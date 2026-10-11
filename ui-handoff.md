@@ -31,6 +31,20 @@ Status of the UI standardization work, for continuing in the cloud. Branch: `ui-
 - The root element always shows a scrollbar track on Home, Browser, How it works and the phone notice, so the centred header sits at the same x on every page.
 - Body overflow is `visible` on those pages so only the root scrolls.
 
+**Credits page** (`src/sources.ts`, `creditsSections()` in `src/app.ts`)
+- Original sources, then one entry per adapted model with its changes, a generated-structures note, and a plain list of software and fonts.
+- The region `credits.ts` files are no longer rendered. They can be deleted once nothing else needs them.
+- The reading lists (NCBI, OpenStax and so on) were dropped from the page.
+- The change lists were condensed from the region notes. Check them against what was actually done.
+
+**How to use page** (`src/howToUse.ts`, route `#/how-to-use`)
+- First draft: choose a region, move around the model, layers, selecting structures, connections, and keyboard shortcuts.
+- Linked from a "How to use" button in the Home hero.
+
+**Removed**
+- Home "Study what you explore" teaser (`src/studyTools.ts` deleted).
+- "Move around the model" box and the sources sentence on How it works.
+
 ## Decisions to revisit
 - Home now shows the site nav (Browser, How it works). Before, it had none. Remove it from `siteHeader` on Home if that's not wanted.
 - The site header background is now transparent. The old Browser header had a surface fill.

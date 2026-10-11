@@ -1,5 +1,5 @@
 import { normalizeRegionSelection } from './regions/selection';
-export type Route = { kind: 'landing' } | { kind: 'how-it-works' } | { kind: 'hub' } | { kind: 'credits' } | { kind: 'region'; regionId: string; select: string | null } | { kind: 'regions'; regionIds: string[]; select: string | null };
+export type Route = { kind: 'landing' } | { kind: 'how-it-works' } | { kind: 'how-to-use' } | { kind: 'hub' } | { kind: 'credits' } | { kind: 'region'; regionId: string; select: string | null } | { kind: 'regions'; regionIds: string[]; select: string | null };
 
 /** Hash routing works on a static host without server rewrite rules. */
 export function parseRoute(hash: string, regionIds: readonly string[]): Route {
@@ -10,6 +10,7 @@ export function parseRoute(hash: string, regionIds: readonly string[]): Route {
   if (!regionId) return { kind: 'landing' };
   if (regionId === 'browser') return { kind: 'hub' };
   if (regionId === 'how-it-works') return { kind: 'how-it-works' };
+  if (regionId === 'how-to-use') return { kind: 'how-to-use' };
   if (regionId === 'credits') return { kind: 'credits' };
   if (regionId === 'regions') {
     const params = new URLSearchParams(query);

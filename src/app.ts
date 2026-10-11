@@ -13,7 +13,8 @@ import { loadingScreen } from "./loading";
 import { combinedTitleForIds } from "./regions/combinedTitle";
 import { renderBodyMap, bindBodyMap } from "./bodyMap";
 import { bindSkipLink, siteFooter, siteHeader, skipLink } from "./siteChrome";
-import { attribution, sourceRecords } from "./sources";
+import { adaptedModels, generatedNote, libraries, upstreamSources } from "./sources";
+import { howToUseBody } from "./howToUse";
 import { phoneScreenNotice, phoneScreenQuery } from "./phoneScreen";
 
 const app = document.querySelector<HTMLElement>("#app")!;
@@ -43,14 +44,15 @@ function renderHub(error?: string) {
 const backLabels: Record<string, string> = { landing: "Home", "how-it-works": "How it works", hub: "Browser" };
 
 function creditsSections() {
-  const entries = [regionCatalog.find(r => r.id === 'left-upper-leg')!, regionCatalog.find(r => r.id === 'left-lower-leg')!, regionCatalog.find(r => r.id === 'lower-leg')!, regionCatalog.find(r => r.id === 'back')!];
-  const sources = `<section class="region-credits"><h2>Sources</h2><p>${attribution}</p><dl class="source-list">${sourceRecords.map(source => `<div><dt>${source.url ? `<a href="${source.url}">${source.name}</a>` : source.name}</dt><dd>${source.credit ? `${source.credit}. ` : ''}<a href="${source.licenseUrl}">${source.license}</a></dd></div>`).join('')}</dl><p><a href="${import.meta.env.BASE_URL}models/CREDITS.md">Model credits and adaptations</a></p></section>`;
-  return sources + entries.map(region => {
-    const upper = region.id === 'left-upper-leg';
-    const manifests = region.id === 'back' ? ['arm-back/manifest.json'] : upper ? ['left-upper-leg/manifest.json', 'right-upper-leg/manifest.json'] : region.id === 'left-lower-leg' ? ['left-lower-leg/manifest.json'] : ['bones.manifest.json', 'muscles.manifest.json', 'neurovascular.manifest.json', 'exterior.manifest.json'];
-    const details = region.credits.sourcesHtml.replace(attribution, '').replace(/<h3>(Credits|Models)<\/h3>/, '<h3>Adaptations</h3>').replace(/<p>\s*<\/p>/, '').replace(/<ul class="link-list">.*?<\/ul>/, '');
-    return `<section class="region-credits"><h2>${upper ? 'Left &amp; Right Hip &amp; Upper Leg' : region.id === 'back' ? 'Right Arm &amp; Back' : region.title}</h2>${details}<h3>Model records</h3><ul class="link-list">${manifests.map(file => `<li><a href="${import.meta.env.BASE_URL}models/${file}">${file.includes('upper-leg') ? (file.startsWith('left') ? 'Left' : 'Right') + ' model manifest' : file}</a></li>`).join('')}</ul></section>`;
-  }).join('') + `<p class="about-footer">${entries[0].credits.footer}</p>`;
+  const sources = `<section class="credits-section" aria-labelledby="credits-sources"><h2 id="credits-sources">Original sources</h2>
+    <ul class="credit-list">${upstreamSources.map(source => `<li><a class="credit-name" href="${source.url}">${source.name}</a><span>${source.author}</span><a href="${source.licenseUrl}">${source.license}</a></li>`).join("")}</ul></section>`;
+  const models = `<section class="credits-section" aria-labelledby="credits-models"><h2 id="credits-models">Adapted models</h2>
+    <p class="credits-note">The changes to each original model are listed below.</p>
+    ${adaptedModels.map(model => `<article class="credit-model" id="model-${model.id}"><h3>${model.name}</h3><p class="credit-from">From ${model.from.join(" and ")}</p><ul>${model.changes.map(change => `<li>${change}</li>`).join("")}</ul></article>`).join("")}</section>`;
+  const generated = `<section class="credits-section" aria-labelledby="credits-generated"><h2 id="credits-generated">Generated</h2><p>${generatedNote}</p></section>`;
+  const software = `<section class="credits-section" aria-labelledby="credits-software"><h2 id="credits-software">Software and fonts</h2><ul class="credit-list credit-list--compact">${libraries.map(lib => `<li><span>${lib.name}</span><span>${lib.license}</span></li>`).join("")}</ul></section>`;
+  const records = `<p class="credits-records"><a href="${import.meta.env.BASE_URL}models/CREDITS.md">Full model records and manifests</a></p>`;
+  return sources + models + generated + software + records;
 }
 
 function renderCredits() {
@@ -59,8 +61,19 @@ function renderCredits() {
   const back = parseRoute(previousPage, regionIds).kind;
   app.innerHTML = `<div id="hub">${skipLink("hub-main")}${siteHeader()}
     <main id="hub-main" class="hub-main credits-main"><a class="credits-back" href="${previousPage}">← Back to ${backLabels[back] ?? "Viewer"}</a><h1>Sources &amp; credits</h1>
+      <p class="credits-lede">Fabrica's models are adapted from two open anatomy datasets. Their creators are credited here, along with what was changed in each model.</p>
       ${creditsSections()}
     </main>${siteFooter}
+  </div>`;
+  bindSkipLink(app);
+}
+
+function renderHowToUse() {
+  document.title = "How to use · Fabrica";
+  document.body.dataset.page = "hub";
+  app.innerHTML = `<div id="hub">${skipLink("hub-main")}${siteHeader()}
+    <main id="hub-main" class="hub-main guide-main">${howToUseBody()}</main>
+    ${siteFooter}
   </div>`;
   bindSkipLink(app);
 }
@@ -99,6 +112,7 @@ async function route() {
   }
   if (next.kind === "hub") { renderHub(); window.scrollTo(0, 0); return; }
   if (next.kind === "credits") { renderCredits(); window.scrollTo(0, 0); return; }
+  if (next.kind === "how-to-use") { renderHowToUse(); window.scrollTo(0, 0); return; }
   const entries = selectedRegionIds.map(id => regionCatalog.find(region => region.id === id)!);
   const title = entries.length > 1 ? combinedTitleForIds(selectedRegionIds) : entries[0].title;
   document.title = `${title} · Fabrica`;
