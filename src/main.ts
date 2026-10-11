@@ -292,10 +292,13 @@ function renderDetails() {
     const regionNote = spansRegions
       ? '<p class="structure-coverage">Spans ' + coverage.map(escapeHtml).join(' + ') + '</p>' : '';
     const articulations = d.tissue === 'bone' ? [...relatedIds(d.id)].filter(id=>byId[id].tissue==='bone').map(id=>byId[id].name) : d.articulations;
-    const facts = [['Origin',d.origin],['Insertion',d.insertion],['Action',d.action],['Innervation',d.innervation],['Blood supply',d.bloodSupply],['Articulations',articulations?.join(', ')]];
+    const facts = [['Action',d.action],['Origin',d.origin],['Insertion',d.insertion],['Innervation',d.innervation],['Blood supply',d.bloodSupply],['Articulations',articulations?.join(', ')]];
     const quickFacts = facts.filter(([,value])=>value).map(([name,value])=>`<dt>${name}</dt><dd>${escapeHtml(value!)}</dd>`).join('');
+    // Only combined views have several regions to name in the header tag.
+    const multiRegion = (pack.regionIds?.length ?? 0) > 1;
+    const tagRegion = multiRegion ? `${spansRegions ? 'Across regions' : d.region} · ` : '';
     $("#details").innerHTML =
-      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${spansRegions ? 'Across regions' : d.region} · ${d.tissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p>${regionNote}<div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content">${quickFacts ? `<section class="quick-facts"><h3>Quick facts</h3><dl>${quickFacts}</dl></section>` : ''}<section class="structure-description"><h3>Description</h3><p>${escapeHtml(d.description)}</p></section></div>`;
+      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${tagRegion}${d.tissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p>${regionNote}<div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content"><section class="structure-description"><h3>Description</h3><p>${escapeHtml(d.description)}</p></section>${quickFacts ? `<section class="quick-facts"><dl>${quickFacts}</dl></section>` : ''}</div>`;
     $("#isolate").onclick = toggleIsolate;
     $("#focus-selected").onclick = () => focusParts(focusIds());
     const connections = connectionsFor(leg.parts, d.id);
@@ -352,7 +355,7 @@ function renderDetails() {
     $("#show-connections").onclick = () => toggleNeighbors(related);
     if (related.length) {
       const links = document.createElement("details");
-      links.open = true;
+      links.open = false;
       links.className = "connection-links";
       links.innerHTML =
         "<summary>Related structures</summary>";

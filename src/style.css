@@ -1056,7 +1056,7 @@ dialog p {
 /* Reserve space above scrolling text for the inspector controls. */
 @media (min-width: 901px) {
   .inspector { max-height: calc(100dvh - var(--topbar) - 2 * var(--gap)); }
-  .inspector:not(.inspector--empty) .details { margin-top: 42px; padding-top: 0; }
+  .inspector:not(.inspector--empty) .details { margin-top: 0; padding-top: 10px; }
   .layer-section { flex-shrink: 1; min-height: 0; overflow: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 }
 @media(max-width:900px){#clear{right:10px}.inspector-resize,#expand-inspector{display:none}.inspector--wide .inspector-content{display:block}.inspector--empty .details{padding:16px 16px}.panel.inspector{height:auto;max-height:none}.details{flex:initial;overflow:visible}}
@@ -1330,10 +1330,13 @@ dialog h2 { font-size: 24px; font-weight: 650; }
 body[data-page="viewer"] .site-footer { position:fixed; bottom:0; left:0; right:0; height:32px; padding:4px 16px; background:var(--surface); z-index:6; }
 body[data-page="viewer"] { --gap:12px; }
 @media(min-width:901px) {
-  .panel { bottom:44px; }
-  .inspector { max-height:calc(100dvh - var(--topbar) - 56px); }
-  .inspector:not(.inspector--empty) .details { flex:1 1 55%; min-height:0; }
-  .inspector:not(.inspector--empty) .layer-section { flex:0 1 42%; min-height:0; }
+  .inspector { max-height:calc(100dvh - var(--topbar) - 2 * var(--gap)); }
+  /* Layers take only the height their switches need; details get the rest. */
+  /* Layers keep their natural height so they never move or scroll; the details body takes the rest. */
+  .inspector:not(.inspector--empty) .details { flex:1 1 0; min-height:96px; }
+  .inspector:not(.inspector--empty) .layer-section { flex:0 0 auto; }
+  .inspector--empty { bottom:var(--gap); height:auto; }
+  .inspector--empty .details { flex:1 1 0; }
   .topbar .action-items .site-nav { gap:8px; font-size:12px; }
 }
 .toggle-row:disabled { opacity:.5; cursor:default; }
@@ -1352,7 +1355,7 @@ body[data-page="viewer"] { --gap:12px; }
 
 
 @media(min-width:901px) {
-  #viewport { bottom:44px; }
+  #viewport { bottom:0; }
   .topbar .modes { position:static; transform:none; margin-left:auto; }
 }
 
@@ -1368,3 +1371,17 @@ body[data-page="viewer"] { --gap:12px; }
 .section-axis { gap: 2px; }
 .section-axis button { flex: 1 1 auto; min-width: 0; padding-left: 6px; padding-right: 6px; font-size: 12px; }
 #section-options { margin-top: 6px; }
+
+/* Structure tag shares the row with the close and expand buttons, which sit on small white discs. */
+.details .structure-tag { min-height: 28px; margin-bottom: 8px; }
+#clear, #expand-inspector { border-radius: 50%; box-shadow: 0 1px 2px var(--shadow-soft); }
+
+/* Compact layers: switches in two columns, tighter than the shared 32px rows. */
+.layer-section { padding: 10px 16px 12px; }
+.layer-section .section-heading { margin-bottom: 6px; }
+#layers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 12px; margin-bottom: 8px; }
+#layers .layer-row { height: auto; min-height: 26px; padding: 2px 0; font-size: 13px; line-height: 1.2; }
+#layers .layer-row > span:not(.switch) { min-width: 0; }
+.layer-section .toggle-row { height: 28px; margin-top: 6px; padding-top: 6px; }
+.layer-section .slider-row { height: 26px; }
+.layer-section .section-control { margin-top: 8px; padding-top: 8px; }
