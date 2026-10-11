@@ -69,15 +69,19 @@ export function sectionFillColor(color: THREE.ColorRepresentation, override?: TH
   return override === undefined ? new THREE.Color(color).multiplyScalar(0.75) : new THREE.Color(override);
 }
 
+/** An open end on a cap source shows up as a stray cap disc at plane depth, over whatever lies in front of it.
+ * Thin structures (tendons, ligaments, vessels) have few edges, so any open end is enough to leave them uncapped. */
+export const capTolerance = (tissue: string) => (tissue === "muscle" || tissue === "bone" || tissue === "skin" ? 0.02 : 0);
+
 /** Inner tissues win ties where cut faces share the plane, so a bone's cut shows inside the muscle around it. */
 const CAP_PRIORITY: Record<string, number> = { skin: -1, muscle: 0, fascia: 1, tendon: 1, ligament: 1, cartilage: 2, bone: 3, artery: 4, vein: 4, nerve: 4 };
 export const capPriority = (tissue: string) => CAP_PRIORITY[tissue] ?? 0;
 
 /** True when almost every edge is shared by two triangles, so the mesh encloses a volume that can be capped.
  * Vertices are welded by position first, since exported meshes often split them along seams. */
-export function isMostlyClosed(geometry: THREE.BufferGeometry): boolean {
-  const cached = geometry.userData.sectionClosed as boolean | undefined;
-  if (cached !== undefined) return cached;
+export function isMostlyClosed(geometry: THREE.BufferGeometry, tolerance = 0.02): boolean {
+  const cached = geometry.userData.sectionOpenRatio as number | undefined;
+  if (cached !== undefined) return cached >= 0 && cached <= tolerance;
   const position = geometry.getAttribute("position");
   const index = geometry.index;
   const count = index ? index.count : position.count;
@@ -102,9 +106,9 @@ export function isMostlyClosed(geometry: THREE.BufferGeometry): boolean {
   }
   let open = 0;
   for (const uses of edges.values()) if (uses !== 2) open++;
-  const closed = edges.size > 0 && open / edges.size <= 0.02;
-  geometry.userData.sectionClosed = closed;
-  return closed;
+  const ratio = edges.size > 0 ? open / edges.size : -1;
+  geometry.userData.sectionOpenRatio = ratio;
+  return ratio >= 0 && ratio <= tolerance;
 }
 
 /** Open sheets (and meshes too faint to cap) show their back faces as a tinted, still-shaded fill. Chains any existing onBeforeCompile. */
@@ -169,11 +173,11 @@ export function createSectionCap(source: THREE.Mesh, order: number, color: THREE
   source.add(back, front);
   return { back, front, quad };
 }
-/** Lay a cap quad onto the plane, large enough to cover the model. */
-export function placeCapQuad(quad: THREE.Mesh, plane: THREE.Plane, size: number) {
-  plane.coplanarPoint(quad.position);
+/** Lay a cap quad onto the plane, centered on the model and large enough to cover it. */
+export function placeCapQuad(quad: THREE.Mesh, plane: THREE.Plane, bounds: THREE.Box3) {
+  plane.projectPoint(bounds.getCenter(new THREE.Vector3()), quad.position);
   quad.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), plane.normal);
-  quad.scale.setScalar(size);
+  quad.scale.setScalar(bounds.getSize(new THREE.Vector3()).length() * 1.5);
   quad.updateMatrixWorld(true);
 }
 export function disposeSectionCap(cap: SectionCap) {

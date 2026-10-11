@@ -12,7 +12,8 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { TAARenderPass } from "three/addons/postprocessing/TAARenderPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { applyCoverage } from "./appearance";
-import { capPriority, createSectionCap, defaultSection, hiddenSide, isMostlyClosed, placeCapQuad, type SectionCap, isClipped, isFullyClipped, normalizeSection, sectionFillColor, sectionPlanes, updateSectionPlane, withSectionFill, type SectionAxis } from "./section";
+import { advanceVisibilitySample, boundedLabelIntersection, sampleLabelVisibility, type VisibilitySample } from "./labelVisibility";
+import { capPriority, capTolerance, createSectionCap, defaultSection, hiddenSide, isMostlyClosed, placeCapQuad, type SectionCap, isClipped, isFullyClipped, normalizeSection, sectionFillColor, sectionPlanes, updateSectionPlane, withSectionFill, type SectionAxis } from "./section";
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/inter/latin-500.css";
 import "@fontsource/inter/latin-600.css";
@@ -81,7 +82,7 @@ app.innerHTML = `
   <div id="label-layer"><svg class="label-leaders" aria-hidden="true"></svg></div>
   <div class="compass-wrap"><div id="compass" role="group" aria-label="Anatomical view compass"></div><span id="view-name">ANTERIOR VIEW</span></div>
   <div class="view-controls segmented" aria-label="Camera views">${pack.viewPresets.map(view => `<button data-view="${view.id}" class="${view.id === pack.defaultView ? 'active' : ''}">${view.label}</button>`).join('')}</div>
-  <div class="canvas-tools"><button id="pan" aria-pressed="false" aria-label="Pan mode" title="Pan mode (P). Right-drag or Shift-drag also pans.">${icon.pan}</button><button id="zoom-in" aria-label="Zoom in" title="Zoom in">${icon.plus}</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">${icon.minus}</button><button id="home" aria-label="Reset camera" title="Reset camera">${icon.home}</button></div>
+  <div class="canvas-tools"><button id="pan" aria-pressed="false" aria-label="Pan mode" title="Pan mode (P). Right-drag, Shift-drag or Alt-drag also pans.">${icon.pan}</button><button id="zoom-in" aria-label="Zoom in" title="Zoom in">${icon.plus}</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">${icon.minus}</button><button id="home" aria-label="Reset camera" title="Reset camera">${icon.home}</button></div>
   <div id="fps-meter" class="fps-meter" role="status" aria-label="Frames per second" hidden>-- FPS</div>
   <div id="render-error" hidden></div>
   <div id="graphics-prompt" class="graphics-prompt" role="status" hidden><p>The 3D view is running slowly on this device.</p><button data-graphics-prompt="low" class="tool-button active">Use Low graphics</button><button data-graphics-prompt="keep" class="tool-button">Keep High</button></div>
@@ -353,7 +354,7 @@ function renderDetails() {
       EMPTY_INSPECTOR_HTML;
   } else {
     const coverage = pack.structureRegions?.[d.id];
-    const spansRegions = coverage && coverage.length > 1 && isNeurovascular(d.tissue);
+    const spansRegions = coverage && coverage.length > 1 && (isNeurovascular(d.tissue) || !!d.canonicalId);
     const regionNote = spansRegions
       ? '<p class="structure-coverage">Spans ' + coverage.map(escapeHtml).join(' + ') + '</p>' : '';
     const articulations = d.tissue === 'bone' ? [...relatedIds(d.id)].filter(id=>byId[id].tissue==='bone').map(id=>byId[id].name) : d.articulations;
@@ -531,7 +532,7 @@ listen(renderer.domElement,
   "pointerdown",
   (e) => {
     controls.mouseButtons.left =
-      state.pan || e.shiftKey || e.ctrlKey || e.metaKey
+      state.pan || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey
         ? CameraControls.ACTION.TRUCK
         : CameraControls.ACTION.ROTATE;
   },
@@ -586,8 +587,10 @@ let taaSamplesLeft=0;
 let taaAccumulated=false;
 let appearanceDirty=true;
 let labelsDirty=true;
+let visibilityDirty=true;
+let labelViewport = { width: 0, height: 0, freeWidth: 0 };
 /** Request a redraw after anything that changes what the scene or its labels show. */
-function invalidate(){appearanceDirty=true;labelsDirty=true;}
+function invalidate(){appearanceDirty=true;labelsDirty=true;visibilityDirty=true;}
 const leg = createAnkle();
 scene.add(leg.root);
 const footprintGroup = new THREE.Group();
@@ -824,6 +827,7 @@ function resize() {
   const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap") || "12");
   const rightCovered = innerWidth > 900 ? $(".inspector-stack").offsetWidth + gap : 0;
   const leftCovered = innerWidth > 900 ? $(".atlas").offsetWidth + 2 * gap : 0;
+  labelViewport = { width: w, height: h, freeWidth: Math.max(100, w - rightCovered) };
   setInspectorInset(camera, w, h, rightCovered - leftCovered);
   $('.compass-wrap').classList.toggle('compass--raised',innerWidth>900 && w-rightCovered-leftCovered<530);
 }
@@ -927,7 +931,6 @@ function setSelection(ids: string[], revealLayer = true) {
   state.attachmentFade = false;
   state.multi = ids.length > 1 ? ids : [];
   state.selected = ids[ids.length - 1] ?? null;
-  if (!state.selected) state.highlightConnections = false;
   if (ids.some(id => !atlasIds(state.atlasRegion).has(id))) state.atlasRegion="all";
   renderList();
   state.isolated = false;
@@ -965,8 +968,7 @@ function refreshSection() {
   if (state.section.axis === "off") { updateSectionPlane(state.section, sectionBounds); return; }
   for (const [id, part] of leg.parts) if (part.meshes.length && !isNeurovascular(byId[id].tissue)) sectionBounds.union(new THREE.Box3().setFromObject(part.group));
   updateSectionPlane(state.section, sectionBounds);
-  const size = sectionBounds.getSize(new THREE.Vector3()).length() * 1.5;
-  for (const cap of sectionCaps) placeCapQuad(cap.quad, sectionPlanes[0], size);
+  for (const cap of sectionCaps) placeCapQuad(cap.quad, sectionPlanes[0], sectionBounds);
   for (const [id, part] of leg.parts) if (part.meshes.length && isFullyClipped(new THREE.Box3().setFromObject(part.group))) sectionHidden.add(id);
 }
 const sectionActive = () => sectionPlanes.length > 0;
@@ -1067,7 +1069,7 @@ function updateAppearance() {
     hint.replaceChildren("Hidden by the section plane. ", clear);
   } else hint.textContent = "";
   if (state.hovered && (!leg.parts.get(state.hovered)?.group.visible ||
-    (state.highlightConnections && !hoverConnectionIds().has(state.hovered))))
+    (hoverFiltered() && !hoverConnectionIds().has(state.hovered))))
     setHovered(null);
   if (hoverPointer) requestHovered(pickStructure(hoverPointer.x, hoverPointer.y, true));
   document
@@ -1098,7 +1100,7 @@ function applySectionToMesh(mesh: THREE.Mesh, mat: THREE.MeshStandardMaterial, t
   if (depth) { depth.clippingPlanes = sectionPlanes; depth.clipShadows = true; }
   let cap = sectionCapOf.get(mesh);
   // Faded meshes, skin end caps and open sheets are not capped; their back faces get a tinted fill instead.
-  const capped = on && shown && (mesh.userData.alpha ?? 1) >= 0.99 && mesh.userData.skinCap !== true && !mesh.userData.fiber && isMostlyClosed(mesh.geometry);
+  const capped = on && shown && (mesh.userData.alpha ?? 1) >= 0.99 && mesh.userData.skinCap !== true && !mesh.userData.fiber && isMostlyClosed(mesh.geometry, capTolerance(tissue));
   mesh.userData.sectionCap = capped;
   mat.userData.baseSide ??= mat.side;
   const side = on && !capped ? THREE.DoubleSide : mat.userData.baseSide as THREE.Side;
@@ -1114,7 +1116,7 @@ function applySectionToMesh(mesh: THREE.Mesh, mat: THREE.MeshStandardMaterial, t
     sectionCapOf.set(mesh, cap);
     sectionCaps.push(cap);
     scene.add(cap.quad);
-    placeCapQuad(cap.quad, sectionPlanes[0], sectionBounds.getSize(new THREE.Vector3()).length() * 1.5);
+    placeCapQuad(cap.quad, sectionPlanes[0], sectionBounds);
   }
   if (cap) {
     cap.back.visible = cap.front.visible = cap.quad.visible = capped;
@@ -1166,7 +1168,10 @@ $("#highlight-connections").onclick = () => {
 };
 $("#labels").onclick = () => {
   state.labels = !state.labels;
-  updateAppearance();
+  $("#labels").classList.toggle("active", state.labels);
+  $("#labels").setAttribute("aria-pressed", String(state.labels));
+  seenTask = null; seenNeedsRefresh = true; seenAt = -Infinity;
+  buildLabels();
 };
 const fpsMeter = $("#fps-meter");
 let fpsFrames = 0, fpsSince = 0;
@@ -1182,10 +1187,28 @@ $("#setting-labels-default").onclick = () => { viewerSettings.labelsDefault = !v
 $("#setting-fps").onclick = () => { viewerSettings.showFps = !viewerSettings.showFps; saveSettings(viewerSettings); syncSettings(); };
 $<HTMLInputElement>("#setting-max-labels").oninput = e => {
   viewerSettings.maxLabels = Number((e.target as HTMLInputElement).value);
-  saveSettings(viewerSettings); syncSettings(); invalidate();
+  saveSettings(viewerSettings); syncSettings(); labelsDirty = true;
 };
 syncSettings();
 $("#all-layers").onclick = () => { preset("anatomy");state.layers=new Set(tissueKeys);state.mode="custom";updateAppearance(); };
+// Holding Shift makes the opacity sliders move at a fifth of the pointer speed.
+function fineSlider(id: string) {
+  const el = $<HTMLInputElement>(id);
+  let anchor: { x: number; v: number } | null = null, lastX = 0, shift = false;
+  el.addEventListener("pointerdown", e => { lastX = e.clientX; shift = e.shiftKey; anchor = { x: e.clientX, v: Number(el.value) }; });
+  el.addEventListener("pointermove", e => {
+    lastX = e.clientX;
+    if (e.shiftKey !== shift) { shift = e.shiftKey; if (anchor) anchor = { x: e.clientX, v: Number(el.value) }; }
+  });
+  // Runs before the slider's own oninput handler and replaces the native value with the slowed one.
+  el.addEventListener("input", () => {
+    if (!anchor || !shift) return;
+    const r = el.getBoundingClientRect(), min = Number(el.min), max = Number(el.max);
+    el.value = String(Math.round(Math.min(max, Math.max(min, anchor.v + ((lastX - anchor.x) / r.width) * (max - min) * 0.2))));
+  });
+  el.addEventListener("pointerup", () => { anchor = null; });
+}
+["#opacity", "#dim-opacity", "#skin-opacity", "#neurovascular-opacity"].forEach(fineSlider);
 $<HTMLInputElement>("#opacity").oninput = (e) => {
   state.opacity = Number((e.target as HTMLInputElement).value) / 100;
   $("#opacity-value").textContent = `${Math.round(state.opacity * 100)}%`;
@@ -1254,30 +1277,57 @@ const raycaster = new THREE.Raycaster(),
   mouse = new THREE.Vector2();
 // Closest hit per mesh; every mesh still participates in selection priority.
 raycaster.firstHitOnly = true;
+/** Hover and picking narrow to the connections only while something is selected. */
+function hoverFiltered() { return state.highlightConnections && !!state.selected; }
 function hoverConnectionIds() {
   return new Set([
     ...selectedConnectionHighlights(),
     ...(state.multi.length ? state.multi : state.selected ? [state.selected] : []),
   ]);
 }
+/** Raycasts respect material.side, and capped meshes render front faces only, so their far walls would never be hit. */
+function intersectBothSides(caster: THREE.Raycaster, targets: THREE.Mesh[]) {
+  const materials = targets.map(mesh => mesh.material as THREE.Material);
+  const sides = materials.map(material => material.side);
+  // Only flipped for the cast and restored before any render, so no program changes.
+  for (const material of materials) material.side = THREE.DoubleSide;
+  try { return caster.intersectObjects(targets, false); }
+  finally { materials.forEach((material, i) => { material.side = sides[i]; }); }
+}
+/** Cap quads are unit squares scaled onto the plane; a point off the square never gets a cap drawn. */
+function onQuad(quad: THREE.Mesh, point: THREE.Vector3) {
+  const local = quad.worldToLocal(point.clone());
+  return Math.abs(local.x) <= 0.5 && Math.abs(local.y) <= 0.5;
+}
 /** Hits on the section's hidden side are dropped; with a section active every hit per mesh is needed, not only the closest. */
 function intersectVisible(caster: THREE.Raycaster, targets: THREE.Mesh[]) {
-  const hits = caster.intersectObjects(targets, false);
-  if (!sectionActive()) return hits;
+  if (!sectionActive()) return caster.intersectObjects(targets, false);
+  const hits = intersectBothSides(caster, targets);
   const direction = caster.ray.direction;
   const backFacing = (hit: THREE.Intersection) => !!hit.face && hit.face.normal.clone().transformDirection(hit.object.matrixWorld).dot(direction) > 0;
-  // A closed mesh whose near wall is cut away shows its cut face on the plane, so a hit on its far wall counts there.
-  const entered = new Set<THREE.Object3D>();
-  for (const hit of hits) if (!backFacing(hit) && visibleHit(hit)) entered.add(hit.object);
   const planeDistance = caster.ray.distanceToPlane(sectionPlanes[0]);
-  const result: THREE.Intersection[] = [];
-  for (const hit of hits) {
-    if (!visibleHit(hit)) continue;
-    if (planeDistance !== null && backFacing(hit) && hit.object.userData.sectionCap && !entered.has(hit.object)) {
-      const tissue = byId[hit.object.userData.id]?.tissue;
-      const distance = planeDistance - capPriority(tissue) * 0.03;
-      result.push({ ...hit, distance, point: caster.ray.at(distance, new THREE.Vector3()) });
-    } else result.push(hit);
+  // Single-sided materials never draw the faces turned away from them, so those hits are not visible either.
+  const drawn = (hit: THREE.Intersection) => {
+    const side = ((hit.object as THREE.Mesh).material as THREE.Material).side;
+    return side === THREE.DoubleSide || (side === THREE.BackSide) === backFacing(hit);
+  };
+  const result = hits.filter(hit => visibleHit(hit) && drawn(hit));
+  const kept = hits.filter(visibleHit);
+  if (planeDistance === null) return result;
+  // Mirror the stencil caps: each kept-side back face adds and each front face subtracts, so a capped mesh shows its
+  // cut face wherever its count is non-zero and the ray crosses the plane on its cap quad.
+  const counts = new Map<THREE.Object3D, { count: number; hit: THREE.Intersection }>();
+  for (const hit of kept) {
+    if (!hit.object.userData.sectionCap) continue;
+    const entry = counts.get(hit.object) ?? counts.set(hit.object, { count: 0, hit }).get(hit.object)!;
+    entry.count += backFacing(hit) ? 1 : -1;
+  }
+  const crossing = caster.ray.at(planeDistance, new THREE.Vector3());
+  for (const [mesh, { count, hit }] of counts) {
+    const cap = sectionCapOf.get(mesh as THREE.Mesh);
+    if (!count || !cap || !onQuad(cap.quad, crossing)) continue;
+    // Coincident cut faces resolve like the caps do: the later-drawn quad wins at equal depth.
+    result.push({ ...hit, distance: planeDistance - cap.quad.renderOrder * 1e-5, point: crossing.clone() });
   }
   return result.sort((a, b) => a.distance - b.distance);
 }
@@ -1288,7 +1338,7 @@ function pickStructure(clientX: number, clientY: number, hoverOnly = false): str
     (-(clientY - rect.top) / rect.height) * 2 + 1,
   );
   raycaster.setFromCamera(mouse, camera);
-  const hoverIds = hoverOnly && state.highlightConnections ? hoverConnectionIds() : null;
+  const hoverIds = hoverOnly && hoverFiltered() ? hoverConnectionIds() : null;
   const targets = [...leg.parts.values()]
     .filter((p) => p.group.visible && (!hoverIds || hoverIds.has(p.id)))
     .flatMap((p) => p.meshes.filter((m) => m.visible && !m.userData.fiber && !sectionHidden.has(p.id)));
@@ -1304,7 +1354,7 @@ function pickStructure(clientX: number, clientY: number, hoverOnly = false): str
   if (directThin) return directThin.object.userData.id;
   if (depthAware) return depthAware.object.userData.id;
   // Low graphics keeps the 48-ray assist for clicks, where it matters, and skips it on hover.
-  const thinHit = hoverOnly && !graphics.thinHoverAssist ? undefined : intersectThinStructures(raycaster, camera, mouse, rect.width, rect.height, anatomyTargets, sectionActive() ? visibleHit : undefined);
+  const thinHit = hoverOnly && !graphics.thinHoverAssist ? undefined : intersectThinStructures(raycaster, camera, mouse, rect.width, rect.height, anatomyTargets, sectionActive() ? caster => intersectVisible(caster, anatomyTargets) : undefined);
   if (thinHit) return thinHit.object.userData.id;
   // Only test the skin when no anatomical hit exists and its opacity allows picking.
   const skinTargets = targets.filter(mesh => isSkinSurface(mesh) && !isSkinCap(mesh) &&
@@ -1315,7 +1365,7 @@ let pendingHover: string | null | undefined;
 let hoverTimer: number | undefined;
 function setHovered(id: string | null) {
   // Selection or mode may have changed during the hover settling delay.
-  if (id && state.highlightConnections && !hoverConnectionIds().has(id)) id = null;
+  if (id && hoverFiltered() && !hoverConnectionIds().has(id)) id = null;
   window.clearTimeout(hoverTimer);
   hoverTimer = undefined;
   pendingHover = undefined;
@@ -1326,7 +1376,7 @@ function setHovered(id: string | null) {
   buildLabels();
 }
 function requestHovered(id: string | null) {
-  if (id && state.highlightConnections && !hoverConnectionIds().has(id)) id = null;
+  if (id && hoverFiltered() && !hoverConnectionIds().has(id)) id = null;
   if (pendingHover === id) return;
   window.clearTimeout(hoverTimer);
   pendingHover = undefined;
@@ -1393,6 +1443,10 @@ type LabelNode = {
   node: HTMLButtonElement;
   x?: number;
   y?: number;
+  width?: number;
+  height?: number;
+  shown?: boolean;
+  leader?: { group: SVGGElement; line: SVGLineElement; dot: SVGCircleElement };
   retiringAt?: number;
   alpha?: number;
 };
@@ -1400,58 +1454,34 @@ const labelNodes: LabelNode[] = [];
 /** Structures with a visible surface in the viewport, from a coarse ray grid plus each anchor's own ray. */
 let seenPoints = new Map<string, THREE.Vector3>();
 let seenAt = -Infinity;
+let seenTask: VisibilitySample | null = null;
+let seenNeedsRefresh = true;
+const leaders = app.querySelector<SVGSVGElement>(".label-leaders")!;
 const seenRaycaster = new THREE.Raycaster();
 seenRaycaster.firstHitOnly = true;
 syncSectionUI();
-function updateSeenIds(time: number, freeWidth: number, height: number) {
-  seenAt = time;
-  if (!labelNodes.some(label => label.retiringAt === undefined)) { seenPoints.clear(); return; }
+/** Start a pass over a stable camera pose; advance it within a small budget each frame. */
+function startSeenIds() {
+  scene.updateMatrixWorld(true);
   const targets = [...leg.parts.values()]
-    .filter((p) => p.group.visible && (p.group.userData.alpha ?? 1) >= .5 && !sectionHidden.has(p.id))
-    .flatMap((p) => p.meshes.filter((m) => m.visible && !m.userData.fiber));
-  const hits = new Map<string, { x: number; y: number; point: THREE.Vector3 }[]>();
-  const width = viewport.clientWidth, ndc = new THREE.Vector2();
-  const firstHit = (px: number, py: number) => {
-    ndc.set((px / width) * 2 - 1, -(py / height) * 2 + 1);
-    seenRaycaster.setFromCamera(ndc, camera);
-    return intersectVisible(seenRaycaster, targets)[0];
-  };
-  const cast = (px: number, py: number) => {
-    const hit = firstHit(px, py);
-    if (!hit) return;
-    const id = hit.object.userData.id as string;
-    (hits.get(id) ?? hits.set(id, []).get(id)!).push({ x: px, y: py, point: hit.point.clone() });
-  };
-  const cols = 40, rows = 24;
-  for (let i = 0; i < cols; i++) for (let j = 0; j < rows; j++) cast(((i + .5) / cols) * freeWidth, ((j + .5) / rows) * height);
-  // Thin structures can slip between grid rays, so also test each anchor's pixel.
-  for (const { id } of labelNodes) {
-    const p = leg.parts.get(id)!.anchor.clone().project(camera);
-    const ax = (p.x * .5 + .5) * width, ay = (-p.y * .5 + .5) * height;
-    if (p.z >= -1 && p.z <= 1 && ax >= 0 && ax <= freeWidth && ay >= 0 && ay <= height) cast(ax, ay);
-  }
-  // Labels track a fixed 3D surface point so they move smoothly with the camera. The point is only
-  // replaced when it stops being visible, so resampling never makes a label jump.
-  const points = new Map<string, THREE.Vector3>();
-  for (const [id, pts] of hits) {
-    if (pts.length < 2) continue;
-    const old = seenPoints.get(id);
-    if (old) {
-      const p = old.clone().project(camera);
-      const px = (p.x * .5 + .5) * width, py = (-p.y * .5 + .5) * height;
-      if (p.z >= -1 && p.z <= 1 && px >= 24 && px <= freeWidth - 24 && py >= 24 && py <= height - 24) {
-        const hit = firstHit(px, py);
-        if (hit && hit.object.userData.id === id && hit.point.distanceTo(old) < 1.5) { points.set(id, old); continue; }
-      }
-    }
-    const cx = pts.reduce((s, q) => s + q.x, 0) / pts.length, cy = pts.reduce((s, q) => s + q.y, 0) / pts.length;
-    const best = pts.reduce((b, q) => Math.hypot(q.x - cx, q.y - cy) < Math.hypot(b.x - cx, b.y - cy) ? q : b);
-    points.set(id, best.point);
-  }
-  seenPoints = points;
+    .filter(p => p.group.visible && (p.group.userData.alpha ?? 1) >= .5 && !sectionHidden.has(p.id))
+    .flatMap(p => p.meshes.filter(m => m.visible && !m.userData.fiber));
+  const anchors = labelNodes.filter(label => label.retiringAt === undefined)
+    .map(label => ({ id: label.id, anchor: leg.parts.get(label.id)!.anchor }));
+  const { width, freeWidth, height } = labelViewport;
+  seenTask = sampleLabelVisibility({ camera, width, freeWidth, height, anchors,
+    previous: seenPoints, raycaster: seenRaycaster, intersect: boundedLabelIntersection(targets, intersectVisible) });
+  seenNeedsRefresh = false;
+}
+function removeLabel(label: LabelNode) {
+  label.node.remove();
+  label.leader?.group.remove();
+}
+function setLeaderAttribute(node: SVGElement, name: string, value: number) {
+  const text = String(value);
+  if (node.getAttribute(name) !== text) node.setAttribute(name, text);
 }
 function buildLabels() {
-  seenAt = -Infinity;
   labelsDirty = true;
   const existing = new Map(labelNodes.map((label) => [label.id, label]));
   const next: LabelNode[] = [];
@@ -1485,18 +1515,29 @@ function buildLabels() {
   }
   for (const label of existing.values()) {
     if (reducedMotion.matches) {
-      label.node.remove();
+      removeLabel(label);
       continue;
     }
     label.retiringAt ??= performance.now() + 220;
     label.node.classList.add("leaving");
     label.node.classList.remove("shown");
     label.node.style.opacity = "0";
+    if (label.leader) label.leader.group.style.opacity = "0";
     label.node.inert = true;
+    label.shown = false;
     next.push(label);
   }
+  const previousIds = labelNodes.filter(label => label.retiringAt === undefined).map(label => label.id).join('|');
+  const nextIds = next.filter(label => label.retiringAt === undefined).map(label => label.id).join('|');
+  if (previousIds !== nextIds && state.labels) seenNeedsRefresh = true;
   labelNodes.splice(0, labelNodes.length, ...next);
 }
+// Font loading can change label dimensions after their first measurement.
+void document.fonts.ready.then(() => {
+  if (disposed) return;
+  for (const label of labelNodes) { label.width = undefined; label.height = undefined; }
+  labelsDirty = true;
+});
 listen(document, "keydown", (e) => {
   if (e.key === "Escape" && !dialog.open) {
     if (state.selected || state.attachmentFade || state.isolated || state.connections) select(null);
@@ -1527,12 +1568,7 @@ resize();
 setView(state.view, false);
 let lastTime = 0;
 let labelsAnimating = false;
-// Safety net: UI controls may change state without passing through updateAppearance.
-// Redrawing restarts temporal anti-aliasing, which shows as a brief flicker on translucent muscles, so the no-op highlight toggle is exempt.
-for (const type of ["input", "change", "click"] as const) listen(document, type, event => {
-  if (!highlightAffectsScene() && (event.target as Element | null)?.closest?.("#highlight-connections")) return;
-  invalidate();
-}, { capture: true });
+// Scene-changing controls invalidate explicitly; UI-only interactions keep the cached render.
 let lastFrameMoved = false;
 function frame(time: number) {
   if (disposed) return;
@@ -1555,7 +1591,7 @@ function frame(time: number) {
     ? Math.min(devicePixelRatio, graphics.movingPixelRatio) : restingPixelRatio())) invalidate();
   const nextTier=tierForZoom(controls.distance/overviewDistance);
   if(nextTier!==maxTier){maxTier=nextTier;buildLabels();}
-  viewport.dataset.labelTier=String(maxTier);
+  if (viewport.dataset.labelTier !== String(maxTier)) viewport.dataset.labelTier=String(maxTier);
   if ((cameraChanged || hoverPickPending) && hoverPointer)
     requestHovered(pickStructure(hoverPointer.x, hoverPointer.y, true));
   hoverPickPending = false;
@@ -1585,22 +1621,41 @@ function frame(time: number) {
     taaSamplesLeft = sceneChanged ? graphics.taaSamples : taaSamplesLeft - 1;
     appearanceDirty = false;
   }
-  if (cameraChanged) updateCompass(camera.quaternion);
+  if (cameraChanged) { updateCompass(camera.quaternion); seenNeedsRefresh = true; }
+  if (visibilityDirty) {
+    seenTask = null; seenAt = -Infinity; seenNeedsRefresh = true;
+    visibilityDirty = false;
+  }
+  // Selected and hover labels bypass passive occlusion checks, so they need no grid rays.
+  if (!state.labels || !labelNodes.some(label => label.retiringAt === undefined)) {
+    seenTask = null; seenNeedsRefresh = false; seenPoints.clear();
+  } else {
+    if (!seenTask && seenNeedsRefresh && time - seenAt > 150) startSeenIds();
+    if (seenTask) {
+      const result = advanceVisibilitySample(seenTask);
+      if (result.done) {
+        seenPoints = result.value; seenTask = null; seenAt = time; labelsDirty = true;
+      }
+    }
+  }
   if (!cameraChanged && !labelsDirty && !labelsAnimating) return;
   labelsDirty = false;
   labelsAnimating = labelNodes.some(l => l.retiringAt !== undefined);
   const occupied: {x:number;y:number;w:number;h:number}[]=[];
-  const labelInset=innerWidth>900?$('.inspector-stack').offsetWidth+12:0;
-  const freeWidth=Math.max(100,viewport.clientWidth-labelInset), height=viewport.clientHeight;
-  const leaders=$<HTMLElement>('.label-leaders');leaders.setAttribute('viewBox',`0 0 ${viewport.clientWidth} ${height}`);leaders.replaceChildren();
-  for(let i=labelNodes.length-1;i>=0;i--){const label=labelNodes[i];if(label.retiringAt!==undefined&&time>=label.retiringAt){label.node.remove();labelNodes.splice(i,1);}}
-  scene.updateMatrixWorld(true);
-  if(time-seenAt>150)updateSeenIds(time,freeWidth,height);
-  // Camera moved since the last visibility sample: run one more pass after it settles.
-  else if(cameraChanged)labelsDirty=true;
+  const { width, freeWidth, height } = labelViewport;
+  const viewBox = `0 0 ${width} ${height}`;
+  // Read every uncached size before writing label positions, avoiding a layout per label.
+  for (const label of labelNodes) {
+    if (label.width === undefined) { label.width = label.node.offsetWidth; label.height = label.node.offsetHeight; }
+  }
+  if (leaders.getAttribute('viewBox') !== viewBox) leaders.setAttribute('viewBox', viewBox);
+  for (let i = labelNodes.length - 1; i >= 0; i--) {
+    const label = labelNodes[i];
+    if (label.retiringAt !== undefined && time >= label.retiringAt) { removeLabel(label); labelNodes.splice(i, 1); }
+  }
   const projected=labelNodes.filter(l=>l.retiringAt===undefined).map(label=>{
     const p=(seenPoints.get(label.id)??leg.parts.get(label.id)!.anchor).clone().project(camera);
-    return {label,p,ax:(p.x*.5+.5)*viewport.clientWidth,ay:(-p.y*.5+.5)*height};
+    return {label,p,ax:(p.x*.5+.5)*width,ay:(-p.y*.5+.5)*height};
   }).sort((a,b)=>{
     const priority=(id:string)=>isSelected(id)?-2:id===state.hovered?-1:labelTier[id]??3;
     return priority(a.label.id)-priority(b.label.id)||Math.hypot(a.ax-freeWidth/2,a.ay-height/2)-Math.hypot(b.ax-freeWidth/2,b.ay-height/2);
@@ -1615,7 +1670,7 @@ function frame(time: number) {
   for(const {label,p,ax,ay} of projected){
     const {id,node}=label,part=leg.parts.get(id)!;
     const important=isSelected(id)||id===state.hovered;
-    const w=node.offsetWidth,h=node.offsetHeight,side=ax>=freeWidth/2?1:-1;
+    const w=label.width!,h=label.height!,side=ax>=freeWidth/2?1:-1;
     const onScreen=p.z>=-1&&p.z<=1&&ax>=24&&ax<=freeWidth-24&&ay>=24&&ay<=height-24;
     let x:number,y:number;
     if(hoverOnly(id)){
@@ -1637,17 +1692,29 @@ function frame(time: number) {
     const target=shown?1:0;
     label.alpha=reducedMotion.matches?target:(label.alpha??0)+(target-(label.alpha??0))*ease;
     if(Math.abs(target-label.alpha)<.01)label.alpha=target;else labelsAnimating=true;
-    node.style.left=`${x}px`;node.style.top=`${y}px`;node.style.opacity=String(label.alpha);node.classList.toggle('shown',shown);node.inert=!shown;
-    if(!shown&&label.alpha===0)continue;
-    if(shown){if(!important)passiveShown++;occupied.push({x,y,w,h});}
-    if(!onScreen)continue;
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.setAttribute('opacity',String(label.alpha));
-    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1',String(ax));line.setAttribute('y1',String(ay));line.setAttribute('x2',String(THREE.MathUtils.clamp(ax,x-w/2,x+w/2)));line.setAttribute('y2',String(THREE.MathUtils.clamp(ay,y-h/2,y+h/2)));
-    if(important)line.setAttribute('class','active');
-    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    dot.setAttribute('cx',String(ax));dot.setAttribute('cy',String(ay));dot.setAttribute('r','2.5');if(important)dot.setAttribute('class','active');
-    g.append(line,dot);leaders.append(g);
+    if (label.x !== x) { node.style.left=`${x}px`; label.x=x; }
+    if (label.y !== y) { node.style.top=`${y}px`; label.y=y; }
+    node.style.opacity=String(label.alpha);
+    if (label.shown !== shown) { node.classList.toggle('shown',shown); node.inert=!shown; label.shown=shown; }
+    if (shown) { if (!important) passiveShown++; occupied.push({x,y,w,h}); }
+    if ((!shown && label.alpha === 0) || !onScreen) {
+      if (label.leader) label.leader.group.style.display='none';
+      continue;
+    }
+    if (!label.leader) {
+      const group=document.createElementNS('http://www.w3.org/2000/svg','g');
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('r','2.5'); group.append(line,dot); leaders.append(group);
+      label.leader={group,line,dot};
+    }
+    const {group,line,dot}=label.leader;
+    group.style.display=''; group.style.opacity=String(label.alpha);
+    line.classList.toggle('active',important); dot.classList.toggle('active',important);
+    setLeaderAttribute(line,'x1',ax); setLeaderAttribute(line,'y1',ay);
+    setLeaderAttribute(line,'x2',THREE.MathUtils.clamp(ax,x-w/2,x+w/2));
+    setLeaderAttribute(line,'y2',THREE.MathUtils.clamp(ay,y-h/2,y+h/2));
+    setLeaderAttribute(dot,'cx',ax); setLeaderAttribute(dot,'cy',ay);
   }
 }
 frameRequest = requestAnimationFrame(frame);
@@ -1768,6 +1835,7 @@ return {
     controls.dispose();
     window.clearTimeout(hoverTimer);
     labelNodes.length = 0;
+    seenTask = null;
     seenPoints.clear();
     $("#label-layer").replaceChildren();
     disposeObject(scene);

@@ -1,0 +1,28 @@
+{
+  "method": "High graphics, combined Right Arm and Back; fresh Edge headless contexts, 1440x1000, Anatomy preset, labels on, normal motion. Local observations, not device guarantees.",
+  "drag": {
+    "beforeP95Ms": 133.5,
+    "afterP95Ms": 16.8
+  },
+  "popup": {
+    "beforeP95Ms": 267,
+    "afterP95Ms": 16.8
+  },
+  "validation": {
+    "build": "passed",
+    "fullSuite": "33 files, 167 tests passed",
+    "finalFocusedSuite": "9 tests passed",
+    "browserRoutes": [
+      "low/right-arm",
+      "low/back",
+      "low/regions?region=right-arm&region=back",
+      "high/right-arm",
+      "high/back",
+      "high/regions?region=right-arm&region=back",
+      "high/lower-leg",
+      "low/lower-leg"
+    ],
+    "sectionBrowserChecks": "Passed: render, flip, picking, labels, atlas hint, reset, and section session restoration",
+    "hoverBrowserChecks": "Passed with the existing hover check adapted to the current selected-only connection filter: clearing selection restores ordinary hover. The original check still expects suppression in its last assertion; viewer behavior was preserved."
+  }
+}

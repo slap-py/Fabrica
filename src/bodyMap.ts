@@ -1,10 +1,11 @@
+import { toggleRegion } from './regions/selection';
 import { browsableCounts, regionCatalog, type RegionCatalogEntry } from './regions/catalog';
 import { regionsHref } from './router';
 
 export type Side = 'right' | 'left';
 /** Most sections that can be explored together; more would be slow to render. */
 export const MAX_SELECTED_SECTIONS = 3;
-type Segment = 'arm-back' | 'hip-leg' | 'foot-ankle';
+type Segment = 'arm-back' | 'hip-leg' | 'foot-ankle' | 'back';
 
 export interface BodySection {
   id: string; side: Side; segment: Segment; title: string;
@@ -14,21 +15,22 @@ export interface BodySection {
 
 /** Head to toe. Neighbouring segments on the same side touch; nothing crosses the midline. */
 const segmentOrder: readonly Segment[] = ['arm-back', 'hip-leg', 'foot-ankle'];
-const segmentTitles: Record<Segment, string> = { 'arm-back': 'Arm & Back', 'hip-leg': 'Hip & Upper Leg', 'foot-ankle': 'Lower Leg & Foot' };
+const segmentTitles: Record<Segment, string> = { 'arm-back': 'Arm', back: 'Back · both sides', 'hip-leg': 'Hip & Upper Leg', 'foot-ankle': 'Lower Leg & Foot' };
 const segmentRegions: Record<Side, Record<Segment, string | null>> = {
-  right: { 'arm-back': null, 'hip-leg': 'right-upper-leg', 'foot-ankle': 'lower-leg' },
-  left: { 'arm-back': null, 'hip-leg': 'left-upper-leg', 'foot-ankle': 'left-lower-leg' },
+  right: { back: 'back', 'arm-back': 'right-arm', 'hip-leg': 'right-upper-leg', 'foot-ankle': 'lower-leg' },
+  left: { back: 'back', 'arm-back': null, 'hip-leg': 'left-upper-leg', 'foot-ankle': 'left-lower-leg' },
 };
 const comingSoonCopy: Record<Segment, string> = {
+  back: 'Posterior neck, both sides of the back, spine and sacrum.',
   'arm-back': 'Shoulder girdle, arm and back muscles, with their attachments, vessels and nerves.',
   'hip-leg': '', 'foot-ankle': '',
 };
 
-export const bodySections: readonly BodySection[] = (['right', 'left'] as const).flatMap(side => segmentOrder.map(segment => ({
+export const bodySections: readonly BodySection[] = [...(['right', 'left'] as const).flatMap(side => segmentOrder.map(segment => ({
   id: `${side}-${segment}`, side, segment,
   title: `${side === 'right' ? 'Right' : 'Left'} ${segmentTitles[segment]}`,
   regionId: segmentRegions[side][segment],
-})));
+}))), { id:'back', side:'right', segment:'back', title:'Back · both sides', regionId:'back' }];
 
 const sectionById = new Map(bodySections.map(section => [section.id, section]));
 export const sectionForRegion = (regionId: string) => bodySections.find(section => section.regionId === regionId);
@@ -37,15 +39,23 @@ const catalogFor = (section: BodySection): RegionCatalogEntry | undefined => reg
 /** A selection is valid when it is empty, or one side's sections form an unbroken chain. */
 export function isValidSelection(ids: readonly string[]) {
   const sections = ids.map(id => sectionById.get(id));
+  if (new Set(ids).size !== ids.length) return false;
   if (ids.length > MAX_SELECTED_SECTIONS) return false;
   if (sections.some(section => !section?.regionId)) return false;
+  const upper = sections.filter(s=>s?.segment === 'arm-back' || s?.segment === 'back');
+  if (upper.length) return upper.length === sections.length && upper.filter(s=>s?.segment === 'arm-back').length <= 1;
   if (new Set(sections.map(section => section!.side)).size > 1) return false;
   const steps = [...new Set(sections.map(section => segmentOrder.indexOf(section!.segment)))].sort((a, b) => a - b);
   return steps.every((step, index) => index === 0 || step === steps[index - 1] + 1);
 }
 
+export function toggleSection(selected: readonly string[], id: string) {
+  if (!selected.includes(id) && sectionById.get(id)?.segment === 'arm-back') return [...selected.filter(item=>sectionById.get(item)?.segment !== 'arm-back'),id];
+  return toggleRegion(selected,id);
+}
+
 export function canToggle(selected: readonly string[], id: string) {
-  const next = selected.includes(id) ? selected.filter(item => item !== id) : [...selected, id];
+  const next = toggleSection(selected, id);
   return isValidSelection(next);
 }
 
@@ -57,6 +67,7 @@ export function blockedReason(selected: readonly string[], id: string): string |
   if (canToggle(selected, id)) return null;
   if (!selected.includes(id) && selected.length >= MAX_SELECTED_SECTIONS) return `Up to ${MAX_SELECTED_SECTIONS} regions at once`;
   if (selected.includes(id)) return 'Deselect the end of your selection first';
+  if (section.segment === 'back' || section.segment === 'arm-back' || selected.some(id=>['back','arm-back'].includes(sectionById.get(id)?.segment ?? ''))) return 'Explore Arm and Back together, or select the leg regions separately';
   const sides = new Set(selected.map(item => sectionById.get(item)?.side));
   if (!sides.has(section.side)) return `Clear your selection to switch to the ${section.side} side`;
   return 'Only sections that touch your selection can be added';
@@ -65,7 +76,8 @@ export function blockedReason(selected: readonly string[], id: string): string |
 // Front view in anatomical position (palms forward, thumbs out), so the subject's right side is drawn on the viewer's left.
 // Left-side shapes mirror these across the midline (x = 120).
 const shapes: Record<Segment, string> = {
-  'arm-back': 'M120 82 L111 80 C102 86 92 88 82 92 C70 95 62 104 60 118 C58 136 57 150 55 168 C53 180 52 184 51 192 C48 214 46 238 44 258 L43 263 C38 267 33 272 31 279 C30 284 33 287 36 284 C38 281 40 279 42 279 C40 287 40 295 42 301 C44 307 53 308 56 302 C58 296 59 284 58 268 L59 258 C61 238 63 216 65 196 C66 188 67 184 68 180 C70 166 74 150 79 138 C81 134 82 134 83 138 C85 156 86 176 89 196 C90 214 86 234 81 250 L120 250 Z',
+  back: 'M86 94 Q120 76 154 94 L148 148 L151 196 Q148 225 159 250 L81 250 Q92 225 89 196 L92 148 Z',
+  'arm-back': 'M82 92 C70 95 62 104 60 118 C58 136 57 150 55 168 C53 180 52 184 51 192 C48 214 46 238 44 258 L43 263 C38 267 33 272 31 279 C30 284 33 287 36 284 C38 281 40 279 42 279 C40 287 40 295 42 301 C44 307 53 308 56 302 C58 296 59 284 58 268 L59 258 C61 238 63 216 65 196 C66 188 67 184 68 180 C70 166 74 150 79 138 C81 134 82 134 83 138 L82 92 Z',
   'hip-leg': 'M120 252 L81 252 C77 268 74 288 74 310 C74 336 78 360 82 382 C90 388 102 388 110 383 C111 360 113 330 115 306 C116 296 118 290 120 288 Z',
   'foot-ankle': 'M82 387 C90 393 102 393 110 388 C112 404 111 420 108 440 C106 454 106 462 107 468 C109 471 109 475 108 478 C111 484 115 491 116 499 C117 506 114 510 109 510 C106 510 104 508 103 506 Q100 508 97 506 Q94 508 91 505 Q88 506 85 503 Q81 503 80 500 C79 496 82 490 85 484 C83 481 83 476 85 473 C85 462 84 452 82 440 C78 424 78 404 82 387 Z',
 };
@@ -159,7 +171,7 @@ export function bindBodyMap(root: HTMLElement) {
     }
     const titles = bodySections.filter(section => selected.includes(section.id)).map(section => section.title);
     status.textContent = titles.length ? titles.join(' + ') : 'Nothing selected';
-    hint.textContent = selected.length ? 'Add a highlighted neighboring section, or press Go.' : 'Click a body region to select it. Hover for details.';
+    hint.textContent = selected.length ? 'Add Back to Right Arm, or a neighboring leg section, then press Go.' : 'Click a body region to select it. Hover for details.';
     warning.hidden = selected.length < 2;
     go.disabled = !selected.length;
     clear.disabled = !selected.length;
@@ -168,7 +180,7 @@ export function bindBodyMap(root: HTMLElement) {
 
   function toggle(id: string) {
     if (blockedReason(selected, id)) { showTip(id); return; }
-    selected = selected.includes(id) ? selected.filter(item => item !== id) : [...selected, id];
+    selected = toggleSection(selected,id);
     update();
     showTip(id);
   }
@@ -191,12 +203,12 @@ export function bindBodyMap(root: HTMLElement) {
 
 /** Where each segment's leader line lands on its shape (right side; the left side mirrors across x = 120). */
 const previewAnchors: Record<Segment, { x: number; y: number }> = {
-  'arm-back': { x: 105, y: 215 }, 'hip-leg': { x: 95, y: 320 }, 'foot-ankle': { x: 96, y: 440 },
+  back: {x:120,y:180}, 'arm-back': { x: 67, y: 155 }, 'hip-leg': { x: 95, y: 320 }, 'foot-ankle': { x: 96, y: 440 },
 };
 /** Vertical centre of each preview label, in the same 516-unit space; leader lines angle from here to the anchor. */
-const previewLabelY: Record<Segment, number> = { 'arm-back': 110, 'hip-leg': 300, 'foot-ankle': 450 };
+const previewLabelY: Record<Segment, number> = { back: 215, 'arm-back': 110, 'hip-leg': 300, 'foot-ankle': 450 };
 /** Phone-size label centres: popups are shorter there (no counts), so the lower-leg label sits lower. */
-const previewLabelYPhone: Record<Segment, number> = { 'arm-back': 125, 'hip-leg': 285, 'foot-ankle': 470 };
+const previewLabelYPhone: Record<Segment, number> = { back: 205, 'arm-back': 125, 'hip-leg': 285, 'foot-ankle': 470 };
 
 /** Static, labelled copy of the body map for the landing page: every section named, availability shown. */
 export function renderRegionsPreview() {

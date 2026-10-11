@@ -1,0 +1,165 @@
+{
+  "origin": "http://127.0.0.1:5187",
+  "method": "Fresh Edge headless contexts per route, 1440x1000, labels on, normal animations; 45 pointer drag steps and four inspector selections. RAF intervals include rendering and label CPU work; local observations.",
+  "rows": [
+    {
+      "graphics": "low",
+      "route": "right-arm",
+      "labels": 2,
+      "drag": {
+        "frames": 147,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 17,
+        "meanFrameMs": 16.68231292517007
+      },
+      "popup": {
+        "frames": 221,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 50,
+        "meanFrameMs": 17.136651583710407
+      }
+    },
+    {
+      "graphics": "low",
+      "route": "back",
+      "labels": 4,
+      "drag": {
+        "frames": 143,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 17,
+        "meanFrameMs": 16.681818181818183
+      },
+      "popup": {
+        "frames": 215,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 33.20000000000073,
+        "meanFrameMs": 16.83767441860465
+      }
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=right-arm&region=back",
+      "labels": 3,
+      "drag": {
+        "frames": 151,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 16.900000000000546,
+        "meanFrameMs": 16.682781456953645
+      },
+      "popup": {
+        "frames": 231,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.899999999999636,
+        "maxFrameMs": 66.80000000000018,
+        "meanFrameMs": 17.549350649350643
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "right-arm",
+      "labels": 3,
+      "drag": {
+        "frames": 139,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 16.900000000000546,
+        "meanFrameMs": 16.68201438848921
+      },
+      "popup": {
+        "frames": 221,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 66.69999999999982,
+        "meanFrameMs": 17.438461538461542
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "back",
+      "labels": 5,
+      "drag": {
+        "frames": 141,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 18.199999999999818,
+        "meanFrameMs": 16.6822695035461
+      },
+      "popup": {
+        "frames": 221,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 33.30000000000018,
+        "meanFrameMs": 16.833936651583706
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "regions?region=right-arm&region=back",
+      "labels": 3,
+      "drag": {
+        "frames": 145,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 17,
+        "meanFrameMs": 16.682758620689654
+      },
+      "popup": {
+        "frames": 233,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 16.800000000000182,
+        "maxFrameMs": 83.30000000000018,
+        "meanFrameMs": 17.399570815450648
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "lower-leg",
+      "labels": 4,
+      "drag": {
+        "frames": 144,
+        "medianFrameMs": 16.69999999999891,
+        "p95FrameMs": 16.80000000000109,
+        "maxFrameMs": 16.900000000001455,
+        "meanFrameMs": 16.68333333333333
+      },
+      "popup": {
+        "frames": 239,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 33.10000000000218,
+        "maxFrameMs": 233.60000000000036,
+        "meanFrameMs": 20.034309623430957
+      }
+    },
+    {
+      "graphics": "low",
+      "route": "lower-leg",
+      "labels": 5,
+      "drag": {
+        "frames": 142,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 16.799999999999272,
+        "maxFrameMs": 16.80000000000291,
+        "meanFrameMs": 16.682394366197194
+      },
+      "popup": {
+        "frames": 225,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 33.39999999999782,
+        "maxFrameMs": 166.8000000000029,
+        "meanFrameMs": 19.35244444444444
+      }
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "Passive labels remain visible after clearing selection",
+    "Labels toggle off",
+    "Selected structures remain labeled with passive labels off after focusing",
+    "Viewer and picking worker are released on leaving each route"
+  ]
+}

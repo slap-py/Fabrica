@@ -31,7 +31,7 @@ function renderHub(error?: string) {
   app.innerHTML = `<div id="hub">${skipLink("hub-main")}
     <header class="hub-header"><a class="hub-brand" href="#/" aria-label="Fabrica home">${brandLockup}</a>
     </header>
-    <main id="hub-main" class="hub-main hub-body-main"><div class="hub-intro"><h1>Explore by region</h1><p>Click a region of the body to select it, add touching sections on the same side, then press Go to explore them together in 3D.</p></div>
+    <main id="hub-main" class="hub-main hub-body-main"><div class="hub-intro"><h1>Explore by region</h1><p>Select Right Arm and Back individually or together, or choose neighboring leg sections. Press Go to explore in 3D.</p></div>
     ${error ? '<p class="hub-error" role="alert">The viewer could not start. Please try opening the region again.</p>' : ""}
     ${renderBodyMap()}
     </main>
@@ -42,14 +42,14 @@ function renderHub(error?: string) {
 }
 
 function creditsSections() {
-  const entries = [regionCatalog.find(r => r.id === 'left-upper-leg')!, regionCatalog.find(r => r.id === 'left-lower-leg')!, regionCatalog.find(r => r.id === 'lower-leg')!];
+  const entries = [regionCatalog.find(r => r.id === 'left-upper-leg')!, regionCatalog.find(r => r.id === 'left-lower-leg')!, regionCatalog.find(r => r.id === 'lower-leg')!, regionCatalog.find(r => r.id === 'back')!];
   const shared = entries[0].credits.sourcesHtml.match(/<ul class="link-list">.*?<\/ul>/)?.[0] ?? '';
   const attribution = 'Z-Anatomy — The libre 3D atlas of anatomy, Gauthier Kervyn, CC BY-SA 4.0. BodyParts3D — The Database Center for Life Science, original model Kousaku Okubo, CC BY-SA 2.1 Japan.';
   return `<section class="region-credits"><h2>Model sources</h2><p>${attribution}</p>${shared}<p><a href="${import.meta.env.BASE_URL}models/CREDITS.md">Model credits and adaptations</a></p></section>` + entries.map(region => {
     const upper = region.id === 'left-upper-leg';
-    const manifests = upper ? ['left-upper-leg/manifest.json', 'right-upper-leg/manifest.json'] : region.id === 'left-lower-leg' ? ['left-lower-leg/manifest.json'] : ['bones.manifest.json', 'muscles.manifest.json', 'neurovascular.manifest.json', 'exterior.manifest.json'];
+    const manifests = region.id === 'back' ? ['arm-back/manifest.json'] : upper ? ['left-upper-leg/manifest.json', 'right-upper-leg/manifest.json'] : region.id === 'left-lower-leg' ? ['left-lower-leg/manifest.json'] : ['bones.manifest.json', 'muscles.manifest.json', 'neurovascular.manifest.json', 'exterior.manifest.json'];
     const details = region.credits.sourcesHtml.replace(attribution, '').replace(/<h3>(Credits|Models)<\/h3>/, '<h3>Adaptations</h3>').replace(/<p>\s*<\/p>/, '').replace(/<ul class="link-list">.*?<\/ul>/, '');
-    return `<section class="region-credits"><h2>${upper ? 'Left &amp; Right Hip &amp; Upper Leg' : region.title}</h2>${details}<h3>Model records</h3><ul class="link-list">${manifests.map(file => `<li><a href="${import.meta.env.BASE_URL}models/${file}">${file.includes('upper-leg') ? (file.startsWith('left') ? 'Left' : 'Right') + ' model manifest' : file}</a></li>`).join('')}</ul></section>`;
+    return `<section class="region-credits"><h2>${upper ? 'Left &amp; Right Hip &amp; Upper Leg' : region.id === 'back' ? 'Right Arm &amp; Back' : region.title}</h2>${details}<h3>Model records</h3><ul class="link-list">${manifests.map(file => `<li><a href="${import.meta.env.BASE_URL}models/${file}">${file.includes('upper-leg') ? (file.startsWith('left') ? 'Left' : 'Right') + ' model manifest' : file}</a></li>`).join('')}</ul></section>`;
   }).join('') + `<p class="about-footer">${entries[0].credits.footer}</p>`;
 }
 

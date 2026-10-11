@@ -4,7 +4,6 @@ import type { createAnkle } from "../ankle";
 import type { rebuildSoftTissues } from "../softTissues";
 import type { loadBoneAssets, loadExteriorAssets, loadMuscleAssets, loadNeurovascularAssets, createAssetSceneLoader } from "../assets";
 import type { createCompass } from "../compass";
-import type { attachmentSources } from "../attachments";
 import type { directlyAttachedIds, connectionHighlightIds, footprintDecal, connectionCameraPose, connectionOccluders, connectionClinicalPoints, connectionsFor } from "../connections";
 import type { relatedIds } from "../foot";
 import type { legacyPointToMm } from "../coordinates";
@@ -19,6 +18,10 @@ export interface RegionStructureCounts { total: number; byTissue: Readonly<Parti
 export interface RegionPack {
   id: string; title: string; description: string; thumbnail: string; assetFailureMessage?: string;
   regionIds?: readonly string[];
+  /** Canonical identity of complete source anatomy, independent of region membership. */
+  sceneBoundsMm?: readonly [readonly number[], readonly number[]];
+  canonicalStructureIds?: Readonly<Record<string, string>>;
+  dataOnlyStructures?: readonly { id: string; name: string; visualizationAvailable: false; sourceObjects: readonly string[]; reason: string; sourceReference: string }[];
   /** Source identity joins cropped neurovascular sections on the same side. */
   neurovascularSources?: Readonly<Record<string, string>>;
   neurovascularCropYMaxMm?: number;
@@ -36,7 +39,7 @@ export interface RegionPack {
     fillPosition: THREE.Vector3; fillTarget: THREE.Vector3; floorPosition: THREE.Vector3;
   };
   createCompass: typeof createCompass;
-  createAnkle: typeof createAnkle; rebuildSoftTissues: typeof rebuildSoftTissues; attachmentSources: typeof attachmentSources; connectionsFor: typeof connectionsFor; directlyAttachedIds: typeof directlyAttachedIds; connectionHighlightIds: typeof connectionHighlightIds; footprintDecal: typeof footprintDecal; connectionCameraPose: typeof connectionCameraPose; connectionOccluders: typeof connectionOccluders; connectionClinicalPoints: typeof connectionClinicalPoints; relatedIds: typeof relatedIds; legacyPointToMm: typeof legacyPointToMm; neurovascularTissues: typeof neurovascularTissues; isNeurovascular: typeof isNeurovascular;
+  createAnkle: typeof createAnkle; rebuildSoftTissues: typeof rebuildSoftTissues; attachmentSources: Readonly<Record<string, { title: string; url: string; section: string }>>; connectionsFor: typeof connectionsFor; directlyAttachedIds: typeof directlyAttachedIds; connectionHighlightIds: typeof connectionHighlightIds; footprintDecal: typeof footprintDecal; connectionCameraPose: typeof connectionCameraPose; connectionOccluders: typeof connectionOccluders; connectionClinicalPoints: typeof connectionClinicalPoints; relatedIds: typeof relatedIds; legacyPointToMm: typeof legacyPointToMm; neurovascularTissues: typeof neurovascularTissues; isNeurovascular: typeof isNeurovascular;
   loaders: { loadBoneAssets: typeof loadBoneAssets; loadMuscleAssets: typeof loadMuscleAssets; loadExteriorAssets: typeof loadExteriorAssets; loadNeurovascularAssets: typeof loadNeurovascularAssets; createAssetSceneLoader: typeof createAssetSceneLoader };
 }
 export function validateRegionPack(pack: RegionPack): RegionPack {

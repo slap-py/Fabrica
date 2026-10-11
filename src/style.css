@@ -461,6 +461,7 @@ canvas:focus-visible {
   outline-offset: -2px;
 }
 #label-layer {
+  contain: layout style;
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -829,9 +830,6 @@ canvas:focus-visible {
 .layer-row input:checked + .switch::after,
 .toggle-row[aria-pressed="true"] .switch::after {
   transform: translateX(11px);
-}
-.toggle-row[aria-pressed="true"] .switch {
-  background: var(--teal);
 }
 .layer-row input:focus-visible + .switch {
   outline: 2px solid var(--accent);
@@ -1450,7 +1448,7 @@ body[data-page="viewer"] { --gap:12px; }
   to { transform: none; opacity: 1; }
 }
 .inspector { transform-origin: 50% 100%; }
-.inspector.inspector--open { animation: info-reveal 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.inspector.inspector--open { will-change: transform, opacity; animation: info-reveal 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
 /* Close is scripted in renderDetails (Web Animations): the top edge drops to the prompt's height. */
 @media (prefers-reduced-motion: reduce) {
   .inspector.inspector--open { animation: none; }
@@ -1465,3 +1463,7 @@ body[data-page="viewer"] { --gap:12px; }
 .layer-section .slider-row { height: 30px; }
 .layer-section .toggle-row { height: 30px; }
 .layer-section #highlight-connections { margin-top: 8px; padding-top: 0; padding-bottom: 8px; border-top: 0; border-bottom: 1px solid var(--border); }
+
+/* Shift/Alt-drag on the viewer must not select text or draw focus rings over the viewport. */
+#viewport, .canvas-tools, .layers-panel .slider-row { user-select: none; -webkit-user-select: none; }
+#viewport canvas:focus, #viewport canvas:focus-visible, .canvas-tools button:focus:not(:focus-visible) { outline: none; }

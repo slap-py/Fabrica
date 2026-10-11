@@ -228,3 +228,20 @@ counts are recorded in each manifest. Footprint focus extents are illustrative.
 ## Illustrative structure envelope (October 2026)
 
 The displayed skin is derived from the side-specific Z-Anatomy structure exports and the viewer’s generated connective tissues, rather than extracted from a skin scan. Each side is constructed from its own packs; the left lower-leg anatomy remains a mirrored right-side derivative, while its upper-leg source is native. Triangle surfaces are voxel-sampled, filled, inflated by a smooth project-defined thickness field and extracted with gradient normals. Independent per-toe fields use source-derived cross-section hulls and preserve air gaps; bounded half-millimetre toe extraction slabs resolve their contours, joined to the one-millimetre body and heel across a configured quarter-millimetre collar. Consistent outward winding is checked across shared edges. The lower-leg gastrocnemius geometry is preserved byte for byte. Cut caps are separately triangulated meshes. The nine original upper-leg open surface patches are compared in `validation/skin-source-audit.json`; the new envelope stops at a groin-level study cut and omits more proximal pelvis/gluteal context. No creases, nails or person-specific fat are modeled. Derived envelopes: CC BY-SA 4.0. Source attribution and upstream license notices above continue to apply.
+
+
+## Right Arm and bilateral Back
+
+Adapted from the same pinned Z-Anatomy / BodyParts3D source and licenses above.
+The shared `arm-back/` bundle exports complete source anatomy, with canonical
+identities and explicit laterality/region membership. Processing includes source
+material separation, solid material-seam caps, source curve tessellation with
+preserved radii, triangle budgets, registered rotation and meter-scale GLB export.
+No source meshes are reflected or cropped at arbitrary region boundaries.
+See `arm-back/manifest.json` for source identifiers, hashes, bounds, checkpoints,
+empty source parts and dataset gaps. The spinal cord is recorded in data only
+and excluded from all GLBs. No continuous skin mesh or substitute envelope is
+included. Attachment focus cards require a reviewed bone-family association; uncertain
+proximity candidates are retained in the manifest and withheld from cards.
+Footprint extents remain illustrative, and source patches are not exhaustive
+clinical attachment facts.

@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "lower-leg: bone/muscle counts, skin layer, selection, focus, isolation and neurovascular loading",
+    "left-lower-leg: bone/muscle counts, skin layer, selection, focus, isolation and neurovascular loading",
+    "right-upper-leg: bone/muscle counts, skin layer, selection, focus, isolation and neurovascular loading",
+    "left-upper-leg: bone/muscle counts, skin layer, selection, focus, isolation and neurovascular loading",
+    "Combined: reviewed attachment focus toggles, cards deduplicate, Neighbors and connection highlighting",
+    "Shared nerve selection survives removing Right Arm",
+    "Hub fits desktop/tablet; existing phone notice and disposal remain intact"
+  ],
+  "errors": []
+}

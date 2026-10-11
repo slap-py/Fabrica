@@ -7,10 +7,15 @@ import { ankleStructures } from "./ankleDetails";
 import { footStructures } from "./foot";
 export type Tissue =
   "skin" | "muscle" | "bone" | "tendon" | "ligament" | "fascia" | "cartilage" | "artery" | "vein" | "nerve";
-export type Region = "Thigh" | "Knee" | "Lower leg" | "Foot";
+export type Region = "Thigh" | "Knee" | "Lower leg" | "Foot" | "Shoulder" | "Upper arm" | "Forearm" | "Elbow" | "Wrist" | "Hand" | "Neck" | "Back" | "Lower back";
 export interface Structure {
   id: string;
   name: string;
+  canonicalId?: string;
+  laterality?: "right" | "left" | "midline";
+  regionMembership?: readonly string[];
+  sourceObject?: string;
+  visualizationAvailable?: boolean;
   tissue: Tissue;
   region: Region;
   group: string;

@@ -1,0 +1,8 @@
+{
+  "checks": [
+    "single-high: render, flip, picking, labels, atlas hint, reset",
+    "combined-low: render, flip, picking, labels, atlas hint, reset",
+    "session round-trip keeps the section"
+  ],
+  "errors": []
+}

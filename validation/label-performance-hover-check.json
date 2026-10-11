@@ -1,0 +1,15 @@
+{
+  "checks": [
+    "highlight mode labels EDL and suppresses hover labels for dimmed, unrelated tissue",
+    "disabling restores ordinary hover; enabling clears a stale hover without moving the pointer",
+    "unrelated structures remain clickable with highlight mode on",
+    "a selected tendon allows hover on its connected muscle; changing selection clears stale connection labels",
+    "isolation keeps selected-muscle hover; clearing selection restores ordinary hover because connection filtering requires a selection"
+  ],
+  "errors": [],
+  "suppressed": {
+    "x": 732.5,
+    "y": 512,
+    "id": "anterior"
+  }
+}

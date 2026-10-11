@@ -2,7 +2,7 @@
 
 Version 1.0.0 · Updated October 2026
 
-An interactive, static atlas with four independently loaded regions: right foot/ankle, left lower leg/foot, and left and right upper legs. Each region has its own card, models, atlas, views and inspector state. Select multiple cards and choose **Open selected regions** to explore them in one aligned scene. Use the region picker beside the viewer title to add or remove regions, and the Area filter to browse each region.
+An interactive, static atlas with six independently loaded regions: right foot/ankle, left lower leg/foot, left and right upper legs, Right Arm and bilateral Back. Each region has its own card, models, atlas, views and inspector state. Select multiple cards and choose **Open selected regions** to explore them in one aligned scene. Use the region picker beside the viewer title to add or remove regions, and the Area filter to browse each region.
 
 Shared vessels and nerves on the same side appear once in a combined view. Selecting either section selects the full structure; Focus and Isolate cover all its loaded sections. The shared entry appears under both regions in the Area filter. Adding or removing a region preserves tissue layers, opacity, labels, search, filters and anatomical view, and carries a shared selection into the remaining region.
 
@@ -219,3 +219,74 @@ After publishing the base skin and writing its acceptance reports, run `python s
 `validation/skin-natural/fullness-geometry.json` records the final closed topology, consistent winding, positive sampled Jacobian and matched cut seams. The exterior manifests record the original GLB hashes and this additional processing. Previous field/clearance/Hausdorff audits describe the base envelope; they are not new measurements of the fuller contour. The fullness is illustrative and does not change the existing unmet anatomical acceptance criteria. Rerunning the script is idempotent.
 
 The surface uses seam-free object-space variation with restrained warm mottling, varied roughness and fine bump relief. Fine detail fades with the pixel footprint to prevent distant shimmer. Caps keep their flat cut-face shading and receive no pores. No additional textures or runtime dependencies are required. `node scripts/skin-natural-browser-check.mjs after` captures both sides, the thigh close-up, transparency and caps; `VIEWER_URL` can select a production preview.
+
+
+## Right Arm and Back
+
+Right Arm (`#/right-arm`) covers shoulder, upper arm, elbow, forearm, wrist and hand.
+Back (`#/back`) covers both sides from posterior neck through the lower back and
+sacrum. Select either region or both in the body map or the viewer region menu.
+Leg selections retain their existing same-side neighboring-section rules;
+Arm/Back are explored separately from the leg selections. The shared selection
+model reserves `left-arm`: selecting an arm replaces the other while preserving
+Back. Left Arm has no assets or catalog entry in this release.
+
+Both packs use the same pinned Z-Anatomy/BodyParts3D source as the legs,
+revision `b722f392d2b09d21f0527229fe1338f27a3bc04e`. The canonical shared bundle
+is in `public/models/arm-back/`. Complete source meshes retain their alignment,
+with no reflection or regional cuts. Source-world origin and the established
+rotation produce +X anterior, +Y superior, +Z subject-right. GLBs use meters;
+the existing asset loader converts to millimeters once. Back retains full
+bilateral scapulae/clavicles, ribs and occipital attachment context.
+
+The pre-import inventory contains 715 candidate structure/material parts.
+651 are renderable: 357 in Right Arm, 333 in Back, with 39 shared. Source
+material separation yielded 64 empty parts or objects without renderable faces;
+these are recorded as `empty-source-part`, rather than failed imports. Named
+semispinalis capitis and suboccipital nerve meshes are absent. No continuous
+scanned skin source is available, so these packs have no Skin layer or invented
+exterior. All source gaps, exclusions and empty parts are recorded in the
+published manifest. There were no failed imports.
+
+Spinal cord is an explicit `dataOnly` record with its pinned source reference,
+white-matter and anterior/posterior-horn source components, laterality, region
+membership and `visualizationAvailable: false`. It is exposed through each
+applicable pack's `dataOnlyStructures`; it is excluded from `structures`, model
+parts, layer controls and every GLB. Its release exclusion is distinct from a
+missing source.
+
+`src/regions/arm-back/createPack.ts` reuses the existing viewer, materials,
+asset loaders, BVHs, tissue visibility, labels, information panels, isolation,
+connection highlighting, focus and cameras. Fascia starts hidden in Anatomy,
+as in the upper-leg packs; its switch reveals the source sheets. Vessels and
+nerves remain off until requested. Available muscle origin/insertion patches
+provide focus cards only when the host bone family matches reviewed UAMS
+anatomy tables. The manifest retains 141 withheld proximity candidates and
+38 accepted focus patches. Footprint extents remain illustrative; partial
+patches are not presented as exhaustive clinical origin/insertion facts. Full clinical muscle facts are not available for all entries.
+Shared source objects keep one canonical ID and their original laterality,
+with stable selection aliases between the single and combined views.
+
+Reproduce the inventory and five preparation checkpoints through the running
+**MCP** extension on port 9876:
+
+```sh
+python scripts/blender-command.py scripts/inspect-arm-back.py
+python scripts/inventory-arm-back.py
+python scripts/blender-command.py scripts/prepare-arm-back.py
+python scripts/blender-command.py scripts/export-arm-back.py
+npm run build
+npm test
+node scripts/arm-back-browser-check.mjs
+node scripts/arm-back-regression-check.mjs
+node scripts/generate-arm-back-thumbnails.mjs
+```
+
+The source scene is replaced during preparation, and the pinned source blend
+is not saved or modified. Export runs in the subsequent MCP command to preserve
+Blender's operator context. Both browser scripts accept `VIEWER_URL`.
+`tests/arm-back.test.ts` compares actual GLB geometry bounds to the manifest,
+checks export hashes, inventory accounting, shared mesh ownership, selection
+transfer, missing-asset hiding, arm replacement and spinal-cord exclusion.
+See `validation/arm-back-browser-check.json` for interaction checks and local
+frame measurements against the existing leg/foot viewer.

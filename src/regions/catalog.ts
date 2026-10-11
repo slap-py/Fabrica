@@ -1,3 +1,6 @@
+import { armBackCredits } from './arm-back/credits';
+import armCounts from './arm-back/right-arm-counts.json';
+import backCounts from './arm-back/back-counts.json';
 import { leftLowerLegCredits } from "./left-lower-leg/credits";
 import { upperLegCredits } from "./upper-leg/credits";
 import leftUpperCounts from "./upper-leg/left-counts.json";
@@ -52,6 +55,14 @@ export const regionCatalog: readonly RegionCatalogEntry[] = [{
   dimThumbnail: `${import.meta.env.BASE_URL}regions/left-upper-leg-dim.png`,
   structureCounts: leftUpperCounts, credits: upperLegCredits,
   load: async () => (await import("./upper-leg/left")).default,
+}, {
+  id: "right-arm", title: "Right Arm", description: "Explore the right shoulder, arm, wrist and hand with source bones, muscles, joint tissues, vessels and nerves.",
+  thumbnail: `${import.meta.env.BASE_URL}regions/right-arm.png`, dimThumbnail: `${import.meta.env.BASE_URL}regions/right-arm-dim.png`,
+  structureCounts: armCounts, credits: armBackCredits, load: async () => (await import("./arm-back/rightArm")).default,
+}, {
+  id: "back", title: "Back", description: "Explore both sides of the posterior neck, shoulder girdle, spine, lower back and sacrum.",
+  thumbnail: `${import.meta.env.BASE_URL}regions/back.png`, dimThumbnail: `${import.meta.env.BASE_URL}regions/back-dim.png`,
+  structureCounts: backCounts, credits: armBackCredits, load: async () => (await import("./arm-back/back")).default,
 }];
 
 export function validateRegionCatalog(entries: readonly RegionCatalogEntry[]) {

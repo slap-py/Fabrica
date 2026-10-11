@@ -34,13 +34,14 @@ export function selectionAliases(pack: RegionPack, id: string | null): string[] 
   if (!id) return [];
   return pack.regionIds
     ? Object.entries(pack.structureAliases ?? {}).filter(([, target]) => target === id).map(([alias]) => alias)
-    : [pack.id + ':' + id];
+    : [pack.id + ':' + id, ...Object.entries(pack.structureAliases ?? {}).filter(([,target])=>target===id).map(([alias])=>alias)];
 }
 
 /** Transfer settings only when the new scene retains a region from this session. */
 export function restoreViewerSession(pack: RegionPack, session?: ViewerSession) {
-  if (!session || !session.regionIds.some(id => (pack.regionIds ?? [pack.id]).includes(id))) return;
+  if (!session) return;
   const selected = session.selectedAliases.map(id => resolveStructureId(pack, id)).find(Boolean) ?? null;
+  if (!session.regionIds.some(id => (pack.regionIds ?? [pack.id]).includes(id)) && !selected) return;
   const area = pack.atlasAreas.some(area => area.id === session.atlasRegion) ? session.atlasRegion
     : !pack.regionIds && session.atlasRegion.startsWith(pack.id + ':') ? session.atlasRegion.slice(pack.id.length + 1) : 'all';
   const view = session.overview ? pack.defaultView : pack.viewPresets.find(view => view.id === session.view)?.id

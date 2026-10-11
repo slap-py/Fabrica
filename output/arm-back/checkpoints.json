@@ -1,0 +1,32 @@
+[
+  {
+    "name": "01 Shared shoulder and arm bones",
+    "structures": 44,
+    "triangles": 53502,
+    "failedImports": []
+  },
+  {
+    "name": "02 Arm muscles",
+    "structures": 49,
+    "triangles": 73667,
+    "failedImports": []
+  },
+  {
+    "name": "03 Back bones and muscles",
+    "structures": 123,
+    "triangles": 430032,
+    "failedImports": []
+  },
+  {
+    "name": "04 Connective tissue",
+    "structures": 289,
+    "triangles": 221631,
+    "failedImports": []
+  },
+  {
+    "name": "05 Nerves and vessels",
+    "structures": 146,
+    "triangles": 175632,
+    "failedImports": []
+  }
+]

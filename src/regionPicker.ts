@@ -1,3 +1,4 @@
+import { toggleRegion } from './regions/selection';
 import { regionsHref } from './router';
 import { blockedReason, isValidSelection, sectionForRegion } from './bodyMap';
 
@@ -21,7 +22,10 @@ export function bindRegionPicker(form: HTMLFormElement) {
       input.closest('.region-picker-row')?.setAttribute('title', input.disabled ? reason! : '');
     });
   }
-  inputs.forEach(input => { input.onchange = update; });
+  inputs.forEach(input => { input.onchange = () => {
+    if (input.checked) { const next = toggleRegion(selected().filter(id=>id!==input.value),input.value); inputs.forEach(item=>{item.checked=next.includes(item.value);}); }
+    update();
+  }; });
   form.onsubmit = event => {
     event.preventDefault();
     if (selected().length) location.hash = regionsHref(selected());

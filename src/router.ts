@@ -1,3 +1,4 @@
+import { normalizeRegionSelection } from './regions/selection';
 export type Route = { kind: 'landing' } | { kind: 'how-it-works' } | { kind: 'hub' } | { kind: 'credits' } | { kind: 'region'; regionId: string; select: string | null } | { kind: 'regions'; regionIds: string[]; select: string | null };
 
 /** Hash routing works on a static host without server rewrite rules. */
@@ -12,7 +13,7 @@ export function parseRoute(hash: string, regionIds: readonly string[]): Route {
   if (regionId === 'credits') return { kind: 'credits' };
   if (regionId === 'regions') {
     const params = new URLSearchParams(query);
-    const ids = [...new Set(params.getAll('region'))].sort();
+    const ids = normalizeRegionSelection(params.getAll('region')).sort();
     if (!ids.length || ids.some(id => !regionIds.includes(id))) return { kind: 'hub' };
     if (ids.length === 1) return { kind: 'region', regionId: ids[0], select: params.get('select') || null };
     return { kind: 'regions', regionIds: ids, select: params.get('select') || null };
@@ -29,7 +30,7 @@ export const LAST_REGION_KEY = 'muscle-map-last-region';
 export const regionStorageKey = (regionId: string, key: string) => `muscle-map-region:${regionId}:${key}`;
 
 export function regionsHref(regionIds: readonly string[], select?: string | null) {
-  const ids = [...new Set(regionIds)].sort();
+  const ids = normalizeRegionSelection(regionIds).sort();
   if (!ids.length) return '#/browser';
   if (ids.length === 1) return regionHref(ids[0], select);
   const params = new URLSearchParams();

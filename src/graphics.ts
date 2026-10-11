@@ -28,7 +28,7 @@ export interface GraphicsSettings {
 export const graphicsSettings: Record<GraphicsTier, GraphicsSettings> = {
   high: {
     maxPixelRatio: 2, movingPixelRatio: null, shadows: true, taaSamples: 32,
-    lazyLayers: false, workerBvh: false, throttleHover: false, thinHoverAssist: true, maxPassiveLabels: 12,
+    lazyLayers: false, workerBvh: false, throttleHover: true, thinHoverAssist: true, maxPassiveLabels: 12,
   },
   low: {
     maxPixelRatio: 1, movingPixelRatio: 0.75, shadows: false, taaSamples: 0,

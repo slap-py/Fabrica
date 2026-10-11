@@ -17,17 +17,20 @@ import { combinedTitleForIds } from './combinedTitle';
  * The left lower leg remains the existing mirrored right-side derivative.
  */
 export const assemblyOffsets: Readonly<Record<string, readonly [number, number, number]>> = {
+  'right-arm': [0, 0, 0],
+  'back': [0, 0, 0],
   'lower-leg': [-36.57284379005432, 67.66913086175919, 74.70057159662247],
   'left-lower-leg': [-36.57284379005432, 67.66913086175919, -74.70057159662247],
   'right-upper-leg': [-20.297355949878693, 657.085657119751, 90.23460745811462],
   'left-upper-leg': [-20.297355949878693, 657.085657119751, -90.23460745811462],
 };
 const sideOf = (pack: RegionPack) => pack.id.startsWith('left-') ? 'left' : 'right';
+const isLower = (pack: RegionPack) => pack.id === 'lower-leg' || pack.id === 'left-lower-leg';
 const isUpper = (pack: RegionPack) => pack.id.endsWith('upper-leg');
 
 /** Hide only the two regional skin cut caps when both matching side packs are selected. */
 function syncCombinedSkinCaps(contexts: readonly Context[]) {
-  const pairedSides = new Set(contexts.filter(context => isUpper(context.pack)).map(context => sideOf(context.pack)).filter(side => contexts.some(other => !isUpper(other.pack) && sideOf(other.pack) === side)));
+  const pairedSides = new Set(contexts.filter(context => isUpper(context.pack)).map(context => sideOf(context.pack)).filter(side => contexts.some(other => isLower(other.pack) && sideOf(other.pack) === side)));
   for (const context of contexts) for (const part of context.parts.values()) for (const mesh of part.meshes) {
     const cap = mesh.userData.skinCap === true || mesh.name.startsWith("skin-cap-");
     const end = mesh.userData.capEnd;
@@ -46,13 +49,18 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   if (new Set(packs.map(pack => pack.id)).size !== packs.length) throw new Error('Duplicate regions');
   if (packs.length === 1) return packs[0];
   for (const pack of packs) if (!assemblyOffsets[pack.id]) throw new Error(`Missing assembly registration: ${pack.id}`);
-  const base = packs.find(isUpper) ?? packs[0];
+  if (packs.some(p => p.id === 'right-arm') && packs.some(p => p.id === 'left-arm')) throw new Error('Choose one arm at a time');
+  const base = packs.find(p => p.id === 'back') ?? packs.find(isUpper) ?? packs[0];
   const owners = new Map<string, Member>();
   const localIds = new Map<string, Map<string, string>>();
-  const fullShafts = new Map(packs.filter(pack => !isUpper(pack)).map(pack => [sideOf(pack), pack]));
+  const fullShafts = new Map(packs.filter(isLower).map(pack => [sideOf(pack), pack]));
   const sacrumOwner = packs.find(pack => isUpper(pack) && pack.byId.sacrum);
+  const canonicalOwners = new Map<string, Member>();
+  for (const pack of packs) for (const [local, key] of Object.entries(pack.canonicalStructureIds ?? {}))
+    if (!canonicalOwners.has(key)) canonicalOwners.set(key, {pack, local});
   const sourceOwners = new Map<string, Member>();
   const sourceKey = (pack: RegionPack, local: string) => {
+    if (pack.canonicalStructureIds?.[local]) return undefined;
     const source = pack.neurovascularSources?.[local];
     return source && pack.isNeurovascular(pack.byId[local].tissue)
       ? sideOf(pack) + ':' + pack.byId[local].tissue + ':' + source.replace(/\.[lr]$/, '') : undefined;
@@ -74,8 +82,9 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
         ? fullShafts.get(sideOf(pack)) ?? pack
         : structure.id === 'sacrum' ? sacrumOwner ?? pack : pack;
       const key = sourceKey(pack, structure.id);
-      const member = key ? sourceOwners.get(key)! : { pack: owner, local: structure.id };
-      const id = `${member.pack.id}:${member.local}`;
+      const canonical = pack.canonicalStructureIds?.[structure.id];
+      const member = canonical ? canonicalOwners.get(canonical)! : key ? sourceOwners.get(key)! : { pack: owner, local: structure.id };
+      const id = canonical ?? `${member.pack.id}:${member.local}`;
       ids.set(structure.id, id);
       owners.set(id, member);
     }
@@ -86,10 +95,12 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
     const list = members.get(id) ?? [];
     list.push({ pack, local }); members.set(id, list);
     structureAliases[pack.id + ':' + local] = id;
+    const canonical = pack.canonicalStructureIds?.[local];
+    if (canonical) { structureAliases[canonical] = id; structureAliases[local] = id; }
   }
   const sharedNeurovascular = new Set([...members].filter(([id, list]) => {
     const owner = owners.get(id)!;
-    return list.length > 1 && owner.pack.isNeurovascular(owner.pack.byId[owner.local].tissue);
+    return !owner.pack.canonicalStructureIds?.[owner.local] && list.length > 1 && owner.pack.isNeurovascular(owner.pack.byId[owner.local].tissue);
   }).map(([id]) => id));
   const structureRegions = Object.fromEntries([...members].map(([id, list]) => [id, list.map(member => member.pack.title)]));
   const structures = [...owners].map(([id, owner]) => {
@@ -200,8 +211,13 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   }
   const connectionsFor: RegionPack['connectionsFor'] = (parts, id) => {
     const list = getContexts(parts);
+    const completeConnections = new Set<string>();
     return list.flatMap(context => [...localIds.get(context.pack.id)!].filter(([, global]) => global === id).flatMap(([local]) =>
-      context.pack.connectionsFor(context.parts, local).map(connection => {
+      context.pack.connectionsFor(context.parts, local).flatMap(connection => {
+        const canonical = context.pack.canonicalStructureIds?.[connection.record.structureId];
+        const key = canonical && canonical + ':' + connection.key;
+        if (key && completeConnections.has(key)) return [];
+        if (key) completeConnections.add(key);
         const mapped = remap(connection, context);
         const owner = owners.get(mapped.footprint.structureId)!;
         if (owner.pack.id !== context.pack.id) {
@@ -210,7 +226,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
           const seed = new THREE.Vector3(...endpoint.seedMm).sub(host.offset).toArray() as MmPoint;
           mapped.footprint = remap(resolveFootprint(host.parts, { ...endpoint, structureId: owner.local, seedMm: seed }), host);
         }
-        return mapped;
+        return [mapped];
       }),
     ));
   };
@@ -296,7 +312,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   };
   const rebuildSoftTissues: RegionPack['rebuildSoftTissues'] = parts => {
     const reports = getContexts(parts).map(context => { const report = context.pack.rebuildSoftTissues(context.parts); sync(parts, context); return report; });
-    return { attachments: reports.reduce((n, report) => n + report.attachments, 0), cartilagePatches: reports.reduce((n, report) => n + report.cartilagePatches, 0), warnings: reports.flatMap(report => report.warnings) };
+    return { attachments: reports.reduce((n, report) => n + report.attachments, 0), cartilagePatches: reports.reduce((n, report) => n + report.cartilagePatches, 0) - [...members].filter(([id])=>owners.get(id)!.pack.canonicalStructureIds?.[owners.get(id)!.local] && byId[id].tissue==='cartilage' && parts.get(id)?.meshes.length).reduce((n,[,list])=>n+list.length-1,0), warnings: reports.flatMap(report => report.warnings) };
   };
   const areas = [{ id: 'all', label: 'All regions', group: '' }, ...packs.flatMap(pack => [
     { id: pack.id, label: pack.title, group: '' },
@@ -309,15 +325,23 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   };
   const tissueKeys = base.tissueKeys.filter(tissue => structures.some(structure => structure.tissue === tissue));
   const title = combinedTitle(packs);
-  const overview = 'Explore the selected regions together. Shared tibia/fibula context copies, the sacrum when shared, and matching vessels and nerves are counted once across regions; other regional entries remain separate. Skin is excluded from browsable totals. Use Area to browse each region. Return to Browser to change the selected regions.';
-  const target = new THREE.Vector3(0, packs.some(isUpper) ? 450 : 160, 0);
+  const overview = 'Explore the selected regions together. Shared tibia/fibula context copies, the sacrum when shared, and matching vessels and nerves and canonical shoulder/back source structures are counted once across regions. Skin is excluded from browsable totals. Use Area to browse each region. Return to Browser to change the selected regions.';
+  const framing = new THREE.Box3();
+  for (const pack of packs) if (pack.sceneBoundsMm) {
+    const offset = new THREE.Vector3(...assemblyOffsets[pack.id]);
+    framing.expandByPoint(new THREE.Vector3(...pack.sceneBoundsMm[0]).add(offset));
+    framing.expandByPoint(new THREE.Vector3(...pack.sceneBoundsMm[1]).add(offset));
+  }
+  const sourceFraming = packs.every(pack => pack.sceneBoundsMm);
+  const target = sourceFraming ? framing.getCenter(new THREE.Vector3()) : new THREE.Vector3(0, packs.some(isUpper) ? 450 : 160, 0);
+  const frameDistance = sourceFraming ? framing.getSize(new THREE.Vector3()).length() * 1.65 : packs.some(isUpper) ? 2100 : 1200;
   const cameraPreset: RegionPack['cameraPreset'] = (view, aspect) => {
     const direction = new THREE.Vector3(...(base.cameraViews[view] ?? base.cameraViews[base.defaultView])).normalize();
-    return { target: target.clone(), position: target.clone().addScaledVector(direction, (packs.some(isUpper) ? 2100 : 1200) * Math.max(1, .8 / aspect)) };
+    return { target: target.clone(), position: target.clone().addScaledVector(direction, frameDistance * Math.max(1, .8 / aspect)) };
   };
   return validateRegionPack({
     ...base, id: packs.map(pack => pack.id).join('+'), regionIds: packs.map(pack => pack.id), title, description: overview,
-    structures, byId, structureAliases, structureRegions, neurovascularSources: undefined, neurovascularCropYMaxMm: undefined, tissueKeys, createAnkle, loaders, rebuildSoftTissues, atlasIds, atlasAreas: areas, atlasTabs: areas,
+    structures, byId, structureAliases, structureRegions, canonicalStructureIds: undefined, dataOnlyStructures: [...new Map(packs.flatMap(p=>p.dataOnlyStructures ?? []).map(s=>[s.id,s])).values()], neurovascularSources: undefined, neurovascularCropYMaxMm: undefined, tissueKeys, createAnkle, loaders, rebuildSoftTissues, atlasIds, atlasAreas: areas, atlasTabs: areas,
     relatedIds: id => related(id, 'relatedIds'), directlyAttachedIds: id => related(id, 'directlyAttachedIds'), connectionHighlightIds: id => related(id, 'connectionHighlightIds'),
     connectionsFor, footprintDecal, connectionCameraPose, connectionOccluders,
     attachmentSources: Object.fromEntries(packs.flatMap(pack => Object.entries(pack.attachmentSources).map(([id, source]) => [`${pack.id}:${id}`, source]))) as RegionPack['attachmentSources'],

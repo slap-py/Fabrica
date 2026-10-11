@@ -1,0 +1,121 @@
+{
+  "origin": "http://127.0.0.1:5187",
+  "method": "Edge headless, 1440x1000, Anatomy preset, passive labels explicitly on, normal animations; 45 drag steps and four inspector selections. The single-region and Low combined rows share contexts per graphics tier; High combined was measured in a fresh context. Local RAF intervals include rendering and label work.",
+  "rows": [
+    {
+      "graphics": "low",
+      "route": "right-arm",
+      "labels": 3,
+      "drag": {
+        "frames": 146,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 50.099999999999454,
+        "maxFrameMs": 50.30000000000018,
+        "meanFrameMs": 21.25342465753425
+      },
+      "popup": {
+        "frames": 195,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 50.100000000000364,
+        "maxFrameMs": 83.30000000000018,
+        "meanFrameMs": 21.987179487179493
+      }
+    },
+    {
+      "graphics": "low",
+      "route": "back",
+      "labels": 4,
+      "drag": {
+        "frames": 153,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 50.099999999998545,
+        "maxFrameMs": 50.20000000000073,
+        "meanFrameMs": 21.262745098039208
+      },
+      "popup": {
+        "frames": 187,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 50.20000000000073,
+        "maxFrameMs": 66.90000000000146,
+        "meanFrameMs": 23.462566844919806
+      }
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=right-arm&region=back",
+      "labels": 3,
+      "drag": {
+        "frames": 163,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 116.90000000000146,
+        "maxFrameMs": 133.59999999999854,
+        "meanFrameMs": 44.52147239263806
+      },
+      "popup": {
+        "frames": 63,
+        "medianFrameMs": 16.700000000004366,
+        "p95FrameMs": 116.90000000000146,
+        "maxFrameMs": 167,
+        "meanFrameMs": 45.54603174603177
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "right-arm",
+      "labels": 3,
+      "drag": {
+        "frames": 167,
+        "medianFrameMs": 16.699999999999818,
+        "p95FrameMs": 66.69999999999982,
+        "maxFrameMs": 83.30000000000018,
+        "meanFrameMs": 22.976646706586823
+      },
+      "popup": {
+        "frames": 151,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 133.5,
+        "maxFrameMs": 216.89999999999964,
+        "meanFrameMs": 39.884105960264904
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "back",
+      "labels": 5,
+      "drag": {
+        "frames": 180,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 100.19999999999709,
+        "maxFrameMs": 116.90000000000146,
+        "meanFrameMs": 33.64333333333335
+      },
+      "popup": {
+        "frames": 147,
+        "medianFrameMs": 16.700000000000728,
+        "p95FrameMs": 116.70000000000073,
+        "maxFrameMs": 150.10000000000218,
+        "meanFrameMs": 36.88299319727888
+      }
+    },
+    {
+      "graphics": "high",
+      "route": "regions?region=right-arm&region=back",
+      "labels": 3,
+      "drag": {
+        "frames": 151,
+        "medianFrameMs": 16.799999999999272,
+        "p95FrameMs": 133.5,
+        "maxFrameMs": 217,
+        "meanFrameMs": 50.711920529801326
+      },
+      "popup": {
+        "frames": 51,
+        "medianFrameMs": 216.90000000000146,
+        "p95FrameMs": 267.0000000000018,
+        "maxFrameMs": 483.60000000000036,
+        "meanFrameMs": 200.19411764705885
+      }
+    }
+  ],
+  "errors": []
+}
