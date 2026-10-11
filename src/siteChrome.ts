@@ -1,8 +1,18 @@
-/** Shared destinations and attribution for every app surface. */
-export function mainNavigation(current = "") {
-  return `<nav class="site-nav" aria-label="Main navigation">${[["#/browser", "Browser"], ["#/how-it-works", "How it works"]].map(([href, label]) => `<a href="${href}"${href === current ? ' aria-current="page"' : ''}>${label}</a>`).join("")}</nav>`;
+import { brandLockup } from "./branding";
+import { footerAttribution } from "./sources";
+
+export const navItems = [
+  { id: "browser", href: "#/browser", label: "Browser" },
+  { id: "how-it-works", href: "#/how-it-works", label: "How it works" },
+] as const;
+export type NavId = (typeof navItems)[number]["id"];
+
+/** The standard header: brand and site navigation. Every page except the viewer uses it. */
+export function siteHeader(current?: NavId) {
+  return `<header class="site-header"><div class="site-header-inner"><a class="site-brand" href="#/" aria-label="Fabrica home">${brandLockup}</a><nav class="site-nav" aria-label="Main navigation">${navItems.map(item => `<a href="${item.href}"${item.id === current ? ' aria-current="page"' : ""}>${item.label}</a>`).join("")}</nav></div></header>`;
 }
-export const siteFooter = `<footer class="site-footer"><p>Models adapted from Z-Anatomy / BodyParts3D.</p><a href="#/credits">Sources &amp; credits</a></footer>`;
+
+export const siteFooter = `<footer class="site-footer"><p>${footerAttribution}</p><a href="#/credits">Sources &amp; credits</a></footer>`;
 
 /** Skip link for keyboard users. Hash routing owns location.hash, so binding moves focus instead of navigating. */
 export const skipLink = (targetId: string) => `<a class="skip-link" href="#${targetId}">Skip to main content</a>`;

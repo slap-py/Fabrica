@@ -12,8 +12,8 @@ import "./viewerDiagnostics";
 import { loadingScreen } from "./loading";
 import { combinedTitleForIds } from "./regions/combinedTitle";
 import { renderBodyMap, bindBodyMap } from "./bodyMap";
-import { bindSkipLink, siteFooter, skipLink } from "./siteChrome";
-import { brandLockup } from "./branding";
+import { bindSkipLink, siteFooter, siteHeader, skipLink } from "./siteChrome";
+import { attribution, sourceRecords } from "./sources";
 import { phoneScreenNotice, phoneScreenQuery } from "./phoneScreen";
 
 const app = document.querySelector<HTMLElement>("#app")!;
@@ -29,8 +29,7 @@ function renderHub(error?: string) {
   document.title = "Browser · Fabrica";
   document.body.dataset.page = "hub";
   app.innerHTML = `<div id="hub">${skipLink("hub-main")}
-    <header class="hub-header"><a class="hub-brand" href="#/" aria-label="Fabrica home">${brandLockup}</a>
-    </header>
+    ${siteHeader("browser")}
     <main id="hub-main" class="hub-main hub-body-main"><div class="hub-intro"><h1>Explore by region</h1><p>Select Right Arm and Back individually or together, or choose neighboring leg sections. Press Go to explore in 3D.</p></div>
     ${error ? '<p class="hub-error" role="alert">The viewer could not start. Please try opening the region again.</p>' : ""}
     ${renderBodyMap()}
@@ -41,11 +40,12 @@ function renderHub(error?: string) {
   bindBodyMap(app.querySelector<HTMLElement>(".body-map")!);
 }
 
+const backLabels: Record<string, string> = { landing: "Home", "how-it-works": "How it works", hub: "Browser" };
+
 function creditsSections() {
   const entries = [regionCatalog.find(r => r.id === 'left-upper-leg')!, regionCatalog.find(r => r.id === 'left-lower-leg')!, regionCatalog.find(r => r.id === 'lower-leg')!, regionCatalog.find(r => r.id === 'back')!];
-  const shared = entries[0].credits.sourcesHtml.match(/<ul class="link-list">.*?<\/ul>/)?.[0] ?? '';
-  const attribution = 'Z-Anatomy — The libre 3D atlas of anatomy, Gauthier Kervyn, CC BY-SA 4.0. BodyParts3D — The Database Center for Life Science, original model Kousaku Okubo, CC BY-SA 2.1 Japan.';
-  return `<section class="region-credits"><h2>Model sources</h2><p>${attribution}</p>${shared}<p><a href="${import.meta.env.BASE_URL}models/CREDITS.md">Model credits and adaptations</a></p></section>` + entries.map(region => {
+  const sources = `<section class="region-credits"><h2>Sources</h2><p>${attribution}</p><dl class="source-list">${sourceRecords.map(source => `<div><dt>${source.url ? `<a href="${source.url}">${source.name}</a>` : source.name}</dt><dd>${source.credit ? `${source.credit}. ` : ''}<a href="${source.licenseUrl}">${source.license}</a></dd></div>`).join('')}</dl><p><a href="${import.meta.env.BASE_URL}models/CREDITS.md">Model credits and adaptations</a></p></section>`;
+  return sources + entries.map(region => {
     const upper = region.id === 'left-upper-leg';
     const manifests = region.id === 'back' ? ['arm-back/manifest.json'] : upper ? ['left-upper-leg/manifest.json', 'right-upper-leg/manifest.json'] : region.id === 'left-lower-leg' ? ['left-lower-leg/manifest.json'] : ['bones.manifest.json', 'muscles.manifest.json', 'neurovascular.manifest.json', 'exterior.manifest.json'];
     const details = region.credits.sourcesHtml.replace(attribution, '').replace(/<h3>(Credits|Models)<\/h3>/, '<h3>Adaptations</h3>').replace(/<p>\s*<\/p>/, '').replace(/<ul class="link-list">.*?<\/ul>/, '');
@@ -56,10 +56,9 @@ function creditsSections() {
 function renderCredits() {
   document.title = "Sources & credits · Fabrica";
   document.body.dataset.page = "hub";
-  app.innerHTML = `<div id="hub">${skipLink("hub-main")}
-    <header class="hub-header"><a class="hub-brand" href="#/" aria-label="Fabrica home">${brandLockup}</a>
-    </header>
-    <main id="hub-main" class="hub-main credits-main"><a class="credits-back" href="${previousPage}">← Back to ${parseRoute(previousPage, regionIds).kind === "landing" ? "Home" : parseRoute(previousPage, regionIds).kind === "how-it-works" ? "How it works" : parseRoute(previousPage, regionIds).kind === "hub" ? "Browser" : "Viewer"}</a><h1>Sources &amp; credits</h1>
+  const back = parseRoute(previousPage, regionIds).kind;
+  app.innerHTML = `<div id="hub">${skipLink("hub-main")}${siteHeader()}
+    <main id="hub-main" class="hub-main credits-main"><a class="credits-back" href="${previousPage}">← Back to ${backLabels[back] ?? "Viewer"}</a><h1>Sources &amp; credits</h1>
       ${creditsSections()}
     </main>${siteFooter}
   </div>`;

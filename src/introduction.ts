@@ -1,6 +1,5 @@
-import { bindSkipLink, siteFooter, skipLink } from "./siteChrome";
+import { bindSkipLink, siteFooter, siteHeader, skipLink, type NavId } from "./siteChrome";
 import { renderRegionsPreview } from "./bodyMap";
-import { brandLockup } from './branding';
 import { renderStudyTools } from './studyTools';
 
 const arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg>';
@@ -17,11 +16,8 @@ const features = [
   { id: 'regions', title: 'Combine regions', summary: 'Open touching regions on the same side in one aligned 3D view.', instruction: 'In the browser, select an available region on the body, then add a touching section on the same side and press Go. For example, combine the left upper leg with the left lower leg and foot. Clear the selection before switching sides. Only the available leg regions can be opened today.' },
 ] as const;
 
-function header() {
-  return `${skipLink("intro-main")}
-  <header class="intro-header">
-    <a class="intro-brand" href="#/" aria-label="Fabrica home">${brandLockup}</a>
-  </header>`;
+function header(current?: NavId) {
+  return `${skipLink("intro-main")}${siteHeader(current)}`;
 }
 
 function footer() {
@@ -55,16 +51,16 @@ function modelPreview() {
 }
 
 export function introductionPage(guide = false) {
-  return `<div class="intro-page">${header()}${guide ? `
+  return `<div class="intro-page">${header(guide ? "how-it-works" : undefined)}${guide ? `
     <main id="intro-main" class="intro-main intro-guide">
       <a class="intro-back" href="#/">← Back to Home</a>
-      <div class="intro-guide-heading"><p class="intro-eyebrow">A quick guide</p><h1>How it works</h1><p>Choose a region, open the model, and explore it at your own pace.</p><a class="intro-button intro-button-primary" href="#/browser">Start exploring ${arrow}</a></div>
-      <ol class="intro-steps">${features.map((feature, index) => `<li id="${feature.id}"><div class="intro-step-number">0${index + 1}</div><div><h2>${feature.title}</h2><p>${feature.instruction}</p></div><div class="intro-step-icon">${featureIcon(feature.id)}</div></li>`).join('')}</ol>
+      <div class="intro-guide-heading"><p class="intro-eyebrow">A quick guide</p><h1>How it works</h1><p>Choose a region, open the model, and explore it at your own pace.</p><a class="button lg primary" href="#/browser">Start exploring ${arrow}</a></div>
+      <ol class="intro-steps">${features.map((feature, index) => `<li id="step-${feature.id}"><div class="intro-step-number">0${index + 1}</div><div><h2>${feature.title}</h2><p>${feature.instruction}</p></div><div class="intro-step-icon">${featureIcon(feature.id)}</div></li>`).join('')}</ol>
       <section class="intro-controls" aria-labelledby="intro-controls-heading"><div><p class="intro-eyebrow">Move around the model</p><h2 id="intro-controls-heading">A different angle helps.</h2><p>Drag to rotate, scroll or pinch to zoom, and right-drag or Shift-drag to pan. The view buttons give you fixed anatomical angles. The camera Home button restores the starting view. Reset (R) also clears selection, search and filters, restores layers and opacity, and returns labels to your default setting.</p></div><dl><div><dt>Focus selection</dt><dd><kbd>F</kbd></dd></div><div><dt>Toggle labels</dt><dd><kbd>L</kbd></dd></div><div><dt>Reset model</dt><dd><kbd>R</kbd></dd></div></dl></section>
       <p class="intro-scope">Fabrica uses static, simplified study models. Available facts and attachments vary by structure; attachment footprints are illustrative. The <a href="#/credits">sources and credits</a> explain the model origins and adaptations.</p>
     </main>` : `
     <main id="intro-main" class="intro-main">
-      <section class="intro-hero" aria-labelledby="intro-headline"><div class="intro-hero-copy"><p class="intro-eyebrow"><span aria-hidden="true"></span> An interactive anatomy browser</p><h1 id="intro-headline"><span class="intro-headline-line">Anatomy you can</span><br/>take apart.</h1><p class="intro-lead">Explore structures in 3D, layer by layer. A place to study anatomy, or show a patient how things fit together.</p><div class="intro-cta"><a class="intro-button intro-button-primary" href="#/browser">Start exploring ${arrow}</a><p class="intro-desktop-note">The 3D viewer runs on a computer, not a phone. Open Fabrica on a desktop to start exploring.</p><a class="intro-button intro-button-secondary" href="#/how-it-works">How it works</a></div></div>${modelPreview()}</section>
+      <section class="intro-hero" aria-labelledby="intro-headline"><div class="intro-hero-copy"><p class="intro-eyebrow"><span aria-hidden="true"></span> An interactive anatomy browser</p><h1 id="intro-headline"><span class="intro-headline-line">Anatomy you can</span><br/>take apart.</h1><p class="intro-lead">Explore structures in 3D, layer by layer. A place to study anatomy, or show a patient how things fit together.</p><div class="intro-cta"><a class="button lg primary" href="#/browser">Start exploring ${arrow}</a><p class="intro-desktop-note">The 3D viewer runs on a computer, not a phone. Open Fabrica on a desktop to start exploring.</p><a class="button lg" href="#/how-it-works">How it works</a></div></div>${modelPreview()}</section>
       <section class="intro-features" aria-labelledby="intro-features-heading"><div class="intro-section-heading"><p class="intro-eyebrow">What you can do</p><h2 id="intro-features-heading">Do all of this, on every region.</h2></div>${regionsBox()}</section>
       ${renderStudyTools()}
     </main>`}${footer()}</div>`;
