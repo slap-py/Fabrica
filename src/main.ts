@@ -86,11 +86,14 @@ app.innerHTML = `
   <div id="render-error" hidden></div>
   <div id="graphics-prompt" class="graphics-prompt" role="status" hidden><p>The 3D view is running slowly on this device.</p><button data-graphics-prompt="low" class="tool-button active">Use Low graphics</button><button data-graphics-prompt="keep" class="tool-button">Keep High</button></div>
 </section>
-<aside class="panel inspector" aria-label="Details and layers">
+<div class="inspector-stack">
+<aside class="panel inspector" aria-label="Structure details">
   <div class="inspector-resize" role="separator" aria-orientation="vertical" aria-label="Resize details panel" tabindex="0" aria-valuemin="280" aria-valuemax="680"></div>
   <button id="expand-inspector" class="icon-button" aria-pressed="false" title="Expand details panel" aria-label="Expand details panel">↔</button>
   <button id="clear" class="icon-button" aria-label="Clear selection" title="Clear selection">${icon.close}</button>
   <div id="details" class="details" aria-live="polite"></div>
+</aside>
+<aside class="panel layers-panel" aria-label="Layers">
   <section class="layer-section">
     <div class="section-heading"><h2>Layers</h2><button id="all-layers" class="link-button">Show all</button></div>
     <div id="layers"></div>
@@ -99,7 +102,7 @@ app.innerHTML = `
     <div class="slider-row"><label for="opacity">Muscle</label><input id="opacity" type="range" min="10" max="100" value="100"/><output id="opacity-value">100%</output></div>
     <div class="slider-row"><label for="dim-opacity" title="How visible other structures stay while something is selected">Others</label><input id="dim-opacity" type="range" min="0" max="100" value="50"/><output id="dim-opacity-value">50%</output></div>
     <div class="slider-row"><label for="skin-opacity">Skin</label><input id="skin-opacity" type="range" min="0" max="100" value="100"/><output id="skin-opacity-value">100%</output></div>
-    <div id="neurovascular-opacity-controls" hidden><div class="slider-row"><label for="neurovascular-opacity">Vessels &amp; nerves</label><input id="neurovascular-opacity" type="range" min="10" max="100" value="100"/><output id="neurovascular-opacity-value">100%</output></div></div>
+    <div id="neurovascular-opacity-controls"><div class="slider-row"><label for="neurovascular-opacity">Vessels &amp; nerves</label><input id="neurovascular-opacity" type="range" min="10" max="100" value="100"/><output id="neurovascular-opacity-value">100%</output></div></div>
     <p id="neurovascular-status" role="status" hidden></p>
     <div class="section-control" role="group" aria-labelledby="section-heading">
       <p class="setting-title" id="section-heading">Section</p>
@@ -112,6 +115,7 @@ app.innerHTML = `
   </section>
   <p id="layer-hint" class="layer-hint"></p>
 </aside>
+</div>
 </main>
 <dialog id="about-dialog" aria-labelledby="about-title"><button class="dialog-close icon-button" aria-label="Close model information">${icon.close}</button><h2 id="about-title">${pack.about.title}</h2>
 <div class="about-tabs" role="tablist" aria-label="About sections">${[['overview','Overview'],['controls','Controls'],['settings','Settings']].map(([id,name])=>`<button id="about-tab-${id}" role="tab" data-about-tab="${id}" aria-controls="about-panel-${id}" aria-selected="${id==='overview'}" tabindex="${id==='overview'?0:-1}">${name}</button>`).join('')}</div>
@@ -267,11 +271,72 @@ function toggleNeighbors(related: string[]) {
   renderDetails();
   updateAppearance();
 }
+let inspectorShownId: string | null = null;
+const INSPECTOR_CLOSE_MS = 200;
+const EMPTY_INSPECTOR_HTML = `<p class="empty-inspector">Click a structure to see more information.</p>`;
+let inspectorCloseTimer: number | undefined;
+let inspectorCloseAnims: Animation[] = [];
+/** Height the box settles at with the prompt showing, measured on an offscreen copy. */
+function restingInspectorHeight(box: HTMLElement) {
+  const probe = box.cloneNode(true) as HTMLElement;
+  probe.classList.remove("inspector--open");
+  probe.classList.add("inspector--empty");
+  probe.querySelector("#details")!.innerHTML = EMPTY_INSPECTOR_HTML;
+  probe.style.cssText = `position:absolute;visibility:hidden;width:${box.offsetWidth}px`;
+  box.parentElement!.append(probe);
+  const height = probe.offsetHeight;
+  probe.remove();
+  return height;
+}
+function stopInspectorClose() {
+  inspectorCloseAnims.forEach(animation => animation.cancel());
+  inspectorCloseAnims = [];
+}
 function renderDetails() {
+  const box = $(".inspector");
+  const selectedNow = state.selected ? byId[state.selected] : null;
+  // Clearing the selection shrinks the box down to the prompt's height while the old content fades,
+  // then swaps to the prompt. The box is bottom-anchored, so the top edge is what travels down.
+  if (!selectedNow && inspectorShownId !== null && inspectorCloseTimer === undefined) {
+    inspectorShownId = null;
+    const details = $("#details");
+    const fromHeight = box.offsetHeight;
+    const restHeight = restingInspectorHeight(box);
+    const duration = matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : INSPECTOR_CLOSE_MS;
+    inspectorCloseAnims = [
+      box.animate([
+        { clipPath: "inset(-48px -48px -48px -48px)" },
+        { clipPath: `inset(${Math.max(0, fromHeight - restHeight)}px -48px -48px -48px)` },
+      ], { duration, easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards" }),
+      details.animate([{ opacity: 1 }, { opacity: 0 }], { duration, easing: "ease-in", fill: "forwards" }),
+    ];
+    inspectorCloseTimer = window.setTimeout(() => {
+      inspectorCloseTimer = undefined;
+      stopInspectorClose();
+      renderDetails();
+      $("#details").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: "ease-out" });
+    }, duration);
+    return;
+  }
+  if (selectedNow && inspectorCloseTimer !== undefined) {
+    // A new structure arrived mid-close: cancel the pending swap and open straight to it.
+    clearTimeout(inspectorCloseTimer);
+    inspectorCloseTimer = undefined;
+    stopInspectorClose();
+  }
+  if (!selectedNow && inspectorCloseTimer !== undefined) return;
   const attachmentsOpen = app.querySelector<HTMLDetailsElement>(".attachment-details")?.open ?? false;
-  const d = state.selected ? byId[state.selected] : null;
+  const d = selectedNow;
   $("#clear").style.visibility = d ? "visible" : "hidden";
   $(".inspector").classList.toggle("inspector--empty", !d);
+  $<HTMLElement>("#expand-inspector").hidden = !d;
+  // Re-run the reveal whenever a structure is selected.
+  if ((d?.id ?? null) !== inspectorShownId) {
+    inspectorShownId = d?.id ?? null;
+    box.classList.remove("inspector--open");
+    void box.offsetWidth;
+    box.classList.add("inspector--open");
+  }
   if (d && state.multi.length > 1) {
     const picked = state.multi.map(id => byId[id]);
     $("#details").innerHTML =
@@ -285,17 +350,20 @@ function renderDetails() {
   }
   if (!d) {
     $("#details").innerHTML =
-      `<p class="empty-inspector">Select a structure to see details.</p>`;
+      EMPTY_INSPECTOR_HTML;
   } else {
     const coverage = pack.structureRegions?.[d.id];
     const spansRegions = coverage && coverage.length > 1 && isNeurovascular(d.tissue);
     const regionNote = spansRegions
       ? '<p class="structure-coverage">Spans ' + coverage.map(escapeHtml).join(' + ') + '</p>' : '';
     const articulations = d.tissue === 'bone' ? [...relatedIds(d.id)].filter(id=>byId[id].tissue==='bone').map(id=>byId[id].name) : d.articulations;
-    const facts = [['Origin',d.origin],['Insertion',d.insertion],['Action',d.action],['Innervation',d.innervation],['Blood supply',d.bloodSupply],['Articulations',articulations?.join(', ')]];
+    const facts = [['Action',d.action],['Origin',d.origin],['Insertion',d.insertion],['Innervation',d.innervation],['Blood supply',d.bloodSupply],['Articulations',articulations?.join(', ')]];
     const quickFacts = facts.filter(([,value])=>value).map(([name,value])=>`<dt>${name}</dt><dd>${escapeHtml(value!)}</dd>`).join('');
+    // Only combined views have several regions to name in the header tag.
+    const multiRegion = (pack.regionIds?.length ?? 0) > 1;
+    const tagRegion = multiRegion ? `${spansRegions ? 'Across regions' : d.region} · ` : '';
     $("#details").innerHTML =
-      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${spansRegions ? 'Across regions' : d.region} · ${d.tissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p>${regionNote}<div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content">${quickFacts ? `<section class="quick-facts"><h3>Quick facts</h3><dl>${quickFacts}</dl></section>` : ''}<section class="structure-description"><h3>Description</h3><p>${escapeHtml(d.description)}</p></section></div>`;
+      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${tagRegion}${d.tissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p>${regionNote}<div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content"><section class="structure-description"><h3>Description</h3><p>${escapeHtml(d.description)}</p></section>${quickFacts ? `<section class="quick-facts"><dl>${quickFacts}</dl></section>` : ''}</div>`;
     $("#isolate").onclick = toggleIsolate;
     $("#focus-selected").onclick = () => focusParts(focusIds());
     const connections = connectionsFor(leg.parts, d.id);
@@ -352,7 +420,7 @@ function renderDetails() {
     $("#show-connections").onclick = () => toggleNeighbors(related);
     if (related.length) {
       const links = document.createElement("details");
-      links.open = true;
+      links.open = false;
       links.className = "connection-links";
       links.innerHTML =
         "<summary>Related structures</summary>";
@@ -400,7 +468,9 @@ let neurovascularRequest: Promise<void> | undefined;
 function ensureNeurovascular(): Promise<void> {
   if (neurovascularRequest) return neurovascularRequest;
   viewport.dataset.neurovascularAssets='loading';
-  const status=$('#neurovascular-status');status.hidden=false;status.textContent='Loading vessels and nerves…';
+  // Show loading in the slider readout: adding a status line here would resize the layers box.
+  const status=$('#neurovascular-status');
+  $('#neurovascular-opacity-value').textContent='Loading…';
   neurovascularRequest=scope.track(loadNeurovascularAssets(leg.parts,pack.assets.neurovascular,createAssetSceneLoader(scope.signal),bvhBuilder())).then(report=>{
     if (disposed) return;
     viewport.dataset.neurovascularAssets=report.fallback.length ? 'fallback' : 'ready';
@@ -411,6 +481,7 @@ function ensureNeurovascular(): Promise<void> {
       toggle.disabled=!available;
       if (!available) state.layers.delete(tissue);
     }
+    $('#neurovascular-opacity-value').textContent=`${Math.round(state.neurovascularOpacity*100)}%`;
     status.hidden=!report.fallback.length;
     status.textContent=report.fallback.length ? 'Some vessels or nerves are unavailable. Missing structures are hidden; reload to retry.' : '';
     for(const warning of report.warnings) console.warn(warning);
@@ -749,9 +820,12 @@ function resize() {
   invalidate();
   camera.aspect = w / h;
   // On wide layouts the inspector floats over the canvas; centre the model in the free area.
-  const covered = innerWidth > 900 ? $(".inspector").offsetWidth + parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap") || "12") : 0;
-  setInspectorInset(camera, w, h, covered);
-  $('.compass-wrap').classList.toggle('compass--raised',innerWidth>900 && w-covered<530);
+  // The canvas runs under the atlas as well, so the model is centred between the two boxes.
+  const gap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap") || "12");
+  const rightCovered = innerWidth > 900 ? $(".inspector-stack").offsetWidth + gap : 0;
+  const leftCovered = innerWidth > 900 ? $(".atlas").offsetWidth + 2 * gap : 0;
+  setInspectorInset(camera, w, h, rightCovered - leftCovered);
+  $('.compass-wrap').classList.toggle('compass--raised',innerWidth>900 && w-rightCovered-leftCovered<530);
 }
 const resizeObserver = new ResizeObserver(() => { if (!disposed) resize(); });
 resizeObserver.observe(viewport);
@@ -931,7 +1005,6 @@ function updateAppearance() {
   }
   if (neurovascularTissues.some(t => state.layers.has(t))) void ensureNeurovascular();
   ensureLayerAssets();
-  $("#neurovascular-opacity-controls").hidden = !neurovascularTissues.some(t => state.layers.has(t));
   cutAwayDirty = !!state.focusedConnection;
   const attached = state.attachmentFade && state.selected ? directlyAttachedIds(state.selected) : new Set<string>();
   const highlighted = selectedConnectionHighlights();
@@ -1517,7 +1590,7 @@ function frame(time: number) {
   labelsDirty = false;
   labelsAnimating = labelNodes.some(l => l.retiringAt !== undefined);
   const occupied: {x:number;y:number;w:number;h:number}[]=[];
-  const labelInset=innerWidth>900?$('.inspector').offsetWidth+12:0;
+  const labelInset=innerWidth>900?$('.inspector-stack').offsetWidth+12:0;
   const freeWidth=Math.max(100,viewport.clientWidth-labelInset), height=viewport.clientHeight;
   const leaders=$<HTMLElement>('.label-leaders');leaders.setAttribute('viewBox',`0 0 ${viewport.clientWidth} ${height}`);leaders.replaceChildren();
   for(let i=labelNodes.length-1;i>=0;i--){const label=labelNodes[i];if(label.retiringAt!==undefined&&time>=label.retiringAt){label.node.remove();labelNodes.splice(i,1);}}
