@@ -29,7 +29,7 @@ try {
       await page.setViewportSize({ width, height: 1000 });
       await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(image => image.offsetParent !== null).map(image => image.decode())); });
       const layout = await page.evaluate(() => {
-        const header = [...document.querySelector('.intro-header').children].map(el => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom }; });
+        const header = [...document.querySelector('.site-header-inner').children].map(el => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom }; });
         const overlaps = header.some((a, i) => header.slice(i + 1).some(b => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom));
         const visibleModel = [...document.querySelectorAll('[data-preview-view="anatomy"] img')].filter(el => getComputedStyle(el).display !== 'none');
         return { width: innerWidth, scrollWidth: document.documentElement.scrollWidth, overlaps, visibleModels: visibleModel.length, modelSrc: visibleModel[0]?.getAttribute('src') };
@@ -74,7 +74,7 @@ try {
     await page.setViewportSize({ width, height: 1000 });
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Browser still fits ' + width + 'px');
   }
-  await page.locator('.hub-brand').click();
+  await page.locator('.site-brand').click();
   await page.locator('.intro-hero').waitFor();
   assert.deepEqual(requests.filter(url => /\.glb(?:[?#]|$)|\/src\/main\.ts/.test(url)), []);
   checks.push('Introduction, guide, credits, and browser stay lightweight until a region is opened');
@@ -91,7 +91,7 @@ try {
   await page.locator('.site-nav a[href="#/browser"]').click();
   await page.locator('.body-map').waitFor();
   assert.equal(new URL(page.url()).hash, '#/browser');
-  await page.locator('.hub-brand').click();
+  await page.locator('.site-brand').click();
   await page.locator('.intro-hero').waitFor();
   assert.equal(await page.evaluate(() => window.__viewerDiagnostics.activeViewers), 0);
   await page.goBack(); await page.locator('.body-map').waitFor();
