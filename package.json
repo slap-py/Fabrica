@@ -7,7 +7,8 @@
     "dev": "vite --host 0.0.0.0 --port 5174",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 5174",
-    "test": "vitest run"
+    "test": "vitest run",
+    "package": "npm run build && node scripts/package-release.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
@@ -20,6 +21,8 @@
     "@playwright/test": "^1.55.1",
     "@types/node": "^26.6.4",
     "@types/three": "0.179.0",
+    "fflate": "0.8.3",
+    "meshoptimizer": "0.22.0",
     "typescript": "~5.9.2",
     "vite": "^7.1.7",
     "vitest": "^4.1.11"

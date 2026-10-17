@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+const createGltfLoader = () => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 import { structures, colors, byId, type Structure, type Tissue } from "./data";
 import { enableMeshPicking, type BvhBuilder } from "./picking";
 import type { createAnkle } from "./ankle";
@@ -215,7 +217,7 @@ const importedMuscleIds = muscleIds.filter(id => id !== "gastrocnemius");
 export async function loadBoneAssets(
   parts: Parts,
   url = `${import.meta.env.BASE_URL}models/bones.glb`,
-  loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene,
+  loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene,
   onProgress?: (loaded: number, total: number) => void,
   bvh?: BvhBuilder,
 ): Promise<AssetReport> {
@@ -229,12 +231,12 @@ export async function loadBoneAssets(
 
 export const installBoneAssets = (scene: THREE.Object3D, parts: Parts) => installAssets(scene, parts, boneIds, 'bone');
 export const installMuscleAssets = (scene: THREE.Object3D, parts: Parts) => installAssets(scene, parts, importedMuscleIds, 'muscle');
-export async function loadMuscleAssets(parts: Parts, url = `${import.meta.env.BASE_URL}models/muscles.glb`, loadScene: (url:string)=>Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene, onProgress?: (loaded:number,total:number)=>void, bvh?: BvhBuilder):Promise<AssetReport> {
+export async function loadMuscleAssets(parts: Parts, url = `${import.meta.env.BASE_URL}models/muscles.glb`, loadScene: (url:string)=>Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene, onProgress?: (loaded:number,total:number)=>void, bvh?: BvhBuilder):Promise<AssetReport> {
   try { return await install(await loadScene(url), parts, importedMuscleIds, 'muscle', bvh); }
   catch(error) { return {loaded:[], fallback:[...importedMuscleIds], warnings:[`Muscle asset unavailable: ${String(error)}`]}; }
 }
 
-export async function loadExteriorAssets(parts: Parts, onProgress?: (loaded:number,total:number)=>void, bvh?: BvhBuilder, url = `${import.meta.env.BASE_URL}models/exterior.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene): Promise<AssetReport> {
+export async function loadExteriorAssets(parts: Parts, onProgress?: (loaded:number,total:number)=>void, bvh?: BvhBuilder, url = `${import.meta.env.BASE_URL}models/exterior.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded,e.total))).scene): Promise<AssetReport> {
   try { return await install(await loadScene(url), parts, exteriorIds, 'skin', bvh); }
   catch(error) { return {loaded:[],fallback:[...exteriorIds],warnings:[`Exterior asset unavailable: ${String(error)}`]}; }
 }
@@ -259,7 +261,7 @@ export const installNeurovascularAssets = (scene: THREE.Object3D, parts: Parts) 
 export async function loadNeurovascularAssets(
   parts: Parts,
   url = `${import.meta.env.BASE_URL}models/neurovascular.glb`,
-  loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path)).scene,
+  loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path)).scene,
   bvh?: BvhBuilder,
 ): Promise<AssetReport> {
   try { return markNeurovascular(await install(await loadScene(url), parts, neurovascularIds, 'artery', bvh), parts); }
@@ -335,13 +337,13 @@ export interface RegionAssetLoaders {
 /** Create asset loaders isolated to one region's structures and asset groups. */
 export function createRegionAssetLoaders(regionStructures: readonly Structure[], assetGroups: RegionAssetGroups): RegionAssetLoaders {
   const lookup = Object.fromEntries(regionStructures.map(structure => [structure.id, structure])) as StructureLookup;
-  const loadBone = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/bones.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder) =>
+  const loadBone = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/bones.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder) =>
     loadRegionalGroup(parts, assetGroups.bones, "bone", url, loadScene, onProgress, bvh, lookup, "Bone");
-  const loadMuscle = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/muscles.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder) =>
+  const loadMuscle = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/muscles.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder) =>
     loadRegionalGroup(parts, assetGroups.muscles, "muscle", url, loadScene, onProgress, bvh, lookup, "Muscle");
-  const loadExterior = async (parts: Parts, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder, url = `${import.meta.env.BASE_URL}models/exterior.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene) =>
+  const loadExterior = async (parts: Parts, onProgress?: (loaded: number, total: number) => void, bvh?: BvhBuilder, url = `${import.meta.env.BASE_URL}models/exterior.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path, e => onProgress?.(e.loaded, e.total))).scene) =>
     loadRegionalGroup(parts, assetGroups.exterior, "skin", url, loadScene, onProgress, bvh, lookup, "Exterior");
-  const loadNeurovascular = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/neurovascular.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await new GLTFLoader().loadAsync(path)).scene, bvh?: BvhBuilder) => {
+  const loadNeurovascular = async (parts: Parts, url = `${import.meta.env.BASE_URL}models/neurovascular.glb`, loadScene: (url: string) => Promise<THREE.Object3D> = async path => (await createGltfLoader().loadAsync(path)).scene, bvh?: BvhBuilder) => {
     const report = await loadRegionalGroup(parts, assetGroups.neurovascular, "artery", url, loadScene, undefined, bvh, lookup, "Neurovascular");
     return markNeurovascular(report, parts, assetGroups.neurovascular);
   };
@@ -357,7 +359,7 @@ export function createAssetSceneLoader(signal: AbortSignal, onProgress?: (loaded
     if (!response.ok) throw new Error(`Asset fetch failed: ${response.status}`);
     const bytes = await readAssetBytes(response, signal, onProgress);
     signal.throwIfAborted();
-    const gltf = await new GLTFLoader().parseAsync(bytes, new URL('.', new URL(url, location.href)).href);
+    const gltf = await createGltfLoader().parseAsync(bytes, new URL('.', new URL(url, location.href)).href);
     if (signal.aborted) {
       gltf.scenes.forEach(disposeObject);
       signal.throwIfAborted();
