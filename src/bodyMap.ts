@@ -18,7 +18,7 @@ const segmentOrder: readonly Segment[] = ['arm-back', 'hip-leg', 'foot-ankle'];
 const segmentTitles: Record<Segment, string> = { 'arm-back': 'Arm', back: 'Back · both sides', 'hip-leg': 'Hip & Upper Leg', 'foot-ankle': 'Lower Leg & Foot' };
 const segmentRegions: Record<Side, Record<Segment, string | null>> = {
   right: { back: 'back', 'arm-back': 'right-arm', 'hip-leg': 'right-upper-leg', 'foot-ankle': 'lower-leg' },
-  left: { back: 'back', 'arm-back': null, 'hip-leg': 'left-upper-leg', 'foot-ankle': 'left-lower-leg' },
+  left: { back: 'back', 'arm-back': 'left-arm', 'hip-leg': 'left-upper-leg', 'foot-ankle': 'left-lower-leg' },
 };
 const comingSoonCopy: Record<Segment, string> = {
   back: 'Posterior neck, both sides of the back, spine and sacrum.',
@@ -36,21 +36,20 @@ const sectionById = new Map(bodySections.map(section => [section.id, section]));
 export const sectionForRegion = (regionId: string) => bodySections.find(section => section.regionId === regionId);
 const catalogFor = (section: BodySection): RegionCatalogEntry | undefined => regionCatalog.find(region => region.id === section.regionId);
 
-/** A selection is valid when it is empty, or one side's sections form an unbroken chain. */
+/** Explore both arms and Back together, or an unbroken chain of one leg's sections. */
 export function isValidSelection(ids: readonly string[]) {
   const sections = ids.map(id => sectionById.get(id));
   if (new Set(ids).size !== ids.length) return false;
   if (ids.length > MAX_SELECTED_SECTIONS) return false;
   if (sections.some(section => !section?.regionId)) return false;
   const upper = sections.filter(s=>s?.segment === 'arm-back' || s?.segment === 'back');
-  if (upper.length) return upper.length === sections.length && upper.filter(s=>s?.segment === 'arm-back').length <= 1;
+  if (upper.length) return upper.length === sections.length;
   if (new Set(sections.map(section => section!.side)).size > 1) return false;
   const steps = [...new Set(sections.map(section => segmentOrder.indexOf(section!.segment)))].sort((a, b) => a - b);
   return steps.every((step, index) => index === 0 || step === steps[index - 1] + 1);
 }
 
 export function toggleSection(selected: readonly string[], id: string) {
-  if (!selected.includes(id) && sectionById.get(id)?.segment === 'arm-back') return [...selected.filter(item=>sectionById.get(item)?.segment !== 'arm-back'),id];
   return toggleRegion(selected,id);
 }
 

@@ -29,10 +29,11 @@ The dev server uses http://127.0.0.1:5174. Every `scripts/*-browser-check.mjs` a
 - Search names, anatomical groups, and descriptions. Tissue chips are independent multi-select filters; cartilage is excluded from the list by default. The Area dropdown filters leg, ankle/heel, midfoot, and individual toes. “Only visible layers” follows your layer switches. Clear filters restores the defaults.
 - Tissue sections can be collapsed; their state is saved locally. A selected structure remains temporarily listed even when filtered out. Selection from the model expands its section and scrolls the row into view. Use ↑/↓ and Enter within the list.
 - Labels start on. The overview displays major landmarks; zooming closer reveals regional and smaller structures. Overlapping automatic labels are omitted, leader lines connect labels to their anchors, and hidden or faded structures below 50% opacity are excluded. Selection and hover take priority.
-- Select a structure for Focus, Isolate, Neighbors, description, function, attachments, related structures, and applicable references. All 13 muscles include sourced origin, insertion, action, innervation, and blood supply. The 49 neurovascular entries each have two short, individually sourced facts. Bone articulations are computed from the existing relationship graph.
+- Neighbors temporarily enables hidden tissue layers needed by related structures. Turning it off, clearing/changing the selection, opening an attachment close-up or using Isolate restores those layers; explicit manual layer changes are preserved.
+- Select a structure for Focus, Isolate, Neighbors, description, function, attachments, related structures, and applicable references. All 13 muscles include sourced origin, insertion, action, innervation, and blood supply. The 49 neurovascular entries each have two short, individually sourced facts. Arm/back bone articulations use an explicit joint graph; muscle attachment hosts remain separate related structures.
 - Drag the inspector's left edge to resize it from 280–680px. Its focused handle responds to ←/→ in 24px steps. Expand switches to 640px and restores your saved width. Wider panels arrange facts and descriptive text in two columns. The empty inspector shows only a prompt and Layers.
 - Highlight connections colors modeled attachments in teal and temporarily reveals hidden connected layers. Focus frames the selected connection set. Isolate takes precedence. Reset turns highlighting off.
-- In Attachments, select a card to focus its footprint. Surrounding anatomy fades; camera-aware cutaways follow the close-up. Select again to return, or press Escape to restore surroundings and clear selection. Footprint extents are illustrative.
+- Attachments includes only loaded surface contacts or continuous modeled attachment paths. Duplicate cards at the same site are collapsed; distinct footprints remain selectable. Anatomical origin/insertion facts and Related structures retain broader relationships when a connection is absent from the model. Select a card to focus its footprint. Surrounding anatomy fades; camera-aware cutaways follow the close-up. Select again to return, or press Escape to restore surroundings and clear selection. Footprint extents are illustrative.
 - Drag to orbit, right-drag or Shift-drag to pan, and scroll/pinch to zoom. The anatomical compass and five view buttons provide fixed views. **1–5** select Overview, Dorsal, Plantar, Medial, Lateral; **P** toggles pan, **F** focuses, **L** toggles labels, **R** resets. Canvas arrow keys pan.
 - About has Overview, Controls, and Sources & credits tabs with arrow-key navigation. Below 700px, topbar actions appear in the ⋯ menu. Below 900px, panels move beneath the canvas.
 
@@ -221,17 +222,35 @@ After publishing the base skin and writing its acceptance reports, run `python s
 The surface uses seam-free object-space variation with restrained warm mottling, varied roughness and fine bump relief. Fine detail fades with the pixel footprint to prevent distant shimmer. Caps keep their flat cut-face shading and receive no pores. No additional textures or runtime dependencies are required. `node scripts/skin-natural-browser-check.mjs after` captures both sides, the thigh close-up, transparency and caps; `VIEWER_URL` can select a production preview.
 
 
-## Right Arm and Back
+## Arms and Back
 
-Right Arm (`#/right-arm`) covers shoulder, upper arm, elbow, forearm, wrist and hand.
-Back (`#/back`) covers both sides from posterior neck through the lower back and
-sacrum. Select either region or both in the body map or the viewer region menu.
-Leg selections retain their existing same-side neighboring-section rules;
-Arm/Back are explored separately from the leg selections. The shared selection
-model reserves `left-arm`: selecting an arm replaces the other while preserving
-Back. Left Arm has no assets or catalog entry in this release.
+Right Arm (`#/right-arm`) and Left Arm (`#/left-arm`) cover the shoulder,
+upper arm, elbow, forearm, wrist and hand. Back (`#/back`) covers both sides
+from posterior neck through the lower back and sacrum. Select either arm,
+both arms, or both arms and Back in the body map.
+The three-region view is titled **Both Arms & Back**. Leg selections retain
+their existing same-side neighboring-section rules.
 
-Both packs use the same pinned Z-Anatomy/BodyParts3D source as the legs,
+Both arms have 357 structures, including 61 muscles and 32 bones. Their
+educational fields, notes, clinical text, references and same-side relationships
+come from the same templates and are checked for parity across every structure.
+The left arm uses native `.l` source objects in `public/models/left-arm/`.
+It is not reflected geometry. Shared left shoulder structures reuse Back's
+canonical identity and existing metadata; each shared structure renders once.
+The full three-region view contains 969 unique source structures.
+
+To reproduce the native left export after the source inventory is available,
+run `blender --background --python scripts/prepare-left-arm.py`. This reuses
+the original preparation/export pipeline without rewriting the right-arm/back
+assets. The separate left inventory and manifest record the six empty source
+material parts and source attachment candidates. `anatomyManifest.ts` merges
+region membership while preserving original Back records and patch decisions.
+`tests/left-arm.test.ts` checks note parity, asset checksums/bounds, source audit
+preservation, camera orientation, selection transfer and shared mesh ownership.
+`node scripts/left-arm-browser-check.mjs` checks the actual viewer and regenerates
+the left-arm thumbnails; `VIEWER_URL` selects the local preview URL.
+
+All three packs use the same pinned Z-Anatomy/BodyParts3D source as the legs,
 revision `b722f392d2b09d21f0527229fe1338f27a3bc04e`. The canonical shared bundle
 is in `public/models/arm-back/`. Complete source meshes retain their alignment,
 with no reflection or regional cuts. Source-world origin and the established
@@ -263,7 +282,7 @@ nerves remain off until requested. Available muscle origin/insertion patches
 provide focus cards only when the host bone family matches reviewed UAMS
 anatomy tables. The manifest retains 141 withheld proximity candidates and
 38 accepted focus patches. Footprint extents remain illustrative; partial
-patches are not presented as exhaustive clinical origin/insertion facts. Full clinical muscle facts are not available for all entries.
+patches are not presented as exhaustive clinical origin/insertion facts. All 131 source-classified muscle records now have structured study facts; source taxonomy and unresolved educational exceptions are documented below.
 Shared source objects keep one canonical ID and their original laterality,
 with stable selection aliases between the single and combined views.
 
@@ -290,3 +309,16 @@ checks export hashes, inventory accounting, shared mesh ownership, selection
 transfer, missing-asset hiding, arm replacement and spinal-cord exclusion.
 See `validation/arm-back-browser-check.json` for interaction checks and local
 frame measurements against the existing leg/foot viewer.
+
+
+## Arm/back educational information — October 11, 2026
+
+The 651 canonical arm/back records share one information dataset independent of region membership. `src/regions/arm-back/muscleFacts.ts` provides descriptions, anatomical groups, origin, insertion, action, innervation, blood supply and references for all 131 source-classified muscle records. This includes 128 contractile muscle components and three explicitly noncontractile source taxonomy exceptions: both wrist retinacula and the superficial transverse metacarpal ligament. Bilateral facts are reused while laterality, named subdivisions and grouped nerve territories remain explicit.
+
+`supportFacts.ts` covers all 520 other records, including separate course and distribution notes with adjacent citations for each of 146 nerves/arteries/veins. Five educational mappings remain unresolved: four source-named wrist ligament bands and the specific median–ulnar communicating variant. Three clinical notes cover median/axillary nerve and scaphoid anatomy. Source provenance remains in the datasets and coverage reports. `studyNotes.ts` adds named joint surfaces, muscle/tendon pathways, cartilage context and connective-tissue attachments. The inspector shows citations beside these fields and qualifications for grouped cartilage, parent-derived tendon facts and ambiguous source names. Noncontractile taxonomy exceptions show applicable anatomical labels and fields while retaining their source layer. All arm/back note templates were checked against anatomical sources; detailed corrections and review limits are documented in the source review.
+
+`relationships.ts` supplies sourced muscle/tendon/host, neurovascular and connective-tissue connections to Neighbors, related links and highlighting. `joints.ts` supplies actual bone articulations. Cross-region canonical links survive combining packs, including endpoints present only in the other pack. Missing source hosts remain documented rather than receiving invalid links. The 38 reviewed illustrative attachment patches across 24 records are retained; all 141 withheld candidates remain withheld pending independent endpoint/location verification. Written attachments describe typical anatomical pathways; they do not establish individual source-material endpoints.
+
+See the [per-record coverage checklist](validation/arm-back-information-coverage.md), [machine-readable coverage and candidate audit](validation/arm-back-information-coverage.json), and [anatomical source review and discrepancy resolutions](validation/arm-back-anatomical-review.md). Source geometry gaps and empty material parts are listed separately from educational exceptions. Regenerate the report with `node scripts/arm-back-information-report.mjs`; run `node scripts/arm-back-information-browser-check.mjs` against a production preview using `VIEWER_URL` (default port 5187). Detailed verification is in [VALIDATION.md](VALIDATION.md).
+
+Arm/back anatomical areas and descriptions are independent of source view membership. Matching left/right structures and their tendon/cartilage components use the same area; source membership labels are omitted from the inspector. The description-to-facts spacing is compact in both arm/back and leg views.

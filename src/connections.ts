@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { attachmentsFor, type AttachmentRecord } from './attachments';
 import { byId } from './data';
+import { refineAttachmentConnections } from './attachmentConnections';
 import type { AnatomyParts, ResolvedFootprint } from './softTissues';
 
 export type ConnectionEnd = 'from' | 'to';
@@ -37,14 +38,14 @@ export function connectionHighlightIds(id: string) {
 }
 
 export function connectionsFor(parts: AnatomyParts, id: string): Connection[] {
-  return attachmentsFor(id).flatMap(record => {
+  return refineAttachmentConnections(parts, attachmentsFor(id).flatMap(record => {
     const mesh = parts.get(record.structureId)?.meshes.find(m => m.userData.attachmentId === record.id);
     if (!mesh) return [];
     return (['from', 'to'] as const).map(end => ({
       key: `${record.id}:${end}`, record, end,
       footprint: mesh.userData[`${end}Footprint`] as ResolvedFootprint,
     })).filter(c => !!c.footprint);
-  });
+  }));
 }
 
 /** A clipped decal follows the actual bone triangles, never the label centroid. */

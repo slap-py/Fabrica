@@ -4,7 +4,7 @@ from collections import Counter
 from pathlib import Path
 globals().update(bpy.app.driver_namespace['muscle_map_arm_back_export'])
 assert not failures, failures
-out=ROOT/'public/models/arm-back';out.mkdir(parents=True,exist_ok=True)
+out=ROOT/f'public/models/{outputName}';out.mkdir(parents=True,exist_ok=True)
 exports=[]
 for group,items in objects.items():
  bpy.ops.object.select_all(action='DESELECT')
@@ -17,8 +17,8 @@ manifest={**inventory,'structures':records,'failedImports':failures,'emptySource
 manifest['attachmentValidation']={'acceptedFocusPatches':sum(len(r['sourceAttachments']) for r in records),'withheldCandidatePatches':sum(len(r['unverifiedAttachmentPatches']) for r in records),'references':__import__('arm_back_attachment_rules').REFERENCES,'scope':'Reviewed bone families only; illustrative focus footprints, not exhaustive clinical attachments'}
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
 target=ROOT/'src/regions/arm-back'
-(target/'manifest.json').write_text(json.dumps({'sourceRevision':inventory['sourceRevision'],'structures':records,'dataOnly':inventory['dataOnly'],'gaps':inventory['gaps'],'emptySourceParts':empty,'attachmentValidation':manifest['attachmentValidation']},indent=2))
-for region in ['right-arm','back']:
+(target/('left-manifest.json' if outputName=='left-arm' else 'manifest.json')).write_text(json.dumps({'sourceRevision':inventory['sourceRevision'],'structures':records,'dataOnly':inventory['dataOnly'],'gaps':inventory['gaps'],'emptySourceParts':empty,'attachmentValidation':manifest['attachmentValidation']},indent=2))
+for region in (['left-arm'] if outputName=='left-arm' else ['right-arm','back']):
  included=[r for r in records if region in r['regions']]
  (target/f'{region}-counts.json').write_text(json.dumps({'total':len(included),'byTissue':dict(Counter(r['tissue'] for r in included))},indent=2))
 result={'exported':len(records),'exports':exports,'emptySourceParts':empty,'failedImports':failures}

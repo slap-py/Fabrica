@@ -1,0 +1,14 @@
+{
+  "total": 357,
+  "byTissue": {
+    "muscle": 61,
+    "bone": 32,
+    "tendon": 52,
+    "ligament": 69,
+    "fascia": 7,
+    "cartilage": 35,
+    "nerve": 53,
+    "artery": 31,
+    "vein": 17
+  }
+}

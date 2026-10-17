@@ -36,11 +36,11 @@ describe('right arm and bilateral back',()=>{
   expect(combined.dataOnlyStructures).toHaveLength(1);
   const model=combined.createAnkle();expect(model.parts.has('spinal-cord')).toBe(false);disposeObject(model.root);
  });
- it('reserves the left arm replacement rule while preserving Back and existing region order',()=>{
-  expect(toggleRegion(['right-arm','back'],'left-arm')).toEqual(['back','left-arm']);
-  expect(toggleRegion(['back','left-arm'],'right-arm')).toEqual(['back','right-arm']);
+ it('preserves both arms and Back in selection order',()=>{
+  expect(toggleRegion(['right-arm','back'],'left-arm')).toEqual(['right-arm','back','left-arm']);
+  expect(toggleRegion(['back','left-arm'],'right-arm')).toEqual(['back','left-arm','right-arm']);
   expect(toggleRegion(['back'],'back')).toEqual([]);
-  expect(normalizeRegionSelection(['back','right-arm','left-arm'])).toEqual(['back','left-arm']);
+  expect(normalizeRegionSelection(['back','right-arm','left-arm','right-arm'])).toEqual(['back','right-arm','left-arm']);
  });
  it('transfers shared selection between single and combined scenes',()=>{
   const session:ViewerSession={regionIds:['right-arm'],selectedAliases:selectionAliases(arm,shared),layers:['bone'],atlasTypes:['bone'],atlasRegion:'all',search:'scapula',onlyVisible:false,opacity:1,skinOpacity:1,neurovascularOpacity:1,labels:true,highlightConnections:false,view:'overview',overview:true};
@@ -62,7 +62,7 @@ describe('right arm and bilateral back',()=>{
   const latissimus=manifest.structures.find(r=>r.id==='latissimus-dorsi-muscle-r')!;
   expect(latissimus.sourceAttachments.some(p=>p.end==='to' && p.hostId==='scapula-r')).toBe(false);
   expect(latissimus.unverifiedAttachmentPatches.some(p=>p.end==='to' && p.hostId==='scapula-r')).toBe(true);
-  expect(arm.byId[latissimus.id].insertion).toBeUndefined();
+  expect(arm.byId[latissimus.id].insertion).toContain('humeral');
   expect(manifest.structures.find(r=>r.id==='long-head-of-biceps-brachii-r')!.sourceAttachments.some(p=>p.hostId==='scapula-r')).toBe(true);
  });
  it('loads real aligned assets, renders shared meshes once and keeps missing assets unavailable',async()=>{

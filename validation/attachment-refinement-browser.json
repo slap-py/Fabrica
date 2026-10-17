@@ -1,0 +1,35 @@
+{
+  "checks": [
+    {
+      "region": "lower-leg",
+      "selection": "achilles",
+      "supportedCards": 4
+    },
+    {
+      "region": "left-lower-leg",
+      "selection": "achilles",
+      "supportedCards": 4
+    },
+    {
+      "region": "right-upper-leg",
+      "selection": "femur",
+      "supportedCards": 25
+    },
+    {
+      "region": "left-upper-leg",
+      "selection": "femur",
+      "supportedCards": 25
+    },
+    {
+      "region": "right-arm",
+      "selection": "clavicle-r",
+      "supportedCards": 1
+    },
+    {
+      "region": "back",
+      "selection": "scapula-r",
+      "supportedCards": 8
+    }
+  ],
+  "errors": []
+}

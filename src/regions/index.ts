@@ -21,6 +21,8 @@ export interface RegionPack {
   /** Canonical identity of complete source anatomy, independent of region membership. */
   sceneBoundsMm?: readonly [readonly number[], readonly number[]];
   canonicalStructureIds?: Readonly<Record<string, string>>;
+  /** Full canonical graph, including endpoints available only when another pack is added. */
+  canonicalRelatedIds?: (canonicalId:string) => Set<string>;
   dataOnlyStructures?: readonly { id: string; name: string; visualizationAvailable: false; sourceObjects: readonly string[]; reason: string; sourceReference: string }[];
   /** Source identity joins cropped neurovascular sections on the same side. */
   neurovascularSources?: Readonly<Record<string, string>>;

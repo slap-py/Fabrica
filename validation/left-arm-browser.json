@@ -1,0 +1,28 @@
+{
+  "origin": "http://127.0.0.1:5174",
+  "checks": [
+    "Left arm: native assets, lazy neurovascular loading, five camera views, median-nerve notes, focus and isolation",
+    "Body map opens Left Arm + Back + Right Arm together; both scapulae deduplicate; neurovascular assets and notes load",
+    "Selected left scapula survives navigating between single-arm, both-arm and three-region scenes",
+    "Existing phone-size screen notice fits at 390px without horizontal overflow"
+  ],
+  "errors": [],
+  "dataset": {
+    "graphics": "high",
+    "graphicsChoice": "high",
+    "highlightedStructures": "",
+    "footprints": "0",
+    "focusedConnection": "",
+    "ghost": "false",
+    "cutaway": "",
+    "boneAssets": "ready",
+    "softTissues": "ready",
+    "labelTier": "1",
+    "exteriorAssets": "ready",
+    "loadedMuscles": "180",
+    "cartilagePatches": "166",
+    "loadedBones": "115",
+    "neurovascularAssets": "ready",
+    "loadedNeurovascular": "232"
+  }
+}

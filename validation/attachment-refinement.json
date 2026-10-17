@@ -1,0 +1,3076 @@
+[
+  {
+    "region": "lower-leg",
+    "cards": 150,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "aitfl:anterior-syndesmosis:from",
+        "structure": "aitfl",
+        "host": "tibia"
+      },
+      {
+        "key": "aitfl:anterior-syndesmosis:to",
+        "structure": "aitfl",
+        "host": "fibula"
+      },
+      {
+        "key": "deltoid:tibionavicular:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:tibionavicular:to",
+        "structure": "deltoid",
+        "host": "navicular"
+      },
+      {
+        "key": "deltoid:tibiocalcaneal:to",
+        "structure": "deltoid",
+        "host": "calcaneus"
+      },
+      {
+        "key": "deltoid:tibiospring:to",
+        "structure": "deltoid",
+        "host": "spring"
+      },
+      {
+        "key": "deltoid:deep-anterior-tibiotalar:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:deep-anterior-tibiotalar:to",
+        "structure": "deltoid",
+        "host": "talus"
+      },
+      {
+        "key": "deltoid:deep-posterior-tibiotalar:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:deep-posterior-tibiotalar:to",
+        "structure": "deltoid",
+        "host": "talus"
+      },
+      {
+        "key": "superior-extensor:transverse:from",
+        "structure": "superior-extensor",
+        "host": "fibula"
+      },
+      {
+        "key": "superior-extensor:transverse:to",
+        "structure": "superior-extensor",
+        "host": "tibia"
+      },
+      {
+        "key": "inferior-extensor:superomedial:from",
+        "structure": "inferior-extensor",
+        "host": "calcaneus"
+      },
+      {
+        "key": "inferior-extensor:superomedial:to",
+        "structure": "inferior-extensor",
+        "host": "tibia"
+      },
+      {
+        "key": "flexor-retinaculum:tarsal-tunnel:from",
+        "structure": "flexor-retinaculum",
+        "host": "tibia"
+      },
+      {
+        "key": "flexor-retinaculum:tarsal-tunnel:to",
+        "structure": "flexor-retinaculum",
+        "host": "calcaneus"
+      },
+      {
+        "key": "atfl:anterior-talofibular:from",
+        "structure": "atfl",
+        "host": "fibula"
+      },
+      {
+        "key": "atfl:anterior-talofibular:to",
+        "structure": "atfl",
+        "host": "talus"
+      },
+      {
+        "key": "cfl:calcaneofibular:from",
+        "structure": "cfl",
+        "host": "fibula"
+      },
+      {
+        "key": "cfl:calcaneofibular:to",
+        "structure": "cfl",
+        "host": "calcaneus"
+      },
+      {
+        "key": "ptfl:posterior-talofibular:from",
+        "structure": "ptfl",
+        "host": "fibula"
+      },
+      {
+        "key": "ptfl:posterior-talofibular:to",
+        "structure": "ptfl",
+        "host": "talus"
+      },
+      {
+        "key": "superior-fibular:retromalleolar:from",
+        "structure": "superior-fibular",
+        "host": "fibula"
+      },
+      {
+        "key": "superior-fibular:retromalleolar:to",
+        "structure": "superior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "dorsal-talonavicular:dorsal:from",
+        "structure": "dorsal-talonavicular",
+        "host": "talus"
+      },
+      {
+        "key": "dorsal-talonavicular:dorsal:to",
+        "structure": "dorsal-talonavicular",
+        "host": "navicular"
+      },
+      {
+        "key": "achilles:common-calcaneal:from",
+        "structure": "achilles",
+        "host": "soleus-distal"
+      },
+      {
+        "key": "achilles:common-calcaneal:to",
+        "structure": "achilles",
+        "host": "calcaneus"
+      },
+      {
+        "key": "deltoid:tibiocalcaneal:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "spring:superomedial:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:superomedial:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "spring:medioplantar-oblique:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:medioplantar-oblique:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "spring:inferoplantar-longitudinal:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:inferoplantar-longitudinal:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "short-plantar:plantar-calcaneocuboid:from",
+        "structure": "short-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "short-plantar:plantar-calcaneocuboid:to",
+        "structure": "short-plantar",
+        "host": "cuboid"
+      },
+      {
+        "key": "long-plantar:deep-calcaneocuboid:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "long-plantar:deep-calcaneocuboid:to",
+        "structure": "long-plantar",
+        "host": "cuboid"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-2:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-2:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-3:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-4:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-5:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "inferior-extensor:inferomedial:to",
+        "structure": "inferior-extensor",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "inferior-fibular:calcaneal:from",
+        "structure": "inferior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "inferior-fibular:calcaneal:to",
+        "structure": "inferior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-1:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-1:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-2:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-3:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-4:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-5:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:navicular:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:navicular:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "navicular"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuboid:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuboid:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuboid"
+      },
+      {
+        "key": "tibialis-anterior-tendon:cuneiform-medial:from",
+        "structure": "tibialis-anterior-tendon",
+        "host": "anterior"
+      },
+      {
+        "key": "tibialis-anterior-tendon:cuneiform-medial:to",
+        "structure": "tibialis-anterior-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "fibularis-longus-tendon:cuneiform-medial:from",
+        "structure": "fibularis-longus-tendon",
+        "host": "fibularis"
+      },
+      {
+        "key": "fibularis-longus-tendon:cuneiform-medial:to",
+        "structure": "fibularis-longus-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-medial:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-medial:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "lisfranc:interosseous:from",
+        "structure": "lisfranc",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "lisfranc:interosseous:to",
+        "structure": "lisfranc",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "inferior-extensor:inferomedial:from",
+        "structure": "inferior-extensor",
+        "host": "calcaneus"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-intermediate"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-lateral"
+      },
+      {
+        "key": "tibialis-anterior-tendon:metatarsal-1:from",
+        "structure": "tibialis-anterior-tendon",
+        "host": "anterior"
+      },
+      {
+        "key": "tibialis-anterior-tendon:metatarsal-1:to",
+        "structure": "tibialis-anterior-tendon",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "fibularis-longus-tendon:metatarsal-1:from",
+        "structure": "fibularis-longus-tendon",
+        "host": "fibularis"
+      },
+      {
+        "key": "fibularis-longus-tendon:metatarsal-1:to",
+        "structure": "fibularis-longus-tendon",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:medial:from",
+        "structure": "mtp-collateral-1",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:medial:to",
+        "structure": "mtp-collateral-1",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "mtp-collateral-1:lateral:from",
+        "structure": "mtp-collateral-1",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:lateral:to",
+        "structure": "mtp-collateral-1",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "abductor-hallucis-tendon:hallux:from",
+        "structure": "abductor-hallucis-tendon",
+        "host": "abductor-hallucis"
+      },
+      {
+        "key": "abductor-hallucis-tendon:hallux:to",
+        "structure": "abductor-hallucis-tendon",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "extensor-hallucis-tendon:hallux:from",
+        "structure": "extensor-hallucis-tendon",
+        "host": "ehl"
+      },
+      {
+        "key": "extensor-hallucis-tendon:hallux:to",
+        "structure": "extensor-hallucis-tendon",
+        "host": "phalanx-1-distal"
+      },
+      {
+        "key": "flexor-hallucis-tendon:hallux:from",
+        "structure": "flexor-hallucis-tendon",
+        "host": "fhl"
+      },
+      {
+        "key": "flexor-hallucis-tendon:hallux:to",
+        "structure": "flexor-hallucis-tendon",
+        "host": "phalanx-1-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-2:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-2:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:medial:from",
+        "structure": "mtp-collateral-2",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:medial:to",
+        "structure": "mtp-collateral-2",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "mtp-collateral-2:lateral:from",
+        "structure": "mtp-collateral-2",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:lateral:to",
+        "structure": "mtp-collateral-2",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-2-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-2-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-2:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-2-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-2-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-2:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-2:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-2-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-3:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-3:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-3:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-3:medial:from",
+        "structure": "mtp-collateral-3",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "mtp-collateral-3:medial:to",
+        "structure": "mtp-collateral-3",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "mtp-collateral-3:lateral:from",
+        "structure": "mtp-collateral-3",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "mtp-collateral-3:lateral:to",
+        "structure": "mtp-collateral-3",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-3-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-3-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-3:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-3-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-3-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-3:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-3:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-3-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-4:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-4:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-4:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-4:medial:from",
+        "structure": "mtp-collateral-4",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "mtp-collateral-4:medial:to",
+        "structure": "mtp-collateral-4",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "mtp-collateral-4:lateral:from",
+        "structure": "mtp-collateral-4",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "mtp-collateral-4:lateral:to",
+        "structure": "mtp-collateral-4",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-4-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-4-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-4:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-4-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-4-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-4:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-4:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-4-distal"
+      },
+      {
+        "key": "fibularis-brevis-tendon:fifth-metatarsal:from",
+        "structure": "fibularis-brevis-tendon",
+        "host": "fibularis-brevis"
+      },
+      {
+        "key": "fibularis-brevis-tendon:fifth-metatarsal:to",
+        "structure": "fibularis-brevis-tendon",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-5:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-5:medial:from",
+        "structure": "mtp-collateral-5",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "mtp-collateral-5:medial:to",
+        "structure": "mtp-collateral-5",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "mtp-collateral-5:lateral:to",
+        "structure": "mtp-collateral-5",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "abductor-digiti-tendon:fifth-toe:from",
+        "structure": "abductor-digiti-tendon",
+        "host": "abductor-digiti"
+      },
+      {
+        "key": "abductor-digiti-tendon:fifth-toe:to",
+        "structure": "abductor-digiti-tendon",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-5:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-5-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-5-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-5:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-5:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-5-distal"
+      },
+      {
+        "key": "deltoid:tibiospring:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "achilles:gastrocnemius-medial:from",
+        "structure": "achilles",
+        "host": "gastrocnemius"
+      },
+      {
+        "key": "achilles:gastrocnemius-medial:to",
+        "structure": "achilles",
+        "host": "soleus-distal"
+      },
+      {
+        "key": "achilles:gastrocnemius-lateral:from",
+        "structure": "achilles",
+        "host": "gastrocnemius"
+      }
+    ]
+  },
+  {
+    "region": "left-lower-leg",
+    "cards": 150,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "aitfl:anterior-syndesmosis:from",
+        "structure": "aitfl",
+        "host": "tibia"
+      },
+      {
+        "key": "aitfl:anterior-syndesmosis:to",
+        "structure": "aitfl",
+        "host": "fibula"
+      },
+      {
+        "key": "deltoid:tibionavicular:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:tibionavicular:to",
+        "structure": "deltoid",
+        "host": "navicular"
+      },
+      {
+        "key": "deltoid:tibiocalcaneal:to",
+        "structure": "deltoid",
+        "host": "calcaneus"
+      },
+      {
+        "key": "deltoid:tibiospring:to",
+        "structure": "deltoid",
+        "host": "spring"
+      },
+      {
+        "key": "deltoid:deep-anterior-tibiotalar:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:deep-anterior-tibiotalar:to",
+        "structure": "deltoid",
+        "host": "talus"
+      },
+      {
+        "key": "deltoid:deep-posterior-tibiotalar:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "deltoid:deep-posterior-tibiotalar:to",
+        "structure": "deltoid",
+        "host": "talus"
+      },
+      {
+        "key": "superior-extensor:transverse:from",
+        "structure": "superior-extensor",
+        "host": "fibula"
+      },
+      {
+        "key": "superior-extensor:transverse:to",
+        "structure": "superior-extensor",
+        "host": "tibia"
+      },
+      {
+        "key": "inferior-extensor:superomedial:from",
+        "structure": "inferior-extensor",
+        "host": "calcaneus"
+      },
+      {
+        "key": "inferior-extensor:superomedial:to",
+        "structure": "inferior-extensor",
+        "host": "tibia"
+      },
+      {
+        "key": "flexor-retinaculum:tarsal-tunnel:from",
+        "structure": "flexor-retinaculum",
+        "host": "tibia"
+      },
+      {
+        "key": "flexor-retinaculum:tarsal-tunnel:to",
+        "structure": "flexor-retinaculum",
+        "host": "calcaneus"
+      },
+      {
+        "key": "atfl:anterior-talofibular:from",
+        "structure": "atfl",
+        "host": "fibula"
+      },
+      {
+        "key": "atfl:anterior-talofibular:to",
+        "structure": "atfl",
+        "host": "talus"
+      },
+      {
+        "key": "cfl:calcaneofibular:from",
+        "structure": "cfl",
+        "host": "fibula"
+      },
+      {
+        "key": "cfl:calcaneofibular:to",
+        "structure": "cfl",
+        "host": "calcaneus"
+      },
+      {
+        "key": "ptfl:posterior-talofibular:from",
+        "structure": "ptfl",
+        "host": "fibula"
+      },
+      {
+        "key": "ptfl:posterior-talofibular:to",
+        "structure": "ptfl",
+        "host": "talus"
+      },
+      {
+        "key": "superior-fibular:retromalleolar:from",
+        "structure": "superior-fibular",
+        "host": "fibula"
+      },
+      {
+        "key": "superior-fibular:retromalleolar:to",
+        "structure": "superior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "dorsal-talonavicular:dorsal:from",
+        "structure": "dorsal-talonavicular",
+        "host": "talus"
+      },
+      {
+        "key": "dorsal-talonavicular:dorsal:to",
+        "structure": "dorsal-talonavicular",
+        "host": "navicular"
+      },
+      {
+        "key": "achilles:common-calcaneal:from",
+        "structure": "achilles",
+        "host": "soleus-distal"
+      },
+      {
+        "key": "achilles:common-calcaneal:to",
+        "structure": "achilles",
+        "host": "calcaneus"
+      },
+      {
+        "key": "deltoid:tibiocalcaneal:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "spring:superomedial:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:superomedial:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "spring:medioplantar-oblique:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:medioplantar-oblique:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "spring:inferoplantar-longitudinal:from",
+        "structure": "spring",
+        "host": "calcaneus"
+      },
+      {
+        "key": "spring:inferoplantar-longitudinal:to",
+        "structure": "spring",
+        "host": "navicular"
+      },
+      {
+        "key": "short-plantar:plantar-calcaneocuboid:from",
+        "structure": "short-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "short-plantar:plantar-calcaneocuboid:to",
+        "structure": "short-plantar",
+        "host": "cuboid"
+      },
+      {
+        "key": "long-plantar:deep-calcaneocuboid:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "long-plantar:deep-calcaneocuboid:to",
+        "structure": "long-plantar",
+        "host": "cuboid"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-2:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-2:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-3:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-4:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-5:to",
+        "structure": "long-plantar",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "inferior-extensor:inferomedial:to",
+        "structure": "inferior-extensor",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "inferior-fibular:calcaneal:from",
+        "structure": "inferior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "inferior-fibular:calcaneal:to",
+        "structure": "inferior-fibular",
+        "host": "calcaneus"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-1:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-1:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-2:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-3:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-4:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-5:to",
+        "structure": "plantar-fascia",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:navicular:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:navicular:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "navicular"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuboid:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuboid:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuboid"
+      },
+      {
+        "key": "tibialis-anterior-tendon:cuneiform-medial:from",
+        "structure": "tibialis-anterior-tendon",
+        "host": "anterior"
+      },
+      {
+        "key": "tibialis-anterior-tendon:cuneiform-medial:to",
+        "structure": "tibialis-anterior-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "fibularis-longus-tendon:cuneiform-medial:from",
+        "structure": "fibularis-longus-tendon",
+        "host": "fibularis"
+      },
+      {
+        "key": "fibularis-longus-tendon:cuneiform-medial:to",
+        "structure": "fibularis-longus-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-medial:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-medial:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "lisfranc:interosseous:from",
+        "structure": "lisfranc",
+        "host": "cuneiform-medial"
+      },
+      {
+        "key": "lisfranc:interosseous:to",
+        "structure": "lisfranc",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "inferior-extensor:inferomedial:from",
+        "structure": "inferior-extensor",
+        "host": "calcaneus"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-intermediate"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "cuneiform-lateral"
+      },
+      {
+        "key": "tibialis-anterior-tendon:metatarsal-1:from",
+        "structure": "tibialis-anterior-tendon",
+        "host": "anterior"
+      },
+      {
+        "key": "tibialis-anterior-tendon:metatarsal-1:to",
+        "structure": "tibialis-anterior-tendon",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "fibularis-longus-tendon:metatarsal-1:from",
+        "structure": "fibularis-longus-tendon",
+        "host": "fibularis"
+      },
+      {
+        "key": "fibularis-longus-tendon:metatarsal-1:to",
+        "structure": "fibularis-longus-tendon",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:medial:from",
+        "structure": "mtp-collateral-1",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:medial:to",
+        "structure": "mtp-collateral-1",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "mtp-collateral-1:lateral:from",
+        "structure": "mtp-collateral-1",
+        "host": "metatarsal-1"
+      },
+      {
+        "key": "mtp-collateral-1:lateral:to",
+        "structure": "mtp-collateral-1",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "abductor-hallucis-tendon:hallux:from",
+        "structure": "abductor-hallucis-tendon",
+        "host": "abductor-hallucis"
+      },
+      {
+        "key": "abductor-hallucis-tendon:hallux:to",
+        "structure": "abductor-hallucis-tendon",
+        "host": "phalanx-1-proximal"
+      },
+      {
+        "key": "extensor-hallucis-tendon:hallux:from",
+        "structure": "extensor-hallucis-tendon",
+        "host": "ehl"
+      },
+      {
+        "key": "extensor-hallucis-tendon:hallux:to",
+        "structure": "extensor-hallucis-tendon",
+        "host": "phalanx-1-distal"
+      },
+      {
+        "key": "flexor-hallucis-tendon:hallux:from",
+        "structure": "flexor-hallucis-tendon",
+        "host": "fhl"
+      },
+      {
+        "key": "flexor-hallucis-tendon:hallux:to",
+        "structure": "flexor-hallucis-tendon",
+        "host": "phalanx-1-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-2:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-2:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:medial:from",
+        "structure": "mtp-collateral-2",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:medial:to",
+        "structure": "mtp-collateral-2",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "mtp-collateral-2:lateral:from",
+        "structure": "mtp-collateral-2",
+        "host": "metatarsal-2"
+      },
+      {
+        "key": "mtp-collateral-2:lateral:to",
+        "structure": "mtp-collateral-2",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-2-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-2-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-2-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-2:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-2-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-2-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-2-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-2:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-2:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-2-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-3:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-3:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-3:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-3:medial:from",
+        "structure": "mtp-collateral-3",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "mtp-collateral-3:medial:to",
+        "structure": "mtp-collateral-3",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "mtp-collateral-3:lateral:from",
+        "structure": "mtp-collateral-3",
+        "host": "metatarsal-3"
+      },
+      {
+        "key": "mtp-collateral-3:lateral:to",
+        "structure": "mtp-collateral-3",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-3-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-3-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-3-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-3:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-3-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-3-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-3-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-3:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-3:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-3-distal"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-4:from",
+        "structure": "tibialis-posterior-tendon",
+        "host": "tibialis-posterior"
+      },
+      {
+        "key": "tibialis-posterior-tendon:plantar-slip-metatarsal-4:to",
+        "structure": "tibialis-posterior-tendon",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-4:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-4:medial:from",
+        "structure": "mtp-collateral-4",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "mtp-collateral-4:medial:to",
+        "structure": "mtp-collateral-4",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "mtp-collateral-4:lateral:from",
+        "structure": "mtp-collateral-4",
+        "host": "metatarsal-4"
+      },
+      {
+        "key": "mtp-collateral-4:lateral:to",
+        "structure": "mtp-collateral-4",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "edb-tendons:toe-4-expansion:from",
+        "structure": "edb-tendons",
+        "host": "edb"
+      },
+      {
+        "key": "edb-tendons:toe-4-expansion:to",
+        "structure": "edb-tendons",
+        "host": "phalanx-4-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-4:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-4-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-4-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-4-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-4:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-4:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-4-distal"
+      },
+      {
+        "key": "fibularis-brevis-tendon:fifth-metatarsal:from",
+        "structure": "fibularis-brevis-tendon",
+        "host": "fibularis-brevis"
+      },
+      {
+        "key": "fibularis-brevis-tendon:fifth-metatarsal:to",
+        "structure": "fibularis-brevis-tendon",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "long-plantar:superficial-metatarsal-5:from",
+        "structure": "long-plantar",
+        "host": "calcaneus"
+      },
+      {
+        "key": "mtp-collateral-5:medial:from",
+        "structure": "mtp-collateral-5",
+        "host": "metatarsal-5"
+      },
+      {
+        "key": "mtp-collateral-5:medial:to",
+        "structure": "mtp-collateral-5",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "mtp-collateral-5:lateral:to",
+        "structure": "mtp-collateral-5",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "abductor-digiti-tendon:fifth-toe:from",
+        "structure": "abductor-digiti-tendon",
+        "host": "abductor-digiti"
+      },
+      {
+        "key": "abductor-digiti-tendon:fifth-toe:to",
+        "structure": "abductor-digiti-tendon",
+        "host": "phalanx-5-proximal"
+      },
+      {
+        "key": "plantar-fascia:digital-slip-5:from",
+        "structure": "plantar-fascia",
+        "host": "calcaneus"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-middle:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-middle:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-5-middle"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-distal:from",
+        "structure": "extensor-digitorum-tendons",
+        "host": "edl"
+      },
+      {
+        "key": "extensor-digitorum-tendons:toe-5-distal:to",
+        "structure": "extensor-digitorum-tendons",
+        "host": "phalanx-5-distal"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-5:from",
+        "structure": "flexor-digitorum-tendons",
+        "host": "fdl"
+      },
+      {
+        "key": "flexor-digitorum-tendons:toe-5:to",
+        "structure": "flexor-digitorum-tendons",
+        "host": "phalanx-5-distal"
+      },
+      {
+        "key": "deltoid:tibiospring:from",
+        "structure": "deltoid",
+        "host": "tibia"
+      },
+      {
+        "key": "achilles:gastrocnemius-medial:from",
+        "structure": "achilles",
+        "host": "gastrocnemius"
+      },
+      {
+        "key": "achilles:gastrocnemius-medial:to",
+        "structure": "achilles",
+        "host": "soleus-distal"
+      },
+      {
+        "key": "achilles:gastrocnemius-lateral:from",
+        "structure": "achilles",
+        "host": "gastrocnemius"
+      }
+    ]
+  },
+  {
+    "region": "right-upper-leg",
+    "cards": 33,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "gluteus-maximus:from:from",
+        "structure": "gluteus-maximus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "gluteus-medius:from:from",
+        "structure": "gluteus-medius",
+        "host": "hip-bone"
+      },
+      {
+        "key": "gluteus-minimus:from:from",
+        "structure": "gluteus-minimus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "iliacus:from:from",
+        "structure": "iliacus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "obturator-externus:from:from",
+        "structure": "obturator-externus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "superior-gemellus:from:from",
+        "structure": "superior-gemellus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "quadratus-femoris:from:from",
+        "structure": "quadratus-femoris",
+        "host": "hip-bone"
+      },
+      {
+        "key": "descending-part-of-iliofemoral-ligament:contact:from",
+        "structure": "descending-part-of-iliofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "descending-part-of-iliofemoral-ligament:contact:to",
+        "structure": "descending-part-of-iliofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "transverse-part-of-iliofemoral-ligament:contact:from",
+        "structure": "transverse-part-of-iliofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "transverse-part-of-iliofemoral-ligament:contact:to",
+        "structure": "transverse-part-of-iliofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "ischiofemoral-ligament:contact:from",
+        "structure": "ischiofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "ischiofemoral-ligament:contact:to",
+        "structure": "ischiofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "pubofemoral-ligament:contact:from",
+        "structure": "pubofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "pubofemoral-ligament:contact:to",
+        "structure": "pubofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "ligament-of-head-of-femur:contact:from",
+        "structure": "ligament-of-head-of-femur",
+        "host": "hip-bone"
+      },
+      {
+        "key": "ligament-of-head-of-femur:contact:to",
+        "structure": "ligament-of-head-of-femur",
+        "host": "femur"
+      },
+      {
+        "key": "vastus-lateralis:from:from",
+        "structure": "vastus-lateralis",
+        "host": "femur"
+      },
+      {
+        "key": "vastus-intermedius:from:from",
+        "structure": "vastus-intermedius",
+        "host": "femur"
+      },
+      {
+        "key": "gluteus-maximus:to:to",
+        "structure": "gluteus-maximus",
+        "host": "femur"
+      },
+      {
+        "key": "adductor-magnus:to:to",
+        "structure": "adductor-magnus",
+        "host": "femur"
+      },
+      {
+        "key": "quadratus-femoris:to:to",
+        "structure": "quadratus-femoris",
+        "host": "femur"
+      },
+      {
+        "key": "anterior-cruciate-ligament:contact:from",
+        "structure": "anterior-cruciate-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "anterior-cruciate-ligament:contact:to",
+        "structure": "anterior-cruciate-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "posterior-cruciate-ligament:contact:from",
+        "structure": "posterior-cruciate-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "posterior-cruciate-ligament:contact:to",
+        "structure": "posterior-cruciate-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "fibular-collateral-ligament:contact:from",
+        "structure": "fibular-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "fibular-collateral-ligament:contact:to",
+        "structure": "fibular-collateral-ligament",
+        "host": "fibula"
+      },
+      {
+        "key": "superficial-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "superficial-part-of-tibial-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "superficial-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "superficial-part-of-tibial-collateral-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "deep-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "deep-part-of-tibial-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "deep-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "deep-part-of-tibial-collateral-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "popliteus:to:to",
+        "structure": "popliteus",
+        "host": "tibia"
+      }
+    ]
+  },
+  {
+    "region": "left-upper-leg",
+    "cards": 33,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "gluteus-maximus:from:from",
+        "structure": "gluteus-maximus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "gluteus-medius:from:from",
+        "structure": "gluteus-medius",
+        "host": "hip-bone"
+      },
+      {
+        "key": "gluteus-minimus:from:from",
+        "structure": "gluteus-minimus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "iliacus:from:from",
+        "structure": "iliacus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "obturator-externus:from:from",
+        "structure": "obturator-externus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "superior-gemellus:from:from",
+        "structure": "superior-gemellus",
+        "host": "hip-bone"
+      },
+      {
+        "key": "quadratus-femoris:from:from",
+        "structure": "quadratus-femoris",
+        "host": "hip-bone"
+      },
+      {
+        "key": "descending-part-of-iliofemoral-ligament:contact:from",
+        "structure": "descending-part-of-iliofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "descending-part-of-iliofemoral-ligament:contact:to",
+        "structure": "descending-part-of-iliofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "transverse-part-of-iliofemoral-ligament:contact:from",
+        "structure": "transverse-part-of-iliofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "transverse-part-of-iliofemoral-ligament:contact:to",
+        "structure": "transverse-part-of-iliofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "ischiofemoral-ligament:contact:from",
+        "structure": "ischiofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "ischiofemoral-ligament:contact:to",
+        "structure": "ischiofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "pubofemoral-ligament:contact:from",
+        "structure": "pubofemoral-ligament",
+        "host": "hip-bone"
+      },
+      {
+        "key": "pubofemoral-ligament:contact:to",
+        "structure": "pubofemoral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "ligament-of-head-of-femur:contact:from",
+        "structure": "ligament-of-head-of-femur",
+        "host": "hip-bone"
+      },
+      {
+        "key": "ligament-of-head-of-femur:contact:to",
+        "structure": "ligament-of-head-of-femur",
+        "host": "femur"
+      },
+      {
+        "key": "vastus-lateralis:from:from",
+        "structure": "vastus-lateralis",
+        "host": "femur"
+      },
+      {
+        "key": "vastus-intermedius:from:from",
+        "structure": "vastus-intermedius",
+        "host": "femur"
+      },
+      {
+        "key": "gluteus-maximus:to:to",
+        "structure": "gluteus-maximus",
+        "host": "femur"
+      },
+      {
+        "key": "adductor-magnus:to:to",
+        "structure": "adductor-magnus",
+        "host": "femur"
+      },
+      {
+        "key": "quadratus-femoris:to:to",
+        "structure": "quadratus-femoris",
+        "host": "femur"
+      },
+      {
+        "key": "anterior-cruciate-ligament:contact:from",
+        "structure": "anterior-cruciate-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "anterior-cruciate-ligament:contact:to",
+        "structure": "anterior-cruciate-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "posterior-cruciate-ligament:contact:from",
+        "structure": "posterior-cruciate-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "posterior-cruciate-ligament:contact:to",
+        "structure": "posterior-cruciate-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "fibular-collateral-ligament:contact:from",
+        "structure": "fibular-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "fibular-collateral-ligament:contact:to",
+        "structure": "fibular-collateral-ligament",
+        "host": "fibula"
+      },
+      {
+        "key": "superficial-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "superficial-part-of-tibial-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "superficial-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "superficial-part-of-tibial-collateral-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "deep-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "deep-part-of-tibial-collateral-ligament",
+        "host": "femur"
+      },
+      {
+        "key": "deep-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "deep-part-of-tibial-collateral-ligament",
+        "host": "tibia"
+      },
+      {
+        "key": "popliteus:to:to",
+        "structure": "popliteus",
+        "host": "tibia"
+      }
+    ]
+  },
+  {
+    "region": "right-arm",
+    "cards": 14,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "clavicular-part-of-deltoid-muscle-r:from:0:from",
+        "structure": "clavicular-part-of-deltoid-muscle-r",
+        "host": "clavicle-r"
+      },
+      {
+        "key": "subscapularis-muscle-r:to:0:to",
+        "structure": "subscapularis-muscle-r",
+        "host": "humerus-r"
+      },
+      {
+        "key": "supraspinatus-muscle-r:to:0:to",
+        "structure": "supraspinatus-muscle-r",
+        "host": "humerus-r"
+      },
+      {
+        "key": "teres-minor-muscle-r:to:0:to",
+        "structure": "teres-minor-muscle-r",
+        "host": "humerus-r"
+      },
+      {
+        "key": "brachialis-muscle-r:from:1:from",
+        "structure": "brachialis-muscle-r",
+        "host": "humerus-r"
+      },
+      {
+        "key": "infraspinatus-muscle-r:from:1:from",
+        "structure": "infraspinatus-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "levator-scapulae-r:to:0:to",
+        "structure": "levator-scapulae-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "rhomboid-major-muscle-r:to:0:to",
+        "structure": "rhomboid-major-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "rhomboid-minor-muscle-r:to:0:to",
+        "structure": "rhomboid-minor-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "subscapularis-muscle-r:from:1:from",
+        "structure": "subscapularis-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "supraspinatus-muscle-r:from:1:from",
+        "structure": "supraspinatus-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "teres-major-muscle-r:from:0:from",
+        "structure": "teres-major-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "teres-minor-muscle-r:from:1:from",
+        "structure": "teres-minor-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "acromial-part-of-deltoid-muscle-r:from:0:from",
+        "structure": "acromial-part-of-deltoid-muscle-r",
+        "host": "scapula-r"
+      }
+    ]
+  },
+  {
+    "region": "back",
+    "cards": 16,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "infraspinatus-muscle-r:from:0:from",
+        "structure": "infraspinatus-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "levator-scapulae-r:to:0:to",
+        "structure": "levator-scapulae-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "rhomboid-major-muscle-r:to:0:to",
+        "structure": "rhomboid-major-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "rhomboid-minor-muscle-r:to:0:to",
+        "structure": "rhomboid-minor-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "subscapularis-muscle-r:from:0:from",
+        "structure": "subscapularis-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "supraspinatus-muscle-r:from:0:from",
+        "structure": "supraspinatus-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "teres-major-muscle-r:from:0:from",
+        "structure": "teres-major-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "teres-minor-muscle-r:from:0:from",
+        "structure": "teres-minor-muscle-r",
+        "host": "scapula-r"
+      },
+      {
+        "key": "infraspinatus-muscle-l:from:0:from",
+        "structure": "infraspinatus-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "levator-scapulae-l:to:0:to",
+        "structure": "levator-scapulae-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "rhomboid-major-muscle-l:to:0:to",
+        "structure": "rhomboid-major-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "rhomboid-minor-muscle-l:to:0:to",
+        "structure": "rhomboid-minor-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "subscapularis-muscle-l:from:0:from",
+        "structure": "subscapularis-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "supraspinatus-muscle-l:from:0:from",
+        "structure": "supraspinatus-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "teres-major-muscle-l:from:0:from",
+        "structure": "teres-major-muscle-l",
+        "host": "scapula-l"
+      },
+      {
+        "key": "teres-minor-muscle-l:from:0:from",
+        "structure": "teres-minor-muscle-l",
+        "host": "scapula-l"
+      }
+    ]
+  },
+  {
+    "region": "back+lower-leg+right-arm+right-upper-leg",
+    "cards": 209,
+    "sartoriusHipCards": 0,
+    "connections": [
+      {
+        "key": "right-arm:clavicular-part-of-deltoid-muscle-r:from:0:from",
+        "structure": "z-anatomy:clavicular-part-of-deltoid-muscle-r",
+        "host": "z-anatomy:clavicle-r"
+      },
+      {
+        "key": "back:infraspinatus-muscle-r:from:0:from",
+        "structure": "z-anatomy:infraspinatus-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:infraspinatus-muscle-r:from:1:from",
+        "structure": "z-anatomy:infraspinatus-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:levator-scapulae-r:to:0:to",
+        "structure": "z-anatomy:levator-scapulae-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:rhomboid-major-muscle-r:to:0:to",
+        "structure": "z-anatomy:rhomboid-major-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:rhomboid-minor-muscle-r:to:0:to",
+        "structure": "z-anatomy:rhomboid-minor-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:subscapularis-muscle-r:from:0:from",
+        "structure": "z-anatomy:subscapularis-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:supraspinatus-muscle-r:from:0:from",
+        "structure": "z-anatomy:supraspinatus-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:teres-major-muscle-r:from:0:from",
+        "structure": "z-anatomy:teres-major-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "back:teres-minor-muscle-r:from:0:from",
+        "structure": "z-anatomy:teres-minor-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:subscapularis-muscle-r:from:1:from",
+        "structure": "z-anatomy:subscapularis-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:supraspinatus-muscle-r:from:1:from",
+        "structure": "z-anatomy:supraspinatus-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:teres-minor-muscle-r:from:1:from",
+        "structure": "z-anatomy:teres-minor-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:acromial-part-of-deltoid-muscle-r:from:0:from",
+        "structure": "z-anatomy:acromial-part-of-deltoid-muscle-r",
+        "host": "z-anatomy:scapula-r"
+      },
+      {
+        "key": "right-arm:subscapularis-muscle-r:to:0:to",
+        "structure": "z-anatomy:subscapularis-muscle-r",
+        "host": "z-anatomy:humerus-r"
+      },
+      {
+        "key": "right-arm:supraspinatus-muscle-r:to:0:to",
+        "structure": "z-anatomy:supraspinatus-muscle-r",
+        "host": "z-anatomy:humerus-r"
+      },
+      {
+        "key": "right-arm:teres-minor-muscle-r:to:0:to",
+        "structure": "z-anatomy:teres-minor-muscle-r",
+        "host": "z-anatomy:humerus-r"
+      },
+      {
+        "key": "back:infraspinatus-muscle-l:from:0:from",
+        "structure": "z-anatomy:infraspinatus-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:levator-scapulae-l:to:0:to",
+        "structure": "z-anatomy:levator-scapulae-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:rhomboid-major-muscle-l:to:0:to",
+        "structure": "z-anatomy:rhomboid-major-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:rhomboid-minor-muscle-l:to:0:to",
+        "structure": "z-anatomy:rhomboid-minor-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:subscapularis-muscle-l:from:0:from",
+        "structure": "z-anatomy:subscapularis-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:supraspinatus-muscle-l:from:0:from",
+        "structure": "z-anatomy:supraspinatus-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:teres-major-muscle-l:from:0:from",
+        "structure": "z-anatomy:teres-major-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "back:teres-minor-muscle-l:from:0:from",
+        "structure": "z-anatomy:teres-minor-muscle-l",
+        "host": "z-anatomy:scapula-l"
+      },
+      {
+        "key": "lower-leg:aitfl:anterior-syndesmosis:from",
+        "structure": "lower-leg:aitfl",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:aitfl:anterior-syndesmosis:to",
+        "structure": "lower-leg:aitfl",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:deltoid:tibionavicular:from",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:deltoid:tibionavicular:to",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:deltoid:tibiocalcaneal:to",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:deltoid:tibiospring:to",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:spring"
+      },
+      {
+        "key": "lower-leg:deltoid:deep-anterior-tibiotalar:from",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:deltoid:deep-anterior-tibiotalar:to",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:talus"
+      },
+      {
+        "key": "lower-leg:deltoid:deep-posterior-tibiotalar:from",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:deltoid:deep-posterior-tibiotalar:to",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:talus"
+      },
+      {
+        "key": "lower-leg:superior-extensor:transverse:from",
+        "structure": "lower-leg:superior-extensor",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:superior-extensor:transverse:to",
+        "structure": "lower-leg:superior-extensor",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:inferior-extensor:superomedial:from",
+        "structure": "lower-leg:inferior-extensor",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:inferior-extensor:superomedial:to",
+        "structure": "lower-leg:inferior-extensor",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:flexor-retinaculum:tarsal-tunnel:from",
+        "structure": "lower-leg:flexor-retinaculum",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:flexor-retinaculum:tarsal-tunnel:to",
+        "structure": "lower-leg:flexor-retinaculum",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "right-upper-leg:popliteus:to:to",
+        "structure": "right-upper-leg:popliteus",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "right-upper-leg:anterior-cruciate-ligament:contact:from",
+        "structure": "right-upper-leg:anterior-cruciate-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:anterior-cruciate-ligament:contact:to",
+        "structure": "right-upper-leg:anterior-cruciate-ligament",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "right-upper-leg:posterior-cruciate-ligament:contact:from",
+        "structure": "right-upper-leg:posterior-cruciate-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:posterior-cruciate-ligament:contact:to",
+        "structure": "right-upper-leg:posterior-cruciate-ligament",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "right-upper-leg:superficial-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "right-upper-leg:superficial-part-of-tibial-collateral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:superficial-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "right-upper-leg:superficial-part-of-tibial-collateral-ligament",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "right-upper-leg:deep-part-of-tibial-collateral-ligament:contact:from",
+        "structure": "right-upper-leg:deep-part-of-tibial-collateral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:deep-part-of-tibial-collateral-ligament:contact:to",
+        "structure": "right-upper-leg:deep-part-of-tibial-collateral-ligament",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:atfl:anterior-talofibular:from",
+        "structure": "lower-leg:atfl",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:atfl:anterior-talofibular:to",
+        "structure": "lower-leg:atfl",
+        "host": "lower-leg:talus"
+      },
+      {
+        "key": "lower-leg:cfl:calcaneofibular:from",
+        "structure": "lower-leg:cfl",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:cfl:calcaneofibular:to",
+        "structure": "lower-leg:cfl",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:ptfl:posterior-talofibular:from",
+        "structure": "lower-leg:ptfl",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:ptfl:posterior-talofibular:to",
+        "structure": "lower-leg:ptfl",
+        "host": "lower-leg:talus"
+      },
+      {
+        "key": "lower-leg:superior-fibular:retromalleolar:from",
+        "structure": "lower-leg:superior-fibular",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:superior-fibular:retromalleolar:to",
+        "structure": "lower-leg:superior-fibular",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "right-upper-leg:fibular-collateral-ligament:contact:from",
+        "structure": "right-upper-leg:fibular-collateral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:fibular-collateral-ligament:contact:to",
+        "structure": "right-upper-leg:fibular-collateral-ligament",
+        "host": "lower-leg:fibula"
+      },
+      {
+        "key": "lower-leg:dorsal-talonavicular:dorsal:from",
+        "structure": "lower-leg:dorsal-talonavicular",
+        "host": "lower-leg:talus"
+      },
+      {
+        "key": "lower-leg:dorsal-talonavicular:dorsal:to",
+        "structure": "lower-leg:dorsal-talonavicular",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:achilles:common-calcaneal:from",
+        "structure": "lower-leg:achilles",
+        "host": "lower-leg:soleus-distal"
+      },
+      {
+        "key": "lower-leg:achilles:common-calcaneal:to",
+        "structure": "lower-leg:achilles",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:deltoid:tibiocalcaneal:from",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:spring:superomedial:from",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:spring:superomedial:to",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:spring:medioplantar-oblique:from",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:spring:medioplantar-oblique:to",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:spring:inferoplantar-longitudinal:from",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:spring:inferoplantar-longitudinal:to",
+        "structure": "lower-leg:spring",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:short-plantar:plantar-calcaneocuboid:from",
+        "structure": "lower-leg:short-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:short-plantar:plantar-calcaneocuboid:to",
+        "structure": "lower-leg:short-plantar",
+        "host": "lower-leg:cuboid"
+      },
+      {
+        "key": "lower-leg:long-plantar:deep-calcaneocuboid:from",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:long-plantar:deep-calcaneocuboid:to",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:cuboid"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-2:from",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-2:to",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:metatarsal-2"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-3:to",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:metatarsal-3"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-4:to",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:metatarsal-4"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-5:to",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:metatarsal-5"
+      },
+      {
+        "key": "lower-leg:inferior-extensor:inferomedial:to",
+        "structure": "lower-leg:inferior-extensor",
+        "host": "lower-leg:cuneiform-medial"
+      },
+      {
+        "key": "lower-leg:inferior-fibular:calcaneal:from",
+        "structure": "lower-leg:inferior-fibular",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:inferior-fibular:calcaneal:to",
+        "structure": "lower-leg:inferior-fibular",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-1:from",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-1:to",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:phalanx-1-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-2:to",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:phalanx-2-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-3:to",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:phalanx-3-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-4:to",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:phalanx-4-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-5:to",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:phalanx-5-proximal"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:navicular:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:navicular:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:navicular"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuboid:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuboid:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:cuboid"
+      },
+      {
+        "key": "lower-leg:tibialis-anterior-tendon:cuneiform-medial:from",
+        "structure": "lower-leg:tibialis-anterior-tendon",
+        "host": "lower-leg:anterior"
+      },
+      {
+        "key": "lower-leg:tibialis-anterior-tendon:cuneiform-medial:to",
+        "structure": "lower-leg:tibialis-anterior-tendon",
+        "host": "lower-leg:cuneiform-medial"
+      },
+      {
+        "key": "lower-leg:fibularis-longus-tendon:cuneiform-medial:from",
+        "structure": "lower-leg:fibularis-longus-tendon",
+        "host": "lower-leg:fibularis"
+      },
+      {
+        "key": "lower-leg:fibularis-longus-tendon:cuneiform-medial:to",
+        "structure": "lower-leg:fibularis-longus-tendon",
+        "host": "lower-leg:cuneiform-medial"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-medial:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-medial:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:cuneiform-medial"
+      },
+      {
+        "key": "lower-leg:lisfranc:interosseous:from",
+        "structure": "lower-leg:lisfranc",
+        "host": "lower-leg:cuneiform-medial"
+      },
+      {
+        "key": "lower-leg:lisfranc:interosseous:to",
+        "structure": "lower-leg:lisfranc",
+        "host": "lower-leg:metatarsal-2"
+      },
+      {
+        "key": "lower-leg:inferior-extensor:inferomedial:from",
+        "structure": "lower-leg:inferior-extensor",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-intermediate:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:cuneiform-intermediate"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-cuneiform-lateral:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:cuneiform-lateral"
+      },
+      {
+        "key": "lower-leg:tibialis-anterior-tendon:metatarsal-1:from",
+        "structure": "lower-leg:tibialis-anterior-tendon",
+        "host": "lower-leg:anterior"
+      },
+      {
+        "key": "lower-leg:tibialis-anterior-tendon:metatarsal-1:to",
+        "structure": "lower-leg:tibialis-anterior-tendon",
+        "host": "lower-leg:metatarsal-1"
+      },
+      {
+        "key": "lower-leg:fibularis-longus-tendon:metatarsal-1:from",
+        "structure": "lower-leg:fibularis-longus-tendon",
+        "host": "lower-leg:fibularis"
+      },
+      {
+        "key": "lower-leg:fibularis-longus-tendon:metatarsal-1:to",
+        "structure": "lower-leg:fibularis-longus-tendon",
+        "host": "lower-leg:metatarsal-1"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-1:medial:from",
+        "structure": "lower-leg:mtp-collateral-1",
+        "host": "lower-leg:metatarsal-1"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-1:medial:to",
+        "structure": "lower-leg:mtp-collateral-1",
+        "host": "lower-leg:phalanx-1-proximal"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-1:lateral:from",
+        "structure": "lower-leg:mtp-collateral-1",
+        "host": "lower-leg:metatarsal-1"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-1:lateral:to",
+        "structure": "lower-leg:mtp-collateral-1",
+        "host": "lower-leg:phalanx-1-proximal"
+      },
+      {
+        "key": "lower-leg:abductor-hallucis-tendon:hallux:from",
+        "structure": "lower-leg:abductor-hallucis-tendon",
+        "host": "lower-leg:abductor-hallucis"
+      },
+      {
+        "key": "lower-leg:abductor-hallucis-tendon:hallux:to",
+        "structure": "lower-leg:abductor-hallucis-tendon",
+        "host": "lower-leg:phalanx-1-proximal"
+      },
+      {
+        "key": "lower-leg:extensor-hallucis-tendon:hallux:from",
+        "structure": "lower-leg:extensor-hallucis-tendon",
+        "host": "lower-leg:ehl"
+      },
+      {
+        "key": "lower-leg:extensor-hallucis-tendon:hallux:to",
+        "structure": "lower-leg:extensor-hallucis-tendon",
+        "host": "lower-leg:phalanx-1-distal"
+      },
+      {
+        "key": "lower-leg:flexor-hallucis-tendon:hallux:from",
+        "structure": "lower-leg:flexor-hallucis-tendon",
+        "host": "lower-leg:fhl"
+      },
+      {
+        "key": "lower-leg:flexor-hallucis-tendon:hallux:to",
+        "structure": "lower-leg:flexor-hallucis-tendon",
+        "host": "lower-leg:phalanx-1-distal"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-2:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-2:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:metatarsal-2"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-2:medial:from",
+        "structure": "lower-leg:mtp-collateral-2",
+        "host": "lower-leg:metatarsal-2"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-2:medial:to",
+        "structure": "lower-leg:mtp-collateral-2",
+        "host": "lower-leg:phalanx-2-proximal"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-2:lateral:from",
+        "structure": "lower-leg:mtp-collateral-2",
+        "host": "lower-leg:metatarsal-2"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-2:lateral:to",
+        "structure": "lower-leg:mtp-collateral-2",
+        "host": "lower-leg:phalanx-2-proximal"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-2-expansion:from",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:edb"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-2-expansion:to",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:phalanx-2-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-2:from",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-2-middle:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-2-middle:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-2-middle"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-2-distal:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-2-distal:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-2-distal"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-2:from",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:fdl"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-2:to",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:phalanx-2-distal"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-3:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-3:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:metatarsal-3"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-3:from",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-3:medial:from",
+        "structure": "lower-leg:mtp-collateral-3",
+        "host": "lower-leg:metatarsal-3"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-3:medial:to",
+        "structure": "lower-leg:mtp-collateral-3",
+        "host": "lower-leg:phalanx-3-proximal"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-3:lateral:from",
+        "structure": "lower-leg:mtp-collateral-3",
+        "host": "lower-leg:metatarsal-3"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-3:lateral:to",
+        "structure": "lower-leg:mtp-collateral-3",
+        "host": "lower-leg:phalanx-3-proximal"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-3-expansion:from",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:edb"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-3-expansion:to",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:phalanx-3-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-3:from",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-3-middle:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-3-middle:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-3-middle"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-3-distal:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-3-distal:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-3-distal"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-3:from",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:fdl"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-3:to",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:phalanx-3-distal"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-4:from",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:tibialis-posterior"
+      },
+      {
+        "key": "lower-leg:tibialis-posterior-tendon:plantar-slip-metatarsal-4:to",
+        "structure": "lower-leg:tibialis-posterior-tendon",
+        "host": "lower-leg:metatarsal-4"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-4:from",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-4:medial:from",
+        "structure": "lower-leg:mtp-collateral-4",
+        "host": "lower-leg:metatarsal-4"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-4:medial:to",
+        "structure": "lower-leg:mtp-collateral-4",
+        "host": "lower-leg:phalanx-4-proximal"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-4:lateral:from",
+        "structure": "lower-leg:mtp-collateral-4",
+        "host": "lower-leg:metatarsal-4"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-4:lateral:to",
+        "structure": "lower-leg:mtp-collateral-4",
+        "host": "lower-leg:phalanx-4-proximal"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-4-expansion:from",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:edb"
+      },
+      {
+        "key": "lower-leg:edb-tendons:toe-4-expansion:to",
+        "structure": "lower-leg:edb-tendons",
+        "host": "lower-leg:phalanx-4-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-4:from",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-4-middle:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-4-middle:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-4-middle"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-4-distal:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-4-distal:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-4-distal"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-4:from",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:fdl"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-4:to",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:phalanx-4-distal"
+      },
+      {
+        "key": "lower-leg:fibularis-brevis-tendon:fifth-metatarsal:from",
+        "structure": "lower-leg:fibularis-brevis-tendon",
+        "host": "lower-leg:fibularis-brevis"
+      },
+      {
+        "key": "lower-leg:fibularis-brevis-tendon:fifth-metatarsal:to",
+        "structure": "lower-leg:fibularis-brevis-tendon",
+        "host": "lower-leg:metatarsal-5"
+      },
+      {
+        "key": "lower-leg:long-plantar:superficial-metatarsal-5:from",
+        "structure": "lower-leg:long-plantar",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-5:medial:from",
+        "structure": "lower-leg:mtp-collateral-5",
+        "host": "lower-leg:metatarsal-5"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-5:medial:to",
+        "structure": "lower-leg:mtp-collateral-5",
+        "host": "lower-leg:phalanx-5-proximal"
+      },
+      {
+        "key": "lower-leg:mtp-collateral-5:lateral:to",
+        "structure": "lower-leg:mtp-collateral-5",
+        "host": "lower-leg:phalanx-5-proximal"
+      },
+      {
+        "key": "lower-leg:abductor-digiti-tendon:fifth-toe:from",
+        "structure": "lower-leg:abductor-digiti-tendon",
+        "host": "lower-leg:abductor-digiti"
+      },
+      {
+        "key": "lower-leg:abductor-digiti-tendon:fifth-toe:to",
+        "structure": "lower-leg:abductor-digiti-tendon",
+        "host": "lower-leg:phalanx-5-proximal"
+      },
+      {
+        "key": "lower-leg:plantar-fascia:digital-slip-5:from",
+        "structure": "lower-leg:plantar-fascia",
+        "host": "lower-leg:calcaneus"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-5-middle:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-5-middle:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-5-middle"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-5-distal:from",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:edl"
+      },
+      {
+        "key": "lower-leg:extensor-digitorum-tendons:toe-5-distal:to",
+        "structure": "lower-leg:extensor-digitorum-tendons",
+        "host": "lower-leg:phalanx-5-distal"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-5:from",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:fdl"
+      },
+      {
+        "key": "lower-leg:flexor-digitorum-tendons:toe-5:to",
+        "structure": "lower-leg:flexor-digitorum-tendons",
+        "host": "lower-leg:phalanx-5-distal"
+      },
+      {
+        "key": "lower-leg:deltoid:tibiospring:from",
+        "structure": "lower-leg:deltoid",
+        "host": "lower-leg:tibia"
+      },
+      {
+        "key": "lower-leg:achilles:gastrocnemius-medial:from",
+        "structure": "lower-leg:achilles",
+        "host": "lower-leg:gastrocnemius"
+      },
+      {
+        "key": "lower-leg:achilles:gastrocnemius-medial:to",
+        "structure": "lower-leg:achilles",
+        "host": "lower-leg:soleus-distal"
+      },
+      {
+        "key": "lower-leg:achilles:gastrocnemius-lateral:from",
+        "structure": "lower-leg:achilles",
+        "host": "lower-leg:gastrocnemius"
+      },
+      {
+        "key": "right-arm:brachialis-muscle-r:from:1:from",
+        "structure": "z-anatomy:brachialis-muscle-r",
+        "host": "z-anatomy:humerus-r"
+      },
+      {
+        "key": "right-upper-leg:gluteus-maximus:from:from",
+        "structure": "right-upper-leg:gluteus-maximus",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:gluteus-medius:from:from",
+        "structure": "right-upper-leg:gluteus-medius",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:gluteus-minimus:from:from",
+        "structure": "right-upper-leg:gluteus-minimus",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:iliacus:from:from",
+        "structure": "right-upper-leg:iliacus",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:obturator-externus:from:from",
+        "structure": "right-upper-leg:obturator-externus",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:superior-gemellus:from:from",
+        "structure": "right-upper-leg:superior-gemellus",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:quadratus-femoris:from:from",
+        "structure": "right-upper-leg:quadratus-femoris",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:descending-part-of-iliofemoral-ligament:contact:from",
+        "structure": "right-upper-leg:descending-part-of-iliofemoral-ligament",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:descending-part-of-iliofemoral-ligament:contact:to",
+        "structure": "right-upper-leg:descending-part-of-iliofemoral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:transverse-part-of-iliofemoral-ligament:contact:from",
+        "structure": "right-upper-leg:transverse-part-of-iliofemoral-ligament",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:transverse-part-of-iliofemoral-ligament:contact:to",
+        "structure": "right-upper-leg:transverse-part-of-iliofemoral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:ischiofemoral-ligament:contact:from",
+        "structure": "right-upper-leg:ischiofemoral-ligament",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:ischiofemoral-ligament:contact:to",
+        "structure": "right-upper-leg:ischiofemoral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:pubofemoral-ligament:contact:from",
+        "structure": "right-upper-leg:pubofemoral-ligament",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:pubofemoral-ligament:contact:to",
+        "structure": "right-upper-leg:pubofemoral-ligament",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:ligament-of-head-of-femur:contact:from",
+        "structure": "right-upper-leg:ligament-of-head-of-femur",
+        "host": "right-upper-leg:hip-bone"
+      },
+      {
+        "key": "right-upper-leg:ligament-of-head-of-femur:contact:to",
+        "structure": "right-upper-leg:ligament-of-head-of-femur",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:vastus-lateralis:from:from",
+        "structure": "right-upper-leg:vastus-lateralis",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:vastus-intermedius:from:from",
+        "structure": "right-upper-leg:vastus-intermedius",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:gluteus-maximus:to:to",
+        "structure": "right-upper-leg:gluteus-maximus",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:adductor-magnus:to:to",
+        "structure": "right-upper-leg:adductor-magnus",
+        "host": "right-upper-leg:femur"
+      },
+      {
+        "key": "right-upper-leg:quadratus-femoris:to:to",
+        "structure": "right-upper-leg:quadratus-femoris",
+        "host": "right-upper-leg:femur"
+      }
+    ]
+  }
+]

@@ -55,7 +55,7 @@ describe('multiple body regions', () => {
       requested.push(url);
       const result = new THREE.Group();
       const pack = url.includes('left-upper-leg') ? leftUpperLegPack : rightUpperLegPack;
-      for (const structure of pack.structures.filter(s => ['bone', 'cartilage', 'ligament', 'fascia'].includes(s.tissue))) {
+      for (const structure of pack.structures.filter(s => (url.endsWith('muscles.glb') ? ['muscle', 'tendon'] : ['bone', 'cartilage', 'ligament', 'fascia']).includes(s.tissue))) {
         const mesh = new THREE.Mesh(new THREE.BoxGeometry(.02, .02, .02), new THREE.MeshStandardMaterial());
         mesh.userData.atlasId = structure.id;
         result.add(mesh);
@@ -72,6 +72,8 @@ describe('multiple body regions', () => {
         expect(part.anchor.toArray()).toEqual(assemblyOffsets[`${side}-upper-leg`]);
         expect(combined.connectionsFor(model.parts, `${side}-upper-leg:adductor-longus`).every(c => c.record.structureId.startsWith(`${side}-upper-leg:`))).toBe(true);
       }
+      expect(combined.connectionsFor(model.parts, 'left-upper-leg:adductor-longus')).toEqual([]);
+      await combined.loaders.loadMuscleAssets(model.parts, undefined, scene);
       const connections = combined.connectionsFor(model.parts, 'left-upper-leg:adductor-longus');
       expect(connections.length).toBeGreaterThan(0);
       const connection = connections[0];

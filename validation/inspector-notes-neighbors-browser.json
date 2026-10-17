@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-11",
+  "checks": [
+    {
+      "check": "right-arm: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "right-arm: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "right-arm: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "fascia",
+        "ligament",
+        "muscle",
+        "tendon"
+      ]
+    },
+    {
+      "check": "back: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "back: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "back: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "muscle",
+        "tendon"
+      ]
+    },
+    {
+      "check": "regions?region=right-arm&region=back: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "regions?region=right-arm&region=back: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "regions?region=right-arm&region=back: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "fascia",
+        "ligament",
+        "muscle",
+        "tendon"
+      ]
+    },
+    {
+      "check": "lower-leg: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "lower-leg: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "lower-leg: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "fascia",
+        "ligament",
+        "tendon"
+      ]
+    },
+    {
+      "check": "left-lower-leg: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "left-lower-leg: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "left-lower-leg: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "fascia",
+        "ligament",
+        "tendon"
+      ]
+    },
+    {
+      "check": "right-upper-leg: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "right-upper-leg: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "right-upper-leg: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "ligament",
+        "muscle",
+        "tendon"
+      ]
+    },
+    {
+      "check": "left-upper-leg: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "left-upper-leg: opening an attachment close-up restores temporary Neighbors layers"
+    },
+    {
+      "check": "left-upper-leg: Neighbors temporarily reveals layers and restores on toggle/clear/selection/isolate; preserves manual changes",
+      "baseline": [
+        "bone",
+        "cartilage"
+      ],
+      "added": [
+        "ligament",
+        "muscle",
+        "tendon"
+      ]
+    },
+    {
+      "check": "Combined trapezius l: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "Combined trapezius r: educational notes without provenance/membership text; compact facts",
+      "gap": 6
+    },
+    {
+      "check": "Ascending trapezius has matching anatomical tags on both sides",
+      "tags": [
+        "Back · Muscle",
+        "Back · Muscle"
+      ]
+    },
+    {
+      "check": "Anatomical area filter includes both trapezius sides"
+    }
+  ],
+  "errors": []
+}

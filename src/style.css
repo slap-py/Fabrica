@@ -1247,7 +1247,6 @@ body[data-page="hub"] { overflow: visible; }
   .body-side-labels { max-width: 220px; }
 }
 
-.structure-coverage { color: var(--muted); font-size: var(--fs-sm); line-height: 1.5; margin: 0 0 12px; }
 
 /* Settings tab */
 .settings-panel{display:grid;gap:16px}
@@ -1478,7 +1477,7 @@ body[data-page="viewer"] { --gap:12px; }
   .compass-wrap { left: calc(var(--atlas-w) + 2 * var(--gap)); }
   .fps-meter { left: calc(var(--atlas-w) + 2 * var(--gap)); }
   .view-controls {
-    left: calc(50% +(var(--atlas-w) - var(--inspector-w)) / 2);
+    left: calc(50% + (var(--atlas-w) - var(--inspector-w)) / 2);
     max-width: calc(100% - var(--inspector-w) - var(--atlas-w) - 96px);
   }
 }
@@ -1509,3 +1508,17 @@ body[data-page="viewer"] { --gap:12px; }
 /* Shift/Alt-drag on the viewer must not select text or draw focus rings over the viewport. */
 #viewport, .canvas-tools, .layers-panel .slider-row { user-select: none; -webkit-user-select: none; }
 #viewport canvas:focus, #viewport canvas:focus-visible, .canvas-tools button:focus:not(:focus-visible) { outline: none; }
+
+/* Long descriptions and facts must fit the narrow inspector. */
+.inspector-content > section { min-width: 0; }
+.quick-facts dd, .structure-description p { overflow-wrap: break-word; }
+.details .structure-description > p:last-child { margin-bottom: 6px; }
+.quick-facts dt:first-child { margin-top: 0; }
+
+/* Sourced anatomy notes share the established inspector layout. */
+.study-notes dd p { margin: 0 0 4px; }
+.study-note-references { display: block; font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.study-note-references a { color: var(--muted); text-decoration: underline; }
+.information-caveat { margin-top: 8px; }
+
+.inspector-content > .study-notes:first-child { grid-column: 1 / -1; }

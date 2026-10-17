@@ -10,6 +10,7 @@ import { createRegionAssetLoaders } from '../../assets';
 import { resolveFootprint, type AnatomyParts } from '../../softTissues';
 import { type AttachmentRecord, type MmPoint } from '../../attachments';
 import { type Connection, connectionCameraPose, connectionOccluders } from '../../connections';
+import { refineAttachmentConnections } from '../../attachmentConnections';
 
 export interface SourceRecord {
   id: string; name: string; tissue: string; assetGroup: string; sourceObject: string;
@@ -46,7 +47,7 @@ export function createUpperLegPack(manifest: UpperManifest): RegionPack {
     const name=r.id==='skin'?'Skin exterior':facts?.name ?? (r.id.endsWith('-cartilage') ? `${r.name} articular cartilage` : tissue==='tendon' ? `${parentFacts?.name ?? r.name} tendon` : r.name);
     const group=facts?.group ?? (tissue==='tendon' ? `${parentFacts?.group ?? 'Thigh'} tendons` : tissue==='bone'?'Skeleton':tissue==='skin'?'Regional surface':tissue==='cartilage'?'Joint surfaces':tissue==='ligament'?'Hip & knee ligaments':tissue==='fascia'?'Thigh fascia':tissueNames[tissue]);
     const structure:Structure = {id:r.id,name,tissue,region:centerOf(r).y < -140 ? 'Knee':'Thigh',group,
-      description:facts?.description ?? (tissue==='skin' ? `An illustrative ${side} structure envelope derived from this side’s registered anatomy, with a groin-level study cut. Pelvis context above the cut is omitted; this is not scanned skin.` : tissue==='tendon' ? `Tendon-material surfaces separated from the source ${parentFacts?.name ?? r.name}.` : `${name} from the ${side} hip, thigh and knee source anatomy.`),
+      description:facts?.description ?? (tissue==='skin' ? `An illustrative ${side} structure envelope derived from this side’s registered anatomy, with a groin-level study cut. Pelvis context above the cut is omitted; this is not scanned skin.` : tissue==='tendon' ? `The tendon of ${parentFacts?.name ?? r.name}, transmitting muscle tension to its attachment tissues.` : `${name} from the ${side} hip, thigh and knee source anatomy.`),
       role:facts?.action ?? (tissue==='tendon'?'Transfers muscle tension through the source attachment surfaces.':tissue==='bone'?'Provides skeletal support and attachment surfaces.':tissue==='cartilage'?'Forms part of a joint surface or fibrocartilaginous joint structure.':tissue==='ligament'?'Connects and supports the joint structures.':tissue==='fascia'?'Connective tissue surrounding or separating the thigh structures.':tissue==='artery'?'Carries blood to the regional tissues.':tissue==='vein'?'Returns blood from the regional tissues.':tissue==='nerve'?'Conveys motor and/or sensory signals along its anatomical course.':'Relates deeper structures to an illustrative outer envelope.'),
       connection:facts?`${facts.origin} → ${facts.insertion}`:tissue==='tendon'?`Associated with ${parentFacts?.name ?? r.name}.`:'Select related structures to explore the regional anatomy.',
       hint:'Use Focus, Isolate, tissue layers and the anatomical views to study this structure.',
@@ -134,10 +135,10 @@ export function createUpperLegPack(manifest: UpperManifest): RegionPack {
     return ids;
   };
   const connectionHighlightIds=(selected:string)=>new Set([selected,...relatedIds(selected)]);
-  const connectionsFor=(parts:AnatomyParts,selected:string):Connection[]=>attachmentRecords.filter(r=>r.structureId===selected||r.from.structureId===selected||r.to.structureId===selected||r.structureId+'-tendon'===selected).flatMap(record=>{
+  const connectionsFor=(parts:AnatomyParts,selected:string):Connection[]=>refineAttachmentConnections(parts,attachmentRecords.filter(r=>r.structureId===selected||r.from.structureId===selected||r.to.structureId===selected||r.structureId+'-tendon'===selected).flatMap(record=>{
     const ends:('from'|'to')[]=record.component==='joint-contact'?['from','to']:[record.component==='origin'?'from':'to'];
     return ends.filter(end=>parts.get(record[end].structureId)?.meshes.length).map(end=>({key:`${record.id}:${end}`,record,end,footprint:resolveFootprint(parts,record[end])}));
-  });
+  }));
   const footprintDecal=(parts:AnatomyParts,c:Connection)=>{
     const f=c.footprint;if(byId[f.structureId]?.tissue!=='bone')return;
     const bone=parts.get(f.structureId)?.meshes[f.meshIndex];if(!bone)return;

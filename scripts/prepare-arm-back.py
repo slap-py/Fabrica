@@ -7,7 +7,8 @@ ROOT=Path(__file__).resolve().parents[1]
 import sys
 sys.path.insert(0,str(ROOT/'scripts'))
 from arm_back_attachment_rules import validate_attachments
-inventory=json.loads((ROOT/'src/regions/arm-back/inventory.json').read_text())
+outputName=globals().get('outputName','arm-back')
+inventory=json.loads((ROOT/globals().get('inventoryPath','src/regions/arm-back/inventory.json')).read_text())
 SOURCE=ROOT/'assets/source/Startup.blend'
 assert hashlib.sha256(SOURCE.read_bytes()).hexdigest()==inventory['sourceBlendSha256']
 bpy.ops.wm.open_mainfile(filepath=str(SOURCE),use_scripts=False)
@@ -51,8 +52,9 @@ records=[];objects={};failures=[];empty=[];checkpoints=[]
 def stage(r):
  if r['tissue'] in ['artery','vein','nerve']:return '05 Nerves and vessels'
  if r['tissue'] not in ['bone','muscle']:return '04 Connective tissue'
- if r['tissue']=='bone' and 'right-arm' in r['regions'] or len(r['regions'])>1:return '01 Shared shoulder and arm bones'
- return '02 Arm muscles' if 'right-arm' in r['regions'] else '03 Back bones and muscles'
+ arm=any(region in ['right-arm','left-arm'] for region in r['regions'])
+ if r['tissue']=='bone' and arm or len(r['regions'])>1:return '01 Shared shoulder and arm bones'
+ return '02 Arm muscles' if arm else '03 Back bones and muscles'
 for checkpoint in collections:
  for item in [i for i in prepared if stage(i['record'])==checkpoint]:
   r=dict(item['record']);tmp=None
@@ -96,7 +98,7 @@ for checkpoint in collections:
    if tmp and tmp.name in bpy.data.objects:bpy.data.objects.remove(tmp,do_unlink=True)
    failures.append({'id':r['id'],'sourceObject':r['sourceObject'],'status':'failed-import','reason':str(e)})
  checkpoints.append({'name':checkpoint,'structures':sum(r['checkpoint']==checkpoint for r in records),'triangles':sum(r['triangles'] for r in records if r['checkpoint']==checkpoint),'failedImports':list(failures)})
- (ROOT/'output/arm-back/checkpoints.json').write_text(json.dumps(checkpoints,indent=2))
+ (ROOT/f'output/{outputName}/checkpoints.json').write_text(json.dumps(checkpoints,indent=2))
  print(checkpoint,checkpoints[-1]['structures'],flush=True)
-bpy.app.driver_namespace['muscle_map_arm_back_export']={'ROOT':ROOT,'inventory':inventory,'records':records,'objects':objects,'failures':failures+missing,'empty':empty,'checkpoints':checkpoints,'transform':transform}
+bpy.app.driver_namespace['muscle_map_arm_back_export']={'ROOT':ROOT,'outputName':outputName,'inventory':inventory,'records':records,'objects':objects,'failures':failures+missing,'empty':empty,'checkpoints':checkpoints,'transform':transform}
 result={'prepared':len(records),'failedImports':failures+missing,'emptySourceParts':empty,'checkpoints':checkpoints}

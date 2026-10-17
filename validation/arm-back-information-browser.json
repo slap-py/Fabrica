@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-11",
+  "checks": [
+    {
+      "check": "right-arm: five long facts at default width",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "right-arm: expanded facts",
+      "client": 638,
+      "scroll": 638,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "right-arm: Neighbors and connection highlighting respond"
+    },
+    {
+      "check": "back: five long facts at default width",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "back: expanded facts",
+      "client": 638,
+      "scroll": 638,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "back: Neighbors and connection highlighting respond"
+    },
+    {
+      "check": "regions?region=right-arm&region=back: five long facts at default width",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "regions?region=right-arm&region=back: expanded facts",
+      "client": 638,
+      "scroll": 638,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "regions?region=right-arm&region=back: Neighbors and connection highlighting respond"
+    },
+    {
+      "check": "Three source attachment cards remain distinct and focus toggles"
+    },
+    {
+      "check": "Scapula articulations show actual AC/glenohumeral joints, no rib articulation"
+    },
+    {
+      "check": "Median nerve named facts, adjacent citations and clinical note",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "Expanded nerve fields use available width",
+      "client": 638,
+      "scroll": 638,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "annular-ligament-of-radius-r: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "brachial-fascia-r: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "long-head-of-biceps-brachii-r-tendon: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "scaphoid-bone-r: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "radial-artery-r: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "cephalic-vein-r: support fields and references",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "flexor-carpi-radialis-r-tendon: cited note fields and scope",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "ulnotriquetral-ligament-r: cited note fields and scope",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "radiocapitate-ligament-r: cited note fields and scope",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "humerus-r-cartilage: cited note fields and scope",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "Retinaculum taxonomy: anatomical label and applicable note fields",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "Disc description and endplate relationships",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "C2–C3 disc related link opens the axis"
+    },
+    {
+      "check": "Rib cartilage label avoids assuming a single articular surface",
+      "client": 298,
+      "scroll": 298,
+      "document": 1440,
+      "window": 1440
+    },
+    {
+      "check": "1024px long facts",
+      "client": 298,
+      "scroll": 298,
+      "document": 1024,
+      "window": 1024
+    },
+    {
+      "check": "Lumbar subdivision and long canonical ID",
+      "client": 298,
+      "scroll": 298,
+      "document": 1024,
+      "window": 1024
+    },
+    {
+      "check": "Expanded lumbar component",
+      "client": 638,
+      "scroll": 638,
+      "document": 1440,
+      "window": 1440
+    }
+  ],
+  "errors": []
+}

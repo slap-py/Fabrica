@@ -18,6 +18,7 @@ import { combinedTitleForIds } from './combinedTitle';
  */
 export const assemblyOffsets: Readonly<Record<string, readonly [number, number, number]>> = {
   'right-arm': [0, 0, 0],
+  'left-arm': [0, 0, 0],
   'back': [0, 0, 0],
   'lower-leg': [-36.57284379005432, 67.66913086175919, 74.70057159662247],
   'left-lower-leg': [-36.57284379005432, 67.66913086175919, -74.70057159662247],
@@ -49,7 +50,6 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   if (new Set(packs.map(pack => pack.id)).size !== packs.length) throw new Error('Duplicate regions');
   if (packs.length === 1) return packs[0];
   for (const pack of packs) if (!assemblyOffsets[pack.id]) throw new Error(`Missing assembly registration: ${pack.id}`);
-  if (packs.some(p => p.id === 'right-arm') && packs.some(p => p.id === 'left-arm')) throw new Error('Choose one arm at a time');
   const base = packs.find(p => p.id === 'back') ?? packs.find(isUpper) ?? packs[0];
   const owners = new Map<string, Member>();
   const localIds = new Map<string, Map<string, string>>();
@@ -189,6 +189,8 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   const mapSet = (pack: RegionPack, ids: Set<string>) => new Set([...ids].map(id => globalId(pack, id)).filter(id => byId[id]));
   const related = (id: string, method: 'relatedIds' | 'directlyAttachedIds' | 'connectionHighlightIds') => {
     const result = new Set<string>();
+    // Canonical anatomy can connect endpoints residing in different regional packs.
+    for (const pack of packs) for (const target of pack.canonicalRelatedIds?.(id) ?? []) if (byId[target]) result.add(target);
     for (const pack of packs) for (const [local, global] of localIds.get(pack.id)!) {
       if (global === id) for (const value of mapSet(pack, pack[method](local))) result.add(value);
     }

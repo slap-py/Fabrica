@@ -1,0 +1,8 @@
+{
+  "public/models/arm-back/bones.glb": "2431cc0c0dc9a42acb13632663da1e9440701a0bf61028eb2f53f4acaa424eb7",
+  "public/models/arm-back/manifest.json": "b766c202719458806b0eb7ea3063f3083cfd15f76b00c5c5d4d8a8c93c7b4208",
+  "public/models/arm-back/muscles.glb": "f7822fef2644c9db4e4450ea340c15737b4669edd25b4198edc982d1f16931ed",
+  "public/models/arm-back/neurovascular.glb": "7b370566c6abc364c73550a7ca93255f68ff32237197176f81725ee151e22f54",
+  "src/regions/arm-back/manifest.json": "ac8ad0442fdc3f9a1cfc185a463933170226449854d2a84b8a84a4bcefd532f4",
+  "src/regions/arm-back/attachmentAudit.ts": "fffb2f95ee7d3b612c4adf2425424c1f63d490d857b51c3422efa0ef534ee831"
+}

@@ -32,6 +32,11 @@ export interface Structure {
   clinical?: string;
   facts?: NeurovascularFact[];
   references?: {title: string; url: string}[];
+  /** Notes-only metadata; source tissue classification and geometry are preserved. */
+  educationalTissue?: Tissue;
+  informationScope?: "individual" | "group" | "parent-derived" | "unresolved";
+  informationCaveat?: string;
+  studyNotes?: {label: string; text: string; references: {title: string; url: string}[]}[];
 }
 export const tissueNames: Record<Tissue, string> = {
   skin: "Skin exterior",

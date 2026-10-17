@@ -12,7 +12,7 @@ export function bindRegionPicker(form: HTMLFormElement) {
     const count = selected().length;
     button.disabled = count === 0;
     if (status) status.textContent = count ? `${count} ${count === 1 ? 'region' : 'regions'} selected` : 'Select regions to explore together';
-    // Same rule as the home body map: one side, touching sections only.
+    // Match the body map: both arms and Back, or touching sections of one leg.
     const sections = selected().map(id => sectionForRegion(id)?.id ?? id);
     const valid = isValidSelection(sections);
     inputs.forEach(input => {

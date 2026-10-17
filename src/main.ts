@@ -253,22 +253,41 @@ $('#structure-list').onkeydown=e=>{
   if(e.key==='Enter'){if(current>=0){e.preventDefault();rows[current].click();}return;}
   e.preventDefault();const next=current<0?0:Math.max(0,Math.min(rows.length-1,current+(e.key==='ArrowDown'?1:-1)));rows[next]?.focus();
 };
+// Only layers revealed by Neighbors are restored when the temporary view ends.
+const neighborLayers = new Set<Tissue>();
+let preNeighborsMode: string | null = null;
+function stopNeighbors() {
+  state.connections = false;
+  for (const tissue of neighborLayers) state.layers.delete(tissue);
+  neighborLayers.clear();
+  if (preNeighborsMode !== null) state.mode = preNeighborsMode;
+  preNeighborsMode = null;
+}
 function toggleIsolate() {
   state.isolated = !state.isolated;
-  state.connections = false;
+  stopNeighbors();
   state.attachmentFade = false;
   clearConnectionFocus();
   renderDetails();
   updateAppearance();
 }
 function toggleNeighbors(related: string[]) {
-  state.connections = !state.connections;
+  if (state.connections) stopNeighbors();
+  else {
+    preNeighborsMode = state.mode;
+    state.connections = true;
+    for (const id of related) {
+      const tissue = byId[id].tissue;
+      if (!state.layers.has(tissue)) {
+        neighborLayers.add(tissue);
+        state.layers.add(tissue);
+      }
+    }
+    state.mode = "custom";
+  }
   state.isolated = false;
   state.attachmentFade = false;
   clearConnectionFocus();
-  if (state.connections)
-    for (const id of related) state.layers.add(byId[id].tissue);
-  state.mode = "custom";
   renderDetails();
   updateAppearance();
 }
@@ -353,18 +372,23 @@ function renderDetails() {
     $("#details").innerHTML =
       EMPTY_INSPECTOR_HTML;
   } else {
-    const coverage = pack.structureRegions?.[d.id];
-    const spansRegions = coverage && coverage.length > 1 && (isNeurovascular(d.tissue) || !!d.canonicalId);
-    const regionNote = spansRegions
-      ? '<p class="structure-coverage">Spans ' + coverage.map(escapeHtml).join(' + ') + '</p>' : '';
-    const articulations = d.tissue === 'bone' ? [...relatedIds(d.id)].filter(id=>byId[id].tissue==='bone').map(id=>byId[id].name) : d.articulations;
-    const facts = [['Action',d.action],['Origin',d.origin],['Insertion',d.insertion],['Innervation',d.innervation],['Blood supply',d.bloodSupply],['Articulations',articulations?.join(', ')]];
+    const articulations = d.articulations ?? (d.tissue === 'bone' ? [...relatedIds(d.id)].filter(id=>byId[id].tissue==='bone').map(id=>byId[id].name) : undefined);
+    const anatomicalTissue = d.educationalTissue ?? d.tissue;
+    const facts = [...(anatomicalTissue === 'muscle' || !d.educationalTissue ? [['Action',d.action],['Origin',d.origin],['Insertion',d.insertion],['Innervation',d.innervation],['Blood supply',d.bloodSupply]] : []),['Articulations',articulations?.join(', ')]];
+    const studyNotes = d.studyNotes ?? [];
+    const noteHtml = studyNotes.map(note => '<dt>'+escapeHtml(note.label)+'</dt><dd><p>'+escapeHtml(note.text)+'</p><span class="study-note-references">'+note.references.map(ref=>'<a href="'+escapeHtml(ref.url)+'" target="_blank" rel="noreferrer">'+escapeHtml(ref.title)+'</a>').join(' · ')+'</span></dd>').join('');
+    const noteContains = (text:string) => studyNotes.some(note=>note.text.toLowerCase()===text.toLowerCase());
+    const summaryHtml = [
+      !noteContains(d.description) ? '<h3>Description</h3><p>'+escapeHtml(d.description)+'</p>' : '',
+      (!d.action || anatomicalTissue!=='muscle') && !noteContains(d.role) ? '<h3>Function</h3><p>'+escapeHtml(d.role.replace(/^Noncontractile:\s*/,''))+'</p>' : '',
+      d.tissue!=='muscle' && !studyNotes.length ? '<h3>Attachments & relationships</h3><p>'+escapeHtml(d.connection)+'</p>' : '',
+    ].join('');
     const quickFacts = facts.filter(([,value])=>value).map(([name,value])=>`<dt>${name}</dt><dd>${escapeHtml(value!)}</dd>`).join('');
     // Only combined views have several regions to name in the header tag.
     const multiRegion = (pack.regionIds?.length ?? 0) > 1;
-    const tagRegion = multiRegion ? `${spansRegions ? 'Across regions' : d.region} · ` : '';
+    const tagRegion = multiRegion ? `${d.region} · ` : '';
     $("#details").innerHTML =
-      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${tagRegion}${d.tissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p>${regionNote}<div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content"><section class="structure-description"><h3>Description</h3><p>${escapeHtml(d.description)}</p></section>${quickFacts ? `<section class="quick-facts"><dl>${quickFacts}</dl></section>` : ''}</div>`;
+      `<div class="structure-tag"><i style="background:${colors[d.tissue]}"></i>${tagRegion}${anatomicalTissue}</div><h2>${d.name}</h2><p class="group-name">${d.group}</p><div class="selection-tools"><button id="focus-selected" class="button" title="Frame this structure (F)">Focus</button><button id="isolate" class="button" aria-pressed="${state.isolated}" title="Show only this structure">Isolate</button><button id="show-connections" class="button" aria-pressed="${state.connections}" title="Show only adjacent and attached structures">Neighbors</button></div><div class="inspector-content">${summaryHtml ? '<section class="structure-description">'+summaryHtml+'</section>' : ''}${quickFacts ? `<section class="quick-facts"><dl>${quickFacts}</dl></section>` : ''}${noteHtml?`<section class="quick-facts study-notes"><dl>${noteHtml}</dl></section>`:''}${d.informationCaveat?`<section class="structure-description information-caveat"><h3>About these notes</h3><p>${escapeHtml(d.informationCaveat)}</p></section>`:''}</div>`;
     $("#isolate").onclick = toggleIsolate;
     $("#focus-selected").onclick = () => focusParts(focusIds());
     const connections = connectionsFor(leg.parts, d.id);
@@ -372,7 +396,7 @@ function renderDetails() {
       const section = document.createElement('details');
       section.open = attachmentsOpen || !!state.focusedConnection;
       section.className = 'attachment-details';
-      section.innerHTML = '<summary>Attachments</summary><p class="footprint-key">Select one to zoom in; select again to return.</p>';
+      section.innerHTML = '<summary>Attachments</summary><p class="footprint-key">Modeled connections only. Select one to zoom in; select again to return.</p>';
       // Bone insertions first, then junctions and soft-to-soft attachments.
       const ordered = [...connections].sort((a,b) => Number(b.record[b.end].kind === 'surface') - Number(a.record[a.end].kind === 'surface'));
       for (const connection of ordered) {
@@ -439,7 +463,7 @@ function renderDetails() {
       }
       $("#details").append(links);
     }
-    if(d.facts?.length){const section=document.createElement('section');section.className='neurovascular-facts';section.innerHTML='<h3>Key facts</h3>';for(const fact of d.facts){const p=document.createElement('p');p.textContent=fact.text;section.append(p);}$('#details').append(section);}
+    if(d.facts?.length && !studyNotes.length){const section=document.createElement('section');section.className='neurovascular-facts';section.innerHTML='<h3>Key facts</h3>';for(const fact of d.facts){const p=document.createElement('p');p.textContent=fact.text;section.append(p);}$('#details').append(section);}
     if(d.references?.length){const sources=document.createElement('section');sources.className='structure-references';sources.innerHTML='<h3>References</h3>';for(const reference of d.references){const a=document.createElement('a');a.href=reference.url;a.textContent=reference.title;a.target='_blank';a.rel='noreferrer';sources.append(a);}$('#details').append(sources);}
   }
 }
@@ -449,6 +473,9 @@ for (const tissue of tissueKeys) {
   label.innerHTML = `<i style="background:${colors[tissue]}"></i><span>${tissueNames[tissue]}</span><input type="checkbox" data-layer="${tissue}" checked/><span class="switch" aria-hidden="true"></span>`;
   label.querySelector("input")!.onchange = (e) => {
     const checked = (e.target as HTMLInputElement).checked;
+    // Explicit layer changes belong to the user, even during a Neighbors view.
+    neighborLayers.delete(tissue);
+    if (state.connections) preNeighborsMode = "custom";
     state.attachmentFade = false;
     clearConnectionFocus();
     checked ? state.layers.add(tissue) : state.layers.delete(tissue);
@@ -667,7 +694,7 @@ function focusConnection(connection: Connection) {
   state.focusedConnection = connection.key;
   state.attachmentFade = true;
   state.isolated = false;
-  state.connections = false;
+  stopNeighbors();
   cutAwayIds.clear();
   cutAwayDirty = true;
   const { target, position } = connectionCameraPose(connection.footprint, camera.fov, camera.aspect);
@@ -927,6 +954,7 @@ function toggleSelection(id: string | null) {
   setSelection(current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
 }
 function setSelection(ids: string[], revealLayer = true) {
+  stopNeighbors();
   clearConnectionFocus();
   state.attachmentFade = false;
   state.multi = ids.length > 1 ? ids : [];
@@ -1127,6 +1155,7 @@ function presetLayers(mode: string): Tissue[] {
   return [...(pack.presets.find(preset => preset.id === mode)?.tissues ?? [])];
 }
 function preset(mode: string) {
+  stopNeighbors();
   clearConnectionFocus();
   state.attachmentFade = false;
   state.mode = mode;
@@ -1814,7 +1843,7 @@ return {
   captureSession(): ViewerSession {
     return {
       regionIds: pack.regionIds ?? [pack.id], selectedAliases: selectionAliases(pack, state.selected),
-      layers: [...state.layers], atlasTypes: [...state.atlasTypes],
+      layers: [...state.layers].filter(tissue => !neighborLayers.has(tissue)), atlasTypes: [...state.atlasTypes],
       atlasRegion: !pack.regionIds && state.atlasRegion !== 'all' ? pack.id + ':' + state.atlasRegion : state.atlasRegion,
       search: $<HTMLInputElement>('#search').value, onlyVisible: state.onlyVisible,
       opacity: state.opacity, skinOpacity: state.skinOpacity, neurovascularOpacity: state.neurovascularOpacity,

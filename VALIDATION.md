@@ -462,3 +462,82 @@ Attachment proximity was audited before delivery. A nearest-bone candidate assoc
 Local Edge headless pointer-drag measurements at 1440x1000 with labels off show **16.7 ms median frame intervals** for both new regions, their combination and the existing lower-leg baseline in High/Low. The new views initially loaded in approximately **0.97–1.62 seconds**; the lower-leg baseline took 16.85–23.14 seconds in these fresh local contexts. These are local observations, not network/device guarantees. Final High/Low overview/focus captures and tablet/desktop body-map captures are under `validation/arm-back-*.png`. The assistant visually reviewed the source arm, bilateral back, combined alignment, labels, selection information, region controls and the four generated light/dark source thumbnails. User visual approval has not been obtained.
 
 Reproduction commands and limitations are in the Right Arm and Back section of `README.md`; the plan remains in chat.
+
+
+## Arm/back sourced information — October 11, 2026
+
+Educational metadata now covers all **651 canonical records**: 131 source-classified muscles and 520 support structures. All 131 have five structured fields and anatomical references. Three source muscle records are noncontractile connective tissue; their fields explicitly state applicability and remaining fine sensory/vascular uncertainty. All **146 neurovascular records** have two individually sourced facts. Five non-muscle educational mappings remain unresolved and are enumerated by canonical ID in `validation/arm-back-information-coverage.md`/`.json` and `arm-back-anatomical-review.md`. The JSON includes each record's baseline/current checklist, tissue, laterality, material component, source object, references, remaining work, unavailable relationship targets, and the full sourced graph.
+
+Source differences are resolved explicitly for radial wrist extensors, flexor pollicis brevis heads, serratus posterior anatomy/function, lateral lumbar intertransversarii, variable spinalis and deep-radial/posterior-interosseous naming. The 38 accepted source patches across 24 muscle records agree with complete written facts. All 179 candidates are audited; the 141 formerly withheld candidates remain withheld because anatomical proximity alone cannot establish a source endpoint/location. Existing seeds, source meshes and geometry are unchanged. Missing visual footprints, data-only spinal cord, absent named meshes and 64 empty source parts remain geometry exceptions, separately documented.
+
+The inspector uses its existing five fact fields, references, related links and attachment cards. It now displays non-muscle Function and Attachments & relationships. Source provenance is retained in datasets and reports, and omitted from the study notes. Arm/back bone articulation lists are explicit actual joints, excluding muscle/ligament attachment links; distal ulna is not listed as directly articulating with carpal bones and scapula is not listed as articulating with ribs. Canonical edges crossing regional membership resolve in the combined view without duplicating information.
+
+The production build passes with the existing CSS `calc` whitespace and bundle-size advisories. **174 tests in 34 files pass**. The new information tests cover exact canonical coverage, all five fields, individual subdivision actions/origins, grouped nerve territories, all relationship endpoints/references, symmetric single/combined links, cross-region canonical edges, identical shared information, actual joints, all 179 attachment decisions and neurovascular facts. The existing latissimus regression now requires its written humeral insertion while still excluding the incompatible scapular footprint.
+
+`validation/arm-back-information-browser.json` records **22 successful checks**, zero browser errors, against the production preview in Edge headless. It checks Right Arm, Back and their combination; five long muscle fields and references at 300px/640px inspector widths; Neighbors and highlighting; three distinct infraspinatus attachment cards and focus toggling; actual scapular joints; representative bone/tendon/ligament/fascia/nerve/artery/vein/cartilage text; selected clinical notes; long subdivision facts at 1440/1024px. Measured inspector/document widths show no horizontal overflow. The assistant reviewed `arm-back-information-expanded.png` and `arm-back-information-1024.png` for text wrapping and inspector layout. Content review is by the implementing assistant against linked institutional anatomy tables and primary studies; automated tests do not provide independent anatomical peer review.
+
+Reproduction:
+
+```sh
+npm run build
+npm test -- --maxWorkers=2
+node scripts/arm-back-information-report.mjs
+npm run preview -- --port 5187 --strictPort
+node scripts/arm-back-information-browser-check.mjs
+```
+
+## Inspector wording and temporary Neighbors layers — October 11, 2026
+
+Removed Model provenance from the shared inspector, so it is absent from all arm/back and leg notes. Provenance remains in source metadata, references and coverage reports. Removed generated “Modeled left/right/midline component” descriptions from all 651 arm/back records and rewrote tendon/cartilage wording around their anatomy. Upper-leg tendon fallback descriptions use the same educational wording. Bilateral descriptions, groups and anatomical areas match, independently of source region membership; corresponding tendon/cartilage components follow that area. Ascending trapezius is Back on both sides, including area filtering. Inspector tags use anatomical areas rather than Across regions, and source-membership Spans labels are removed. The description-to-Action gap measures 6px in normal-width inspectors.
+
+Neighbors owns only the tissue layers it temporarily enables. Turning it off, clearing/changing a selection, using Isolate or opening an attachment close-up restores those layers. Existing enabled layers and explicit manual changes remain enabled; presets replace the layer state. Captured viewer sessions omit temporary Neighbors layers.
+
+`validation/inspector-notes-neighbors-browser.json` records **25 successful checks**, zero page errors, across Right Arm, Back, their combination and both upper/lower legs. Checks cover temporary reveal/restoration through each exit, manual overrides, attachment close-ups, presets, missing provenance/membership wording, compact fact spacing and matching trapezius labels/filters. The assistant inspected the 1440px and 1024px screenshots. The existing **22 arm/back information browser checks** also pass after these changes. Production build and all **174 tests across 34 files** pass; the new data invariant checks every arm/back record and all four leg packs for the removed wording, and all bilateral arm/back pairs for consistent descriptions and areas.
+
+Reproduce with a production preview running at port 5187:
+
+```sh
+npm run build
+npm test
+node scripts/arm-back-information-report.mjs
+node scripts/arm-back-information-browser-check.mjs
+node scripts/inspector-notes-neighbors-browser-check.mjs
+```
+
+
+## Arm/back notes-only accuracy revision — October 11, 2026
+
+All arm/back muscle and support template definitions were reviewed against the institutional anatomy tables, textbook chapters and anatomical studies listed in [the source review](validation/arm-back-anatomical-review.md). The review includes bilateral expansions, grouped structures, named subdivisions, shared shoulder records and source taxonomy exceptions. **651 records** have an explicit information scope; all **520 non-muscle records** have cited study notes. The coverage JSON now includes full note text, adjacent citations, scope/caveats and model-preservation hashes. Field presence indicates coverage, not exhaustive anatomy or independent peer review.
+
+The inspector adds named joint surfaces, tendon muscle/pathways and selected courses, cartilage relationships, connective-tissue attachments, and nerve/vessel course and territory fields. References sit beside the applicable text; neurovascular fields use their fact-specific source, with FPB variation evidence added to the relevant motor distribution. Duplicate description/territory text is omitted. Source-classified retinacula and palmar fascia show their anatomical labels and applicable fields; the distal radioulnar disc shows cartilage. Source layers and IDs are retained. Bone-associated cartilage groups use an associated-cartilage title without claiming individual surface segmentation.
+
+The anatomical corrections and qualifications include cervical transverse-process terminology, variable branch/root innervation, FPB supply, hand digital branches, intercostal/subcostal levels, ulnocarpal attachments, disputed transverse-humeral terminology, anterior thoracolumbar fascia mechanics, region-appropriate vascular references and scaphoid vascularity. Relationship corrections resolve C2–C3 disc/nucleus hosts to the axis, follow lumbrical tendon pathways, distinguish indirect tendon force pathways from established endpoints, and retain separate costovertebral/costotransverse joint edges. Ribs 11–12 have no costotransverse edges. **Five** ambiguous source mappings remain unresolved; **68** tendon records explicitly describe parent-muscle anatomy without establishing individual material endpoints.
+
+SHA-256 checks against the notes-task starting state confirm all **six** protected files are unchanged: three arm/back GLBs, the exported and source manifests, and the spatial attachment audit. No mesh, segmentation, registration, seed or footprint was edited. Existing attachment audit decisions and visual cards were retained.
+
+Production build passes, with the existing CSS calc-whitespace and chunk-size warnings. The full suite passes **179 tests in 35 files**; the final citation adjustment also passes the **12** targeted information/notes tests. New checks cover all support citations/scopes, the five unresolved mappings, tendon/lumbrical pathways, C2 hosts, distinct rib joints, source taxonomy retention and byte preservation. The final production browser run passes **30 checks**, zero page errors, at 1440/1024px and 298/638px inspector widths. It covers all tissue note categories, adjacent citations, unresolved/grouped caveats, anatomical retinaculum labeling, the C2–C3-to-axis link, rib-cartilage wording, Neighbors/highlighting and retained attachment-card focus. Inspector/document widths show no horizontal overflow. The assistant inspected the disc, nerve and expanded muscle screenshots for wrapping and field layout.
+
+Evidence: [browser checks](validation/arm-back-information-browser.json), [coverage and preservation](validation/arm-back-information-coverage.json), and [review limits and source discrepancies](validation/arm-back-anatomical-review.md). The newer note layout and scope descriptions supersede the earlier information-section wording about generic Function/Attachments displays and complete written attachments.
+
+## Attachment menu refinement · October 12, 2026
+
+Attachment candidates across all six regions now require a loaded host footprint and either direct source surface contact (within 0.5 mm export tolerance) or an attachment-specific authored mesh. Source origin/insertion markers and generic associated tendon material alone do not establish a modeled route. The broader anatomical facts and Related structures remain available.
+
+Repeated cards for the same owner, host, role and site (within 2 mm, with agreeing surface normals) collapse. Separate footprints and origin/insertion roles remain selectable. Eligibility is cached against loaded mesh/BVH identities and footprint positions so asset reloads/refits invalidate it; layer visibility does not affect eligibility.
+
+- `npm run build`: passed. Existing CSS calc spacing and chunk-size warnings remain.
+- `npm test`: 37 files, 184 tests passed.
+- `tests/attachment-regions.test.ts`: actual bone/muscle assets for all six regions and a four-region combined scene; both sartorius hip cards withheld. Report: `validation/attachment-refinement.json`.
+- `node scripts/attachment-refinement-browser-check.mjs` against the local dev server: all six regions passed with no page errors; supported card focus/return works, both sartorius hip cards are absent and written origins remain, the EDL junction appears once with all eight insertion sites retained. Report: `validation/attachment-refinement-browser.json`; upper-leg screenshots: `validation/attachment-refinement-{right,left}-upper-leg.png`.
+
+
+## Native Left Arm and simultaneous arms/back (2026-10-16)
+
+- Exported 357 native left source structures (61 muscles, 32 bones); six empty material parts are explicitly recorded and there are no failed imports. Native source alignment is retained.
+- Every right-arm structure has a left counterpart with identical educational fields, notes, clinical text, references, categories and same-side relationships. Medial/lateral camera directions reflect the left side. Source geometry and spatial focus patches remain side-specific.
+- The body map, landing preview, catalog and help identify Left Arm as available. Left Arm, Right Arm and Back can be selected together; combined titles and routes retain all three. Shared native shoulder identities render once, giving 969 unique structures (115 bones and 180 muscles).
+- Original arm/back GLBs and manifests retain their recorded hashes. The original 179 patch-audit candidates and 38 accepted decisions remain unchanged; the expanded audit covers new left source objects too.
+- `node node_modules/vitest/vitest.mjs run --pool=threads --maxWorkers=2 --reporter=dot`: **38 files, 189 tests passed**. Final re-export verified again by all five left-arm tests.
+- `npm run build`: **passed** (existing bundle-size advisory). Corrected invalid CSS calc spacing that positioned camera controls offscreen.
+- `node scripts/left-arm-browser-check.mjs`: **passed**, no browser errors. Verified native loading, lazy neurovascular loading, notes, focus/isolation, anatomical views, body-map three-region selection, shared scapula deduplication, selected-structure transfer across routes, and the existing 390px phone-size screen notice without horizontal overflow.
+- Evidence: `validation/left-arm-browser.json`, `validation/left-arm-both-arms-back-1440.png`, `validation/left-arm-both-arms-back-390.png`. Generated distinct light/dim thumbnails in `public/regions/left-arm*.png`.
