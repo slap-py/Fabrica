@@ -45,6 +45,10 @@ export function mountViewer(pack: RegionPack, app: HTMLElement, initialSelection
 const restored = restoreViewerSession(pack, session);
 const scope = createViewerScope();
 const listen = scope.listen;
+const loadAssets = (run: () => Promise<AssetReport>) => scope.load(run).catch(error => {
+  if (!scope.signal.aborted) throw error;
+  return { loaded: [], fallback: [], warnings: [] } as AssetReport;
+});
 let disposed = false;
 let frameRequest = 0;
 const worker = createPickingWorker(delta => { viewerDiagnostics.activeWorkers += delta; });
@@ -499,7 +503,7 @@ function ensureNeurovascular(): Promise<void> {
   // Show loading in the slider readout: adding a status line here would resize the layers box.
   const status=$('#neurovascular-status');
   $('#neurovascular-opacity-value').textContent='Loading…';
-  neurovascularRequest=scope.track(loadNeurovascularAssets(leg.parts,pack.assets.neurovascular,createAssetSceneLoader(scope.signal),bvhBuilder())).then(report=>{
+  neurovascularRequest=loadAssets(() => loadNeurovascularAssets(leg.parts,pack.assets.neurovascular,createAssetSceneLoader(scope.signal),bvhBuilder())).then(report=>{
     if (disposed) return;
     viewport.dataset.neurovascularAssets=report.fallback.length ? 'fallback' : 'ready';
     viewport.dataset.loadedNeurovascular=String(report.loaded.length);
@@ -1760,9 +1764,9 @@ const muscleShown = () => state.layers.has("muscle") || state.attachmentFade || 
 const needsMuscles = () => !graphics.lazyLayers || muscleShown();
 const needsExterior = () => needsMuscles() || state.layers.has("skin");
 const requestMuscles = (progress?: (loaded: number, total: number) => void) =>
-  muscleRequest ??= scope.track(loadMuscleAssets(leg.parts, pack.assets.muscles, createAssetSceneLoader(scope.signal, progress), progress, bvhBuilder())).then(r => { if (!disposed) { r.warnings.forEach(w => console.warn(w)); muscleReport = r; } return r; });
+  muscleRequest ??= loadAssets(() => loadMuscleAssets(leg.parts, pack.assets.muscles, createAssetSceneLoader(scope.signal, progress), progress, bvhBuilder())).then(r => { if (!disposed) { r.warnings.forEach(w => console.warn(w)); muscleReport = r; } return r; });
 const requestExterior = (progress?: (loaded: number, total: number) => void) =>
-  exteriorRequest ??= scope.track(loadExteriorAssets(leg.parts, progress, bvhBuilder(), pack.assets.exterior, createAssetSceneLoader(scope.signal, progress))).then(r => { if (!disposed) { r.warnings.forEach(w => console.warn(w)); exteriorReport = r; } return r; });
+  exteriorRequest ??= loadAssets(() => loadExteriorAssets(leg.parts, progress, bvhBuilder(), pack.assets.exterior, createAssetSceneLoader(scope.signal, progress))).then(r => { if (!disposed) { r.warnings.forEach(w => console.warn(w)); exteriorReport = r; } return r; });
 /** Called from updateAppearance: fetch deferred layers once something needs them. */
 function ensureLayerAssets() {
   if (disposed) return;
@@ -1809,7 +1813,7 @@ function startLoad(load: (progress: (loaded: number, total: number) => void) => 
   const index = loadingBytes.push({ loaded: 0, total: 0 }) - 1;
   initialLoads.push(load(modelProgress(index)));
 }
-startLoad(progress => scope.track(loadBoneAssets(leg.parts, pack.assets.bones, createAssetSceneLoader(scope.signal, progress), progress, bvhBuilder())));
+startLoad(progress => loadAssets(() => loadBoneAssets(leg.parts, pack.assets.bones, createAssetSceneLoader(scope.signal, progress), progress, bvhBuilder())));
 // Low shows the skeleton first; once it is ready, ensureLayerAssets fetches what the layers need.
 if (!graphics.lazyLayers) { startLoad(requestMuscles); startLoad(requestExterior); }
 initialLoad = Promise.all(initialLoads).then(([report]) => {

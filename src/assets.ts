@@ -4,6 +4,7 @@ import { structures, colors, byId, type Structure, type Tissue } from "./data";
 import { enableMeshPicking, type BvhBuilder } from "./picking";
 import type { createAnkle } from "./ankle";
 import { disposeObject } from "./viewerResources";
+import { readAssetBytes } from "./assetLoading";
 import { createSkinMaterial } from "./skinMaterial";
 
 type Parts = ReturnType<typeof createAnkle>["parts"];
@@ -64,11 +65,40 @@ async function installAssetsAsync(scene: THREE.Object3D, parts: Parts, ids: stri
   }
 }
 
+function finiteValues(values: ArrayLike<number>): boolean {
+  for (let i = 0; i < values.length; i++) if (!Number.isFinite(values[i])) return false;
+  return true;
+}
+function validIndices(values: ArrayLike<number>, vertexCount: number): boolean {
+  for (let i = 0; i < values.length; i++) if (!Number.isInteger(values[i]) || values[i] < 0 || values[i] >= vertexCount) return false;
+  return true;
+}
+
 function stageAssets(scene: THREE.Object3D, parts: Parts, ids: string[], tissue: Tissue, pick: boolean, lookup: StructureLookup = byId, skinSource = "structure-envelope"): StagedAssets {
   const report: AssetReport = { loaded: [], fallback: [], warnings: [] };
   const staged = new Map<string, THREE.Mesh[]>();
   const invalid = new Set<string>();
   const sourceMeshes: THREE.Mesh[] = [];
+  const allowed = new Set(ids);
+  // A consumed scene gives exclusive buffers directly to the installed mesh.
+  // Shared/interleaved source buffers stay on the copy path to avoid changing
+  // another mesh's coordinates when baking a hierarchy or reflection.
+  const uses = new Map<THREE.BufferGeometry, number>();
+  const buffers = new Map<ArrayBufferLike, THREE.BufferGeometry>();
+  const shared = new Set<THREE.BufferGeometry>();
+  scene.traverse(object => {
+    if (!(object instanceof THREE.Mesh)) return;
+    const geometry = object.geometry;
+    uses.set(geometry, (uses.get(geometry) ?? 0) + 1);
+    for (const attribute of [...Object.values(geometry.attributes), geometry.index]) {
+      if (!attribute) continue;
+      if (attribute instanceof THREE.InterleavedBufferAttribute) { shared.add(geometry); continue; }
+      const buffer = attribute.array.buffer;
+      const previous = buffers.get(buffer);
+      if (previous && previous !== geometry) { shared.add(previous); shared.add(geometry); }
+      buffers.set(buffer, geometry);
+    }
+  });
   scene.updateMatrixWorld(true);
   scene.traverse(object => {
     if (!(object instanceof THREE.Mesh)) return;
@@ -80,7 +110,7 @@ function stageAssets(scene: THREE.Object3D, parts: Parts, ids: string[], tissue:
       id = parent.userData.atlasId;
     id ??= object.name;
     const structure = typeof id === "string" ? lookup[id] : undefined;
-    if (typeof id !== "string" || !structure || !ids.includes(id) || !parts.has(id)) {
+    if (typeof id !== "string" || !structure || !allowed.has(id) || !parts.has(id)) {
       report.warnings.push(`Ignored unmatched mesh: ${object.name}`);
       return;
     }
@@ -89,22 +119,32 @@ function stageAssets(scene: THREE.Object3D, parts: Parts, ids: string[], tissue:
     try {
       if (object instanceof THREE.SkinnedMesh || object instanceof THREE.InstancedMesh)
         throw new Error("Expected a static anatomical mesh");
-      geometry = object.geometry.clone();
+      if (uses.get(object.geometry) === 1 && !shared.has(object.geometry)) {
+        geometry = object.geometry;
+        object.geometry = new THREE.BufferGeometry();
+      } else geometry = object.geometry.clone();
       // glTF is meters. Bake hierarchy and unit conversion once, before bounds/BVH.
       const matrix = new THREE.Matrix4().makeScale(1000, 1000, 1000).multiply(object.matrixWorld);
+      geometry.boundsTree = undefined;
       geometry.applyMatrix4(matrix);
       const positions = geometry.getAttribute("position");
-      if (!positions || positions.count < 3 || !Array.from(positions.array).every(Number.isFinite))
+      if (!positions || positions.count < 3 || !finiteValues(positions.array))
         throw new Error("Missing or non-finite vertices");
       const index = geometry.getIndex();
       const count = index?.count ?? positions.count;
-      if (count < 3 || count % 3 || (index && Array.from(index.array).some(i => i >= positions.count)))
+      if (count < 3 || count % 3 || (index && !validIndices(index.array, positions.count)))
         throw new Error("Invalid triangle indices");
       if (matrix.determinant() < 0) {
-        const indices = index ? Array.from(index.array) : Array.from({length: positions.count}, (_, i) => i);
-        for (let i = 0; i < indices.length; i += 3)
-          [indices[i + 1], indices[i + 2]] = [indices[i + 2], indices[i + 1]];
-        geometry.setIndex(indices);
+        if (!index) {
+          const indices = positions.count > 65535 ? new Uint32Array(positions.count) : new Uint16Array(positions.count);
+          for (let i = 0; i < indices.length; i++) indices[i] = i;
+          geometry.setIndex(new THREE.BufferAttribute(indices, 1));
+        }
+        const winding = geometry.index!;
+        for (let i = 0; i < winding.count; i += 3) {
+          const second = winding.getX(i + 1);
+          winding.setX(i + 1, winding.getX(i + 2)); winding.setX(i + 2, second);
+        }
       }
       geometry.clearGroups();
       const actualTissue = structure.tissue;
@@ -315,29 +355,9 @@ export function createAssetSceneLoader(signal: AbortSignal, onProgress?: (loaded
     signal.throwIfAborted();
     const response = await fetch(url, { signal });
     if (!response.ok) throw new Error(`Asset fetch failed: ${response.status}`);
-    const total = Number(response.headers.get('content-length') || 0);
-    const reader = response.body?.getReader();
-    const chunks: Uint8Array[] = [];
-    let loaded = 0;
-    if (reader) {
-      try {
-        for (;;) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          chunks.push(value); loaded += value.length;
-          onProgress?.(loaded, total);
-        }
-      } finally { reader.releaseLock(); }
-    } else {
-      const bytes = new Uint8Array(await response.arrayBuffer());
-      chunks.push(bytes); loaded = bytes.length;
-      onProgress?.(loaded, total);
-    }
+    const bytes = await readAssetBytes(response, signal, onProgress);
     signal.throwIfAborted();
-    const bytes = new Uint8Array(loaded);
-    let offset = 0;
-    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-    const gltf = await new GLTFLoader().parseAsync(bytes.buffer, new URL('.', new URL(url, location.href)).href);
+    const gltf = await new GLTFLoader().parseAsync(bytes, new URL('.', new URL(url, location.href)).href);
     if (signal.aborted) {
       gltf.scenes.forEach(disposeObject);
       signal.throwIfAborted();

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+import { createLoadQueue } from "./assetLoading";
 import { viewerDiagnostics } from "./viewerDiagnostics";
 export { viewerDiagnostics } from "./viewerDiagnostics";
 
@@ -25,6 +26,7 @@ export function createViewerScope() {
   const cleanups: (() => void)[] = [];
   const timers = new Set<number>();
   const abort = new AbortController();
+  const queueLoad = createLoadQueue(abort.signal);
   function listen<K extends keyof HTMLElementEventMap>(target: HTMLElement, type: K, listener: (event: HTMLElementEventMap[K]) => void, options?: AddEventListenerOptions): void;
   function listen<K extends keyof DocumentEventMap>(target: Document, type: K, listener: (event: DocumentEventMap[K]) => void, options?: AddEventListenerOptions): void;
   function listen<K extends keyof WindowEventMap>(target: Window, type: K, listener: (event: WindowEventMap[K]) => void, options?: AddEventListenerOptions): void;
@@ -36,6 +38,10 @@ export function createViewerScope() {
   }
   return {
     signal: abort.signal, listen,
+    load<T>(run: () => Promise<T>): Promise<T> {
+      viewerDiagnostics.pendingLoads++;
+      return queueLoad(run).finally(() => { viewerDiagnostics.pendingLoads--; });
+    },
     cleanup(callback: () => void) { cleanups.push(callback); },
     timeout(callback: () => void, delay: number) {
       const id = window.setTimeout(() => { timers.delete(id); if (!abort.signal.aborted) callback(); }, delay);
