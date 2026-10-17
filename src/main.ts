@@ -1777,17 +1777,18 @@ function ensureLayerAssets() {
   ];
   if (!pending.length) return;
   viewport.dataset.layerAssets = "loading";
-  void Promise.all([initialLoad, ...pending]).then(() => {
+  void Promise.all([initialLoad, ...pending]).then(async () => {
     if (disposed) return;
-    refreshAfterAssets();
+    await refreshAfterAssets();
     viewport.dataset.layerAssets = "ready";
-  });
+  }).catch(error => { if (!disposed) console.warn(error); });
 }
 /** Tendons, ligaments and cartilage fit whatever bones and muscles are installed. */
-function refreshAfterAssets(beforeAppearance?: () => void) {
+async function refreshAfterAssets(beforeAppearance?: () => void) {
   if (disposed) return;
   if (exteriorReport) viewport.dataset.exteriorAssets = exteriorReport.fallback.length ? "fallback" : "ready";
-  const soft = rebuildSoftTissues(leg.parts);
+  const soft = pack.rebuildSoftTissuesAsync ? await scope.track(pack.rebuildSoftTissuesAsync(leg.parts, scope.signal)) : rebuildSoftTissues(leg.parts);
+  if (disposed) return;
   footprintSelection = undefined;
   cutAwayIds.clear();
   viewport.dataset.softTissues = soft.warnings.length ? "partial" : "ready";
@@ -1816,9 +1817,9 @@ function startLoad(load: (progress: (loaded: number, total: number) => void) => 
 startLoad(progress => loadAssets(() => loadBoneAssets(leg.parts, pack.assets.bones, createAssetSceneLoader(scope.signal, progress), progress, bvhBuilder())));
 // Low shows the skeleton first; once it is ready, ensureLayerAssets fetches what the layers need.
 if (!graphics.lazyLayers) { startLoad(requestMuscles); startLoad(requestExterior); }
-initialLoad = Promise.all(initialLoads).then(([report]) => {
+initialLoad = Promise.all(initialLoads).then(async ([report]) => {
   if (disposed) return;
-  refreshAfterAssets(() => {
+  await refreshAfterAssets(() => {
     viewport.dataset.boneAssets = report.fallback.length ? "fallback" : "ready";
     viewport.dataset.loadedBones = String(report.loaded.filter(id=>byId[id].tissue==='bone').length);
     // Fit the overview after soft tissues are rebuilt, since they extend the bounds.
@@ -1826,7 +1827,7 @@ initialLoad = Promise.all(initialLoads).then(([report]) => {
     for (const warning of report.warnings) console.warn(warning);
   });
   hideLoading(!!(report.fallback.length || muscleReport?.fallback.length || exteriorReport?.fallback.length));
-}, () => hideLoading(true));
+}).catch(error => { if (!disposed) { console.warn(error); hideLoading(true); } });
 function hideLoading(failed = false) {
   if (disposed) return;
   const el = app.querySelector<HTMLElement>("#loading");

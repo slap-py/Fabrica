@@ -1,3 +1,4 @@
+import { prepareSoftTissues } from "../../softTissuePreparation";
 import * as THREE from "three";
 import { createAnkle as createRightAnkle } from "../../ankle";
 import { rebuildSoftTissues as rebuildRightSoftTissues } from "../../softTissues";
@@ -302,6 +303,7 @@ export const leftLowerLegPack: RegionPack = validateRegionPack({
   createCompass,
   createAnkle,
   rebuildSoftTissues,
+  rebuildSoftTissuesAsync: (parts, signal) => prepareSoftTissues("left-lower-leg", parts, signal, () => rebuildSoftTissues(parts)),
   attachmentSources,
   connectionsFor,
   directlyAttachedIds,

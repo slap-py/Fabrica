@@ -1,3 +1,4 @@
+import { prepareSoftTissues } from "../../softTissuePreparation";
 import neurovascularCatalog from "../../neurovascularCatalog.json";
 import { structures, byId, tissueNames, colors, type Tissue } from "../../data";
 import { atlasTabs as sourceAtlasTabs, atlasIds } from "../../atlas";
@@ -58,5 +59,5 @@ export const scene = {
   fillPosition: legacyPointToMm(5, 6, -4), fillTarget: legacyPointToMm(0, 0, 0),
   floorPosition: legacyPointToMm(0, 0.06, 0),
 };
-export const lowerLegPack: RegionPack = validateRegionPack({ id: "lower-leg", title: "Right Lower Leg & Foot", description: "An interactive study model of the right lower leg and foot.", thumbnail: `${base}regions/lower-leg.png`, structures, byId, neurovascularSources, neurovascularCropYMaxMm, tissueNames, colors, atlasTabs: atlasAreas, atlasAreas, atlasIds, directions, cameraViews, cameraPreset, viewPresets, labelTier, tierForZoom, presets, assets: assetUrls, assetUrls, about, structureCounts, scene, createCompass, createAnkle, rebuildSoftTissues, attachmentSources, connectionsFor, directlyAttachedIds, connectionHighlightIds, footprintDecal, connectionCameraPose, connectionOccluders, connectionClinicalPoints, relatedIds, legacyPointToMm, neurovascularTissues, isNeurovascular, defaultView, defaultMode, tissueKeys, atlasOrder, atlasNames, loaders });
+export const lowerLegPack: RegionPack = validateRegionPack({ id: "lower-leg", title: "Right Lower Leg & Foot", description: "An interactive study model of the right lower leg and foot.", thumbnail: `${base}regions/lower-leg.png`, structures, byId, neurovascularSources, neurovascularCropYMaxMm, tissueNames, colors, atlasTabs: atlasAreas, atlasAreas, atlasIds, directions, cameraViews, cameraPreset, viewPresets, labelTier, tierForZoom, presets, assets: assetUrls, assetUrls, about, structureCounts, scene, createCompass, createAnkle, rebuildSoftTissues, rebuildSoftTissuesAsync: (parts, signal) => prepareSoftTissues("lower-leg", parts, signal, () => rebuildSoftTissues(parts)), attachmentSources, connectionsFor, directlyAttachedIds, connectionHighlightIds, footprintDecal, connectionCameraPose, connectionOccluders, connectionClinicalPoints, relatedIds, legacyPointToMm, neurovascularTissues, isNeurovascular, defaultView, defaultMode, tissueKeys, atlasOrder, atlasNames, loaders });
 export default lowerLegPack;

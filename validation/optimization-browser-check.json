@@ -1,0 +1,401 @@
+{
+  "rows": [
+    {
+      "graphics": "high",
+      "route": "lower-leg",
+      "readyMs": 8950,
+      "requests": [
+        "/models/bones.glb",
+        "/models/muscles.glb",
+        "/models/exterior.glb",
+        "/models/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "high",
+        "graphicsChoice": "high",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "exteriorAssets": "ready",
+        "loadedMuscles": "13",
+        "cartilagePatches": "78",
+        "loadedBones": "30"
+      },
+      "workers": [
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 200,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 108193320
+    },
+    {
+      "graphics": "high",
+      "route": "left-lower-leg",
+      "readyMs": 14631,
+      "requests": [
+        "/models/left-lower-leg/bones.glb",
+        "/models/left-lower-leg/muscles.glb",
+        "/models/left-lower-leg/exterior.glb",
+        "/models/left-lower-leg/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "high",
+        "graphicsChoice": "high",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "exteriorAssets": "ready",
+        "loadedMuscles": "13",
+        "cartilagePatches": "78",
+        "loadedBones": "30"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 200,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 73475747
+    },
+    {
+      "graphics": "high",
+      "route": "regions?region=lower-leg&region=right-upper-leg",
+      "readyMs": 14801,
+      "requests": [
+        "/models/bones.glb",
+        "/models/right-upper-leg/bones.glb",
+        "/models/muscles.glb",
+        "/models/right-upper-leg/muscles.glb",
+        "/models/exterior.glb",
+        "/models/right-upper-leg/exterior.glb",
+        "/models/neurovascular.glb",
+        "/models/right-upper-leg/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "high",
+        "graphicsChoice": "high",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "exteriorAssets": "ready",
+        "loadedMuscles": "40",
+        "cartilagePatches": "86",
+        "loadedBones": "34"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 267,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 145037729
+    },
+    {
+      "graphics": "high",
+      "route": "regions?region=right-arm&region=back",
+      "readyMs": 2000,
+      "requests": [
+        "/models/arm-back/bones.glb",
+        "/models/arm-back/muscles.glb",
+        "/models/arm-back/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "high",
+        "graphicsChoice": "high",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "exteriorAssets": "ready",
+        "loadedMuscles": "131",
+        "cartilagePatches": "133",
+        "loadedBones": "85"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 494,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 79057392
+    },
+    {
+      "graphics": "low",
+      "route": "lower-leg",
+      "readyMs": 13159,
+      "requests": [
+        "/models/bones.glb",
+        "/models/muscles.glb",
+        "/models/exterior.glb",
+        "/models/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "low",
+        "graphicsChoice": "low",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "loadedMuscles": "13",
+        "cartilagePatches": "78",
+        "loadedBones": "30",
+        "layerAssets": "ready",
+        "exteriorAssets": "ready"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 199,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 100482667
+    },
+    {
+      "graphics": "low",
+      "route": "left-lower-leg",
+      "readyMs": 21637,
+      "requests": [
+        "/models/left-lower-leg/bones.glb",
+        "/models/left-lower-leg/muscles.glb",
+        "/models/left-lower-leg/exterior.glb",
+        "/models/left-lower-leg/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "low",
+        "graphicsChoice": "low",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "loadedMuscles": "13",
+        "cartilagePatches": "78",
+        "loadedBones": "30",
+        "layerAssets": "ready",
+        "exteriorAssets": "ready"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 199,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 67304246
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=lower-leg&region=right-upper-leg",
+      "readyMs": 19767,
+      "requests": [
+        "/models/bones.glb",
+        "/models/right-upper-leg/bones.glb",
+        "/models/muscles.glb",
+        "/models/right-upper-leg/muscles.glb",
+        "/models/exterior.glb",
+        "/models/right-upper-leg/exterior.glb",
+        "/models/neurovascular.glb",
+        "/models/right-upper-leg/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "low",
+        "graphicsChoice": "low",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "loadedMuscles": "40",
+        "cartilagePatches": "86",
+        "loadedBones": "34",
+        "layerAssets": "ready",
+        "exteriorAssets": "ready"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 266,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 106279157
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=right-arm&region=back",
+      "readyMs": 1844,
+      "requests": [
+        "/models/arm-back/bones.glb",
+        "/models/arm-back/muscles.glb",
+        "/models/arm-back/neurovascular.glb"
+      ],
+      "viewport": {
+        "graphics": "low",
+        "graphicsChoice": "low",
+        "highlightedStructures": "",
+        "footprints": "0",
+        "focusedConnection": "",
+        "ghost": "false",
+        "cutaway": "",
+        "boneAssets": "ready",
+        "softTissues": "ready",
+        "labelTier": "1",
+        "loadedMuscles": "131",
+        "cartilagePatches": "133",
+        "loadedBones": "85",
+        "layerAssets": "ready",
+        "exteriorAssets": "ready"
+      },
+      "workers": [
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        },
+        {
+          "parts": 63
+        }
+      ],
+      "diagnostics": {
+        "activeViewers": 1,
+        "activeListeners": 14,
+        "activeWorkers": 1,
+        "pendingLoads": 0,
+        "geometries": 493,
+        "lastDisposedGeometries": 0
+      },
+      "heap": 129618421
+    }
+  ],
+  "errors": [],
+  "warnings": []
+}

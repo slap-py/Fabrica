@@ -385,6 +385,15 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   return validateRegionPack({
     ...base, id: packs.map(pack => pack.id).join('+'), regionIds: packs.map(pack => pack.id), title, description: overview,
     structures, byId, structureAliases, structureRegions, canonicalStructureIds: undefined, dataOnlyStructures: [...new Map(packs.flatMap(p=>p.dataOnlyStructures ?? []).map(s=>[s.id,s])).values()], neurovascularSources: undefined, neurovascularCropYMaxMm: undefined, tissueKeys, createAnkle, loaders, rebuildSoftTissues, atlasIds, atlasAreas: areas, atlasTabs: areas,
+    rebuildSoftTissuesAsync: async (parts, signal) => {
+      const reports = [];
+      for (const context of getContexts(parts)) {
+        signal.throwIfAborted();
+        reports.push(context.pack.rebuildSoftTissuesAsync ? await context.pack.rebuildSoftTissuesAsync(context.parts, signal) : context.pack.rebuildSoftTissues(context.parts));
+        sync(parts, context);
+      }
+      return { attachments: reports.reduce((sum, r) => sum + r.attachments, 0), cartilagePatches: reports.reduce((sum, r) => sum + r.cartilagePatches, 0) - [...members].filter(([id]) => owners.get(id)!.pack.canonicalStructureIds?.[owners.get(id)!.local] && byId[id].tissue === 'cartilage' && parts.get(id)?.meshes.length).reduce((sum, [, list]) => sum + list.length - 1, 0), warnings: reports.flatMap(r => r.warnings) };
+    },
     relatedIds: id => related(id, 'relatedIds'), directlyAttachedIds: id => related(id, 'directlyAttachedIds'), connectionHighlightIds: id => related(id, 'connectionHighlightIds'),
     connectionsFor, footprintDecal, connectionCameraPose, connectionOccluders,
     attachmentSources: Object.fromEntries(packs.flatMap(pack => Object.entries(pack.attachmentSources).map(([id, source]) => [`${pack.id}:${id}`, source]))) as RegionPack['attachmentSources'],
