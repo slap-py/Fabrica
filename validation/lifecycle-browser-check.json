@@ -7,9 +7,10 @@
   ],
   "errors": [],
   "baseline": {
+    "frameTicks": 67,
     "activeViewers": 1,
-    "activeListeners": 19,
-    "activeWorkers": 0,
+    "activeListeners": 22,
+    "activeWorkers": 1,
     "pendingLoads": 0,
     "geometries": 200,
     "lastDisposedGeometries": 0
@@ -18,6 +19,7 @@
     {
       "cycle": 1,
       "disposed": {
+        "frameTicks": 67,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -26,26 +28,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 134,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 2,
       "disposed": {
+        "frameTicks": 134,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -54,26 +58,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 201,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 3,
       "disposed": {
+        "frameTicks": 201,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -82,26 +88,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 268,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 4,
       "disposed": {
+        "frameTicks": 268,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -110,26 +118,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 335,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 5,
       "disposed": {
+        "frameTicks": 335,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -138,26 +148,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 402,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 6,
       "disposed": {
+        "frameTicks": 402,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -166,26 +178,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 469,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 7,
       "disposed": {
+        "frameTicks": 469,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -194,26 +208,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 536,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 8,
       "disposed": {
+        "frameTicks": 536,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -222,26 +238,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 603,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 9,
       "disposed": {
+        "frameTicks": 603,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -250,26 +268,28 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 670,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     },
     {
       "cycle": 10,
       "disposed": {
+        "frameTicks": 670,
         "activeViewers": 0,
         "activeListeners": 0,
         "activeWorkers": 0,
@@ -278,33 +298,36 @@
         "lastDisposedGeometries": 0
       },
       "mounted": {
+        "frameTicks": 737,
         "activeViewers": 1,
-        "activeListeners": 19,
-        "activeWorkers": 0,
+        "activeListeners": 22,
+        "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
       "globalListeners": {
-        "active": 38,
+        "active": 37,
         "byTarget": {
-          "window": 16,
-          "media-query": 3,
-          "canvas": 14,
-          "document": 5
+          "document": 4,
+          "window": 15,
+          "media-query": 4,
+          "canvas": 14
         }
       }
     }
   ],
   "duringCancellation": {
+    "frameTicks": 738,
     "activeViewers": 1,
-    "activeListeners": 19,
+    "activeListeners": 22,
     "activeWorkers": 0,
     "pendingLoads": 1,
     "geometries": 333,
     "lastDisposedGeometries": 0
   },
   "cancelled": {
+    "frameTicks": 740,
     "activeViewers": 0,
     "activeListeners": 0,
     "activeWorkers": 0,
@@ -313,14 +336,16 @@
     "lastDisposedGeometries": 0
   },
   "low": {
+    "frameTicks": 747,
     "activeViewers": 1,
-    "activeListeners": 19,
+    "activeListeners": 22,
     "activeWorkers": 1,
     "pendingLoads": 0,
     "geometries": 199,
     "lastDisposedGeometries": 0
   },
   "lowDisposed": {
+    "frameTicks": 747,
     "activeViewers": 0,
     "activeListeners": 0,
     "activeWorkers": 0,
@@ -329,9 +354,11 @@
     "lastDisposedGeometries": 0
   },
   "hubListenerBaseline": {
-    "active": 15,
+    "active": 16,
     "byTarget": {
-      "window": 15
+      "document": 1,
+      "window": 14,
+      "media-query": 1
     }
   }
 }

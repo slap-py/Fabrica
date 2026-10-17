@@ -3,7 +3,7 @@
     {
       "graphics": "high",
       "route": "lower-leg",
-      "readyMs": 8950,
+      "readyMs": 11269,
       "requests": [
         "/models/bones.glb",
         "/models/muscles.glb",
@@ -32,19 +32,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 67,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
-      "heap": 108193320
+      "heap": 123224582
     },
     {
       "graphics": "high",
       "route": "left-lower-leg",
-      "readyMs": 14631,
+      "readyMs": 18480,
       "requests": [
         "/models/left-lower-leg/bones.glb",
         "/models/left-lower-leg/muscles.glb",
@@ -76,19 +77,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 142,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 200,
         "lastDisposedGeometries": 0
       },
-      "heap": 73475747
+      "heap": 109169597
     },
     {
       "graphics": "high",
       "route": "regions?region=lower-leg&region=right-upper-leg",
-      "readyMs": 14801,
+      "readyMs": 16429,
       "requests": [
         "/models/bones.glb",
         "/models/right-upper-leg/bones.glb",
@@ -127,19 +129,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 216,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 267,
         "lastDisposedGeometries": 0
       },
-      "heap": 145037729
+      "heap": 137533444
     },
     {
       "graphics": "high",
       "route": "regions?region=right-arm&region=back",
-      "readyMs": 2000,
+      "readyMs": 3857,
       "requests": [
         "/models/arm-back/bones.glb",
         "/models/arm-back/muscles.glb",
@@ -173,19 +176,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 297,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 494,
         "lastDisposedGeometries": 0
       },
-      "heap": 79057392
+      "heap": 93068411
     },
     {
       "graphics": "low",
       "route": "lower-leg",
-      "readyMs": 13159,
+      "readyMs": 15075,
       "requests": [
         "/models/bones.glb",
         "/models/muscles.glb",
@@ -218,19 +222,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 8,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 199,
         "lastDisposedGeometries": 0
       },
-      "heap": 100482667
+      "heap": 74214655
     },
     {
       "graphics": "low",
       "route": "left-lower-leg",
-      "readyMs": 21637,
+      "readyMs": 23938,
       "requests": [
         "/models/left-lower-leg/bones.glb",
         "/models/left-lower-leg/muscles.glb",
@@ -269,19 +274,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 17,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 199,
         "lastDisposedGeometries": 0
       },
-      "heap": 67304246
+      "heap": 43496697
     },
     {
       "graphics": "low",
       "route": "regions?region=lower-leg&region=right-upper-leg",
-      "readyMs": 19767,
+      "readyMs": 21962,
       "requests": [
         "/models/bones.glb",
         "/models/right-upper-leg/bones.glb",
@@ -330,19 +336,20 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 26,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 266,
         "lastDisposedGeometries": 0
       },
-      "heap": 106279157
+      "heap": 93871558
     },
     {
       "graphics": "low",
       "route": "regions?region=right-arm&region=back",
-      "readyMs": 1844,
+      "readyMs": 3145,
       "requests": [
         "/models/arm-back/bones.glb",
         "/models/arm-back/muscles.glb",
@@ -386,16 +393,18 @@
         }
       ],
       "diagnostics": {
+        "frameTicks": 35,
         "activeViewers": 1,
-        "activeListeners": 14,
+        "activeListeners": 22,
         "activeWorkers": 1,
         "pendingLoads": 0,
         "geometries": 493,
         "lastDisposedGeometries": 0
       },
-      "heap": 129618421
+      "heap": 128131290
     }
   ],
   "errors": [],
-  "warnings": []
+  "warnings": [],
+  "fallbackVerified": true
 }

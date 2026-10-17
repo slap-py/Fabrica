@@ -1,0 +1,36 @@
+{
+  "checkpoint": "2fe5810",
+  "unitTests": {
+    "files": 41,
+    "passed": 197
+  },
+  "models": {
+    "count": 22,
+    "sourceBytes": 74216368,
+    "deliveryBytes": 56568472,
+    "lossless": true
+  },
+  "release": {
+    "buildBytes": 64140813,
+    "zipBytes": 51613613,
+    "files": 96,
+    "allArchiveFilesVerified": true
+  },
+  "runtimeFactoryChunk": {
+    "beforeBytes": 1121298,
+    "afterBytes": 677802
+  },
+  "notes": [
+    "Source GLBs, manifests and thumbnails remain unchanged relative to the checkpoint.",
+    "Heap samples are observations; no guaranteed peak-RAM reduction is claimed."
+  ],
+  "browserReports": [
+    "optimization-browser-check.json",
+    "optimization-queue-browser.json",
+    "optimization-cancellation.json",
+    "arm-back-browser-check.json",
+    "lifecycle-browser-check.json",
+    "attachment-refinement-browser.json",
+    "inspector-notes-neighbors-browser.json"
+  ]
+}

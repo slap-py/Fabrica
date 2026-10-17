@@ -49,7 +49,7 @@ try{
   }
   await page.goto(origin+'/#/right-arm');await ready(page);await page.locator('[data-mode="neurovascular"]').click();await ready(page,true);
   await page.locator('#search').fill('Right Scapula');await page.locator('.structure-row[data-id="scapula-r"]').click();await page.locator('#labels').click();await page.locator('#neurovascular-opacity').fill('60');await page.locator('[data-view="posterior"]').click();
-  await switchRegion(page,'back',true);assert.equal(await page.locator('.structure-row.selected').getAttribute('data-id'),'z-anatomy:scapula-r');assert.match(await page.locator('.structure-coverage').innerText(),/Back.*Right Arm|Right Arm.*Back/);assert.equal(await page.locator('#neurovascular-opacity').inputValue(),'60');
+  await switchRegion(page,'back',true);assert.equal(await page.locator('.structure-row.selected').getAttribute('data-id'),'z-anatomy:scapula-r');assert.equal(await page.locator('#atlas-area option[value="back"]').count(),1);assert.equal(await page.locator('#atlas-area option[value="right-arm"]').count(),1);assert.equal(await page.locator('#neurovascular-opacity').inputValue(),'60');
   for(const area of ['back','right-arm']){await page.locator('#atlas-area').selectOption(area);assert.equal(await page.locator('.structure-row.selected').getAttribute('data-id'),'z-anatomy:scapula-r');}
   await switchRegion(page,'right-arm',false);assert.equal(await page.locator('.structure-row.selected').getAttribute('data-id'),'scapula-r');await switchRegion(page,'right-arm',true);assert.equal(await page.locator('.structure-row.selected').getAttribute('data-id'),'z-anatomy:scapula-r');
   checks.push(`${graphics}: shared bone selection and view settings survive adding/removing either region`);

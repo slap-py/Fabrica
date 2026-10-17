@@ -18,7 +18,7 @@ try {
   const page = await context.newPage();
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if(m.type()==='warning') warnings.push(m.text()); });
-  for(const route of ['lower-leg','left-lower-leg','regions?region=lower-leg&region=right-upper-leg','regions?region=right-arm&region=back']) {
+  for(const route of process.env.OPTIMIZATION_ROUTES?.split('|') ?? ['lower-leg','left-lower-leg','regions?region=lower-leg&region=right-upper-leg','regions?region=right-arm&region=back']) {
    const requests = [];
    const collect = r => { if (r.url().endsWith('.glb')) requests.push(new URL(r.url()).pathname); };
    page.on('request', collect);
@@ -68,6 +68,6 @@ try {
  assert(fallbackWarnings.some(w=>w.includes('Fitting worker unavailable')));
  await fallbackContext.close();
  assert.deepEqual(errors,[]);
- await fs.writeFile('validation/optimization-browser-check.json',JSON.stringify({rows,errors,warnings,fallbackVerified:true},null,2));
+ await fs.writeFile(process.env.OPTIMIZATION_OUT ?? 'validation/optimization-browser-check.json',JSON.stringify({rows,errors,warnings,fallbackVerified:true},null,2));
  console.log(JSON.stringify({checks:rows.length,errors,warnings,rows:rows.map(({graphics,route,readyMs,heap})=>({graphics,route,readyMs,heap}))},null,2));
 } finally { await browser.close(); }

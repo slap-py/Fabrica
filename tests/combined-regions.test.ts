@@ -12,6 +12,21 @@ import { regionHref, regionsHref, parseRoute } from '../src/router';
 const packs = [lowerLegPack, leftLowerLegPack, leftUpperLegPack, rightUpperLegPack];
 const ids = packs.map(pack => pack.id);
 describe('multiple body regions', () => {
+  it('bounds model preparation across simultaneous layer loads and regional URLs', async () => {
+    const combined = combineRegionPacks([leftUpperLegPack, rightUpperLegPack]);
+    const model = combined.createAnkle();
+    let active=0, maximum=0, requests=0;
+    const scene = async () => {
+      active++; requests++; maximum=Math.max(maximum,active);
+      await new Promise(resolve=>setTimeout(resolve,10)); active--;
+      return new THREE.Group();
+    };
+    try {
+      await Promise.all([combined.loaders.loadBoneAssets(model.parts,undefined,scene),combined.loaders.loadMuscleAssets(model.parts,undefined,scene)]);
+      expect(requests).toBe(4);expect(maximum).toBe(2);
+    } finally {disposeObject(model.root);}
+  });
+
   it('keeps single-region URLs and canonicalizes combined URLs with deep links', () => {
     expect(regionsHref([])).toBe('#/browser');
     expect(regionsHref(['lower-leg', 'lower-leg'], 'talus')).toBe(regionHref('lower-leg', 'talus'));

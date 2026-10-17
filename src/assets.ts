@@ -352,8 +352,8 @@ export function createRegionAssetLoaders(regionStructures: readonly Structure[],
 
 
 /** Abortable fetch and parse for a mounted viewer. A late parse never installs into a disposed scene. */
-export function createAssetSceneLoader(signal: AbortSignal, onProgress?: (loaded: number, total: number) => void) {
-  return async (url: string): Promise<THREE.Object3D> => {
+export function createAssetSceneLoader(signal: AbortSignal, onProgress?: (loaded: number, total: number) => void): ((url: string) => Promise<THREE.Object3D>) & { readonly signal?: AbortSignal } {
+  return Object.assign(async (url: string): Promise<THREE.Object3D> => {
     signal.throwIfAborted();
     const response = await fetch(url, { signal });
     if (!response.ok) throw new Error(`Asset fetch failed: ${response.status}`);
@@ -365,5 +365,5 @@ export function createAssetSceneLoader(signal: AbortSignal, onProgress?: (loaded
       signal.throwIfAborted();
     }
     return gltf.scene;
-  };
+  }, { signal });
 }

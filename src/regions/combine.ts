@@ -1,3 +1,4 @@
+import { createLoadQueue } from '../assetLoading';
 import * as THREE from 'three';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { validateRegionPack, type RegionPack } from './index';
@@ -120,6 +121,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   });
   const byId = Object.fromEntries(structures.map(structure => [structure.id, structure]));
   const contexts = new WeakMap<AnatomyParts, Context[]>();
+  const assetQueues = new WeakMap<AnatomyParts, ReturnType<typeof createLoadQueue>>();
   const getContexts = (parts: AnatomyParts) => {
     const result = contexts.get(parts);
     if (!result) throw new Error('Combined model has not been created');
@@ -279,7 +281,12 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
       batch.push(context); batches.set(key, batch);
     }
     const reports = new Map<Context, AssetReport>();
-    await Promise.all([...batches.values()].map(async batch => {
+    let queue = assetQueues.get(parts);
+    if (!queue) {
+      const signal = (scene as { signal?: AbortSignal } | undefined)?.signal ?? new AbortController().signal;
+      queue = createLoadQueue(signal, 2); assetQueues.set(parts, queue);
+    }
+    await Promise.all([...batches.values()].map(batch => queue!(async () => {
       const first = batch[0];
       let target = first.parts, loaders = first.pack.loaders;
       if (batch.length > 1) {
@@ -299,7 +306,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
         reports.set(context, { loaded: report.loaded.filter(id => ids.has(id)), fallback: report.fallback.filter(id => ids.has(id)), warnings: context === first ? report.warnings : [] });
         sync(parts, context);
       }
-    }));
+    })));
     return mergeReports(parts, list.map(c => reports.get(c)!));
   }
   async function loadNeurovascular(parts: AnatomyParts, scene: Parameters<RegionPack['loaders']['loadNeurovascularAssets']>[2], bvh: Parameters<RegionPack['loaders']['loadNeurovascularAssets']>[3]) {
@@ -337,7 +344,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
   const loaders: RegionPack['loaders'] = {
     createAssetSceneLoader: (signal, onProgress) => {
       const bytes = new Map<string, { loaded: number; total: number }>();
-      return url => {
+      return Object.assign((url: string) => {
         bytes.set(url, { loaded: 0, total: 0 });
         const loader = base.loaders.createAssetSceneLoader(signal, (loaded, total) => {
           bytes.set(url, { loaded, total });
@@ -346,7 +353,7 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
             values.every(value => value.total > 0) ? values.reduce((sum, value) => sum + value.total, 0) : 0);
         });
         return loader(url);
-      };
+      }, { signal });
     },
     loadBoneAssets: (parts, _url, scene, progress, bvh) => loadGroup(parts, 'bones', scene, progress, bvh),
     loadMuscleAssets: (parts, _url, scene, progress, bvh) => loadGroup(parts, 'muscles', scene, progress, bvh),

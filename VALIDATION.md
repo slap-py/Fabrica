@@ -574,6 +574,13 @@ licenses and region thumbnails are unchanged relative to the source checkpoint.
 Production measurements: model bytes 74,216,368 → 56,568,472 (23.8% reduction).
 The complete static build is approximately 61.2 MiB, compared with the initial
 78.0 MiB audit; its release ZIP is approximately 49.2 MiB. The arm/back factory
-chunk is 677,800 bytes versus 1,121,298 bytes before runtime-data extraction.
+chunk is 677,802 bytes versus 1,121,298 bytes before runtime-data extraction.
 These are delivery/build measurements. Browser heap samples vary with collection
 and include no controlled before/after peak-memory claim.
+
+Final verification: 41 test files / 197 tests passed. Section, ten-cycle lifecycle,
+attachment refinement, inspector/Neighbors, High/Low arm/back interactions, idle
+rendering, worker-disabled fallback and combined-view cancellation checks passed.
+All 96 static-release files were compared byte-for-byte with the ZIP contents.
+Local orbit p95 frame intervals were 16.8–17.0 ms; these are local observations.
+Final byte counts and limits are recorded in `validation/optimization-summary.json`.

@@ -1,0 +1,25 @@
+{
+  "checks": [
+    {
+      "graphics": "high",
+      "route": "regions?region=lower-leg&region=right-upper-leg",
+      "clean": true
+    },
+    {
+      "graphics": "high",
+      "route": "regions?region=right-arm&region=back",
+      "clean": true
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=lower-leg&region=right-upper-leg",
+      "clean": true
+    },
+    {
+      "graphics": "low",
+      "route": "regions?region=right-arm&region=back",
+      "clean": true
+    }
+  ],
+  "errors": []
+}
