@@ -2,7 +2,7 @@ import type * as THREE from "three";
 import type { Structure, Tissue } from "../data";
 import type { createAnkle } from "../ankle";
 import type { rebuildSoftTissues } from "../softTissues";
-import type { loadBoneAssets, loadExteriorAssets, loadMuscleAssets, loadNeurovascularAssets, createAssetSceneLoader } from "../assets";
+import type { RegionAssetGroups, loadBoneAssets, loadExteriorAssets, loadMuscleAssets, loadNeurovascularAssets, createAssetSceneLoader } from "../assets";
 import type { createCompass } from "../compass";
 import type { directlyAttachedIds, connectionHighlightIds, footprintDecal, connectionCameraPose, connectionOccluders, connectionClinicalPoints, connectionsFor } from "../connections";
 import type { relatedIds } from "../foot";
@@ -42,7 +42,7 @@ export interface RegionPack {
   };
   createCompass: typeof createCompass;
   createAnkle: typeof createAnkle; rebuildSoftTissues: typeof rebuildSoftTissues; attachmentSources: Readonly<Record<string, { title: string; url: string; section: string }>>; connectionsFor: typeof connectionsFor; directlyAttachedIds: typeof directlyAttachedIds; connectionHighlightIds: typeof connectionHighlightIds; footprintDecal: typeof footprintDecal; connectionCameraPose: typeof connectionCameraPose; connectionOccluders: typeof connectionOccluders; connectionClinicalPoints: typeof connectionClinicalPoints; relatedIds: typeof relatedIds; legacyPointToMm: typeof legacyPointToMm; neurovascularTissues: typeof neurovascularTissues; isNeurovascular: typeof isNeurovascular;
-  loaders: { loadBoneAssets: typeof loadBoneAssets; loadMuscleAssets: typeof loadMuscleAssets; loadExteriorAssets: typeof loadExteriorAssets; loadNeurovascularAssets: typeof loadNeurovascularAssets; createAssetSceneLoader: typeof createAssetSceneLoader };
+  loaders: { assetGroups?: RegionAssetGroups; loadBoneAssets: typeof loadBoneAssets; loadMuscleAssets: typeof loadMuscleAssets; loadExteriorAssets: typeof loadExteriorAssets; loadNeurovascularAssets: typeof loadNeurovascularAssets; createAssetSceneLoader: typeof createAssetSceneLoader };
 }
 export function validateRegionPack(pack: RegionPack): RegionPack {
   if (!pack || typeof pack !== "object") throw new Error("Region pack must be an object");

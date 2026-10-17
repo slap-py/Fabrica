@@ -4,7 +4,7 @@ import { validateRegionPack, type RegionPack } from './index';
 import type { AnatomyParts } from '../softTissues';
 import { resolveFootprint } from '../softTissues';
 import { connectionCameraPose, connectionOccluders } from '../connections';
-import type { AssetReport } from '../assets';
+import { createRegionAssetLoaders, type AssetReport, type RegionAssetGroups } from '../assets';
 import type { MmPoint } from '../attachments';
 import { clipGeometryAboveY } from './combinedGeometry';
 import { enableMeshPicking } from '../picking';
@@ -181,6 +181,18 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
         parts.set(id, { id, group: part.group, meshes: part.meshes, anchor: part.anchor.clone().add(offset) });
       }
     }
+    // Identical canonical objects from the same asset URL have one owner. Local
+    // attachment queries refer to that owner's part instead of hidden mesh copies.
+    for (const context of list) for (const [local, part] of context.parts) {
+      const canonical = context.pack.canonicalStructureIds?.[local];
+      const owner = owners.get(globalId(context.pack, local))!;
+      const host = list.find(c => c.pack.id === owner.pack.id)!;
+      if (!canonical || host === context || !context.pack.loaders.assetGroups ||
+        !(['bones', 'muscles', 'neurovascular'] as const).every(group => context.pack.assets[group] === host.pack.assets[group])) continue;
+      part.group.removeFromParent();
+      disposeObject(part.group);
+      context.parts.set(local, host.parts.get(owner.local)!);
+    }
     contexts.set(parts, list);
     list.forEach(context => sync(parts, context));
     root.updateMatrixWorld(true);
@@ -253,16 +265,45 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
     const loaded = mapIds('loaded');
     return { loaded: [...loaded], fallback: [...mapIds('fallback')].filter(id => !loaded.has(id)), warnings: reports.flatMap((report, index) => report.warnings.map(warning => list[index].pack.title + ': ' + warning)) };
   }
-  async function load(parts: AnatomyParts, run: (context: Context) => Promise<AssetReport>) {
-    const reports = await Promise.all(getContexts(parts).map(async context => {
-      const report = await run(context);
-      sync(parts, context);
-      return report;
+  // Group complete native anatomy by asset URL before parsing or building BVHs.
+  // Distinct regional crops keep their own loaders and attachment context.
+  async function loadGroup(parts: AnatomyParts, group: keyof RegionAssetGroups,
+    scene: Parameters<RegionPack['loaders']['loadBoneAssets']>[2],
+    progress: Parameters<RegionPack['loaders']['loadBoneAssets']>[3],
+    bvh: Parameters<RegionPack['loaders']['loadBoneAssets']>[4]) {
+    const list = getContexts(parts);
+    const batches = new Map<string, Context[]>();
+    for (const context of list) {
+      const key = context.pack.loaders.assetGroups ? context.pack.assets[group] : context.pack.id;
+      const batch = batches.get(key) ?? [];
+      batch.push(context); batches.set(key, batch);
+    }
+    const reports = new Map<Context, AssetReport>();
+    await Promise.all([...batches.values()].map(async batch => {
+      const first = batch[0];
+      let target = first.parts, loaders = first.pack.loaders;
+      if (batch.length > 1) {
+        target = new Map(batch.flatMap(c => [...c.parts]));
+        const groups: RegionAssetGroups = { bones: [], muscles: [], exterior: [], neurovascular: [] };
+        groups[group] = [...new Set(batch.flatMap(c => c.pack.loaders.assetGroups![group]))];
+        const records = [...new Map(batch.flatMap(c => c.pack.structures.map(s => [s.id, s] as const))).values()];
+        loaders = createRegionAssetLoaders(records, groups);
+      }
+      const url = first.pack.assets[group];
+      const report = group === 'bones' ? await loaders.loadBoneAssets(target, url, scene, progress, bvh)
+        : group === 'muscles' ? await loaders.loadMuscleAssets(target, url, scene, progress, bvh)
+        : group === 'exterior' ? await loaders.loadExteriorAssets(target, progress, bvh, url, scene)
+        : await loaders.loadNeurovascularAssets(target, url, scene, bvh);
+      for (const context of batch) {
+        const ids = new Set(context.pack.structures.map(s => s.id));
+        reports.set(context, { loaded: report.loaded.filter(id => ids.has(id)), fallback: report.fallback.filter(id => ids.has(id)), warnings: context === first ? report.warnings : [] });
+        sync(parts, context);
+      }
     }));
-    return mergeReports(parts, reports);
+    return mergeReports(parts, list.map(c => reports.get(c)!));
   }
   async function loadNeurovascular(parts: AnatomyParts, scene: Parameters<RegionPack['loaders']['loadNeurovascularAssets']>[2], bvh: Parameters<RegionPack['loaders']['loadNeurovascularAssets']>[3]) {
-    const report = await load(parts, c => c.pack.loaders.loadNeurovascularAssets(c.parts, c.pack.assets.neurovascular, scene, bvh));
+    const report = await loadGroup(parts, 'neurovascular', scene, undefined, bvh);
     const changed: THREE.Mesh[] = [];
     const list = getContexts(parts);
     for (const id of sharedNeurovascular) {
@@ -307,9 +348,9 @@ export function combineRegionPacks(input: readonly RegionPack[]): RegionPack {
         return loader(url);
       };
     },
-    loadBoneAssets: (parts, _url, scene, progress, bvh) => load(parts, c => c.pack.loaders.loadBoneAssets(c.parts, c.pack.assets.bones, scene, progress, bvh)),
-    loadMuscleAssets: (parts, _url, scene, progress, bvh) => load(parts, c => c.pack.loaders.loadMuscleAssets(c.parts, c.pack.assets.muscles, scene, progress, bvh)),
-    loadExteriorAssets: (parts, progress, bvh, _url, scene) => load(parts, c => c.pack.loaders.loadExteriorAssets(c.parts, progress, bvh, c.pack.assets.exterior, scene)),
+    loadBoneAssets: (parts, _url, scene, progress, bvh) => loadGroup(parts, 'bones', scene, progress, bvh),
+    loadMuscleAssets: (parts, _url, scene, progress, bvh) => loadGroup(parts, 'muscles', scene, progress, bvh),
+    loadExteriorAssets: (parts, progress, bvh, _url, scene) => loadGroup(parts, 'exterior', scene, progress, bvh),
     loadNeurovascularAssets: (parts, _url, scene, bvh) => loadNeurovascular(parts, scene, bvh),
   };
   const rebuildSoftTissues: RegionPack['rebuildSoftTissues'] = parts => {

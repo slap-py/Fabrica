@@ -68,12 +68,18 @@ describe('right arm and bilateral back',()=>{
  it('loads real aligned assets, renders shared meshes once and keeps missing assets unavailable',async()=>{
   const model=combined.createAnkle();
   try {
-   const bones=await combined.loaders.loadBoneAssets(model.parts,undefined,scene);
+   const requests: string[] = [];
+   const trackedScene = async (url: string) => { requests.push(url); return scene(url); };
+   const bones=await combined.loaders.loadBoneAssets(model.parts,undefined,trackedScene);
+   expect(requests).toEqual([arm.assets.bones]);
    const muscles=await combined.loaders.loadMuscleAssets(model.parts,undefined,scene);
    const neuro=await combined.loaders.loadNeurovascularAssets(model.parts,undefined,scene);
    expect([...bones.fallback,...muscles.fallback,...neuro.fallback]).toEqual([]);
    const part=model.parts.get('z-anatomy:'+shared)!;
    expect(part.meshes).toHaveLength(1);
+   const allCopies: THREE.Mesh[] = [];
+   model.root.traverse(o => { if (o instanceof THREE.Mesh && o.userData.id === 'z-anatomy:'+shared) allCopies.push(o); });
+   expect(allCopies).toHaveLength(1);
    expect(part.meshes[0].userData.id).toBe('z-anatomy:'+shared);
    const visible:THREE.Mesh[]=[];model.root.traverseVisible(o=>{if(o instanceof THREE.Mesh && o.userData.id==='z-anatomy:'+shared)visible.push(o);});
    expect(visible).toHaveLength(1);

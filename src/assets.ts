@@ -265,6 +265,7 @@ async function loadRegionalGroup(
   bvh: BvhBuilder | undefined, lookup: StructureLookup, label: string,
 ): Promise<AssetReport> {
   const groupIds = [...ids];
+  if (!groupIds.length) return { loaded: [], fallback: [], warnings: [] };
   const visibility = preparePartAssets(parts, groupIds);
   try {
     const report = await install(await loadScene(url), parts, groupIds, tissue, bvh, lookup, "structure-envelope");
@@ -283,6 +284,7 @@ async function loadRegionalGroup(
 }
 
 export interface RegionAssetLoaders {
+  assetGroups?: RegionAssetGroups;
   loadBoneAssets: typeof loadBoneAssets;
   loadMuscleAssets: typeof loadMuscleAssets;
   loadExteriorAssets: typeof loadExteriorAssets;
@@ -303,7 +305,7 @@ export function createRegionAssetLoaders(regionStructures: readonly Structure[],
     const report = await loadRegionalGroup(parts, assetGroups.neurovascular, "artery", url, loadScene, undefined, bvh, lookup, "Neurovascular");
     return markNeurovascular(report, parts, assetGroups.neurovascular);
   };
-  return { loadBoneAssets: loadBone, loadMuscleAssets: loadMuscle, loadExteriorAssets: loadExterior, loadNeurovascularAssets: loadNeurovascular, createAssetSceneLoader };
+  return { assetGroups, loadBoneAssets: loadBone, loadMuscleAssets: loadMuscle, loadExteriorAssets: loadExterior, loadNeurovascularAssets: loadNeurovascular, createAssetSceneLoader };
 }
 
 
