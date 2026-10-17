@@ -37,7 +37,7 @@ const waitViewer = async () => {
 };
 const go = async hash => {
   await page.evaluate(value => { window.location.hash = value; }, hash);
-  if (hash === '#/') await waitHub();
+  if (hash === '#/browser') await waitHub();
   else await waitViewer();
 };
 

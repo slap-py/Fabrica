@@ -3,7 +3,7 @@ import type { MeshBVH } from 'three-mesh-bvh';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 import { upperLegFacts } from './facts';
 import { upperLegSupportFacts } from './supportFacts';
-import { lowerLegPack } from '../lower-leg';
+import { regionDefaults } from '../defaults';
 import { validateRegionPack, type RegionPack } from '..';
 import { type Structure, type Tissue, colors, tissueNames } from '../../data';
 import { createRegionAssetLoaders } from '../../assets';
@@ -55,7 +55,7 @@ export function createUpperLegPack(manifest: UpperManifest): RegionPack {
     return Object.assign(structure,facts,upperLegSupportFacts[r.id]);
   });
   const byId=Object.fromEntries(structures.map(s=>[s.id,s]));
-  const tissueKeys=[...lowerLegPack.tissueKeys].filter(t=>structures.some(s=>s.tissue===t));
+  const tissueKeys=[...regionDefaults.tissueKeys].filter(t=>structures.some(s=>s.tissue===t));
   const counts={total:structures.length,byTissue:Object.fromEntries(tissueKeys.map(t=>[t,structures.filter(s=>s.tissue===t).length]))};
   const base=`${import.meta.env.BASE_URL}models/${id}/`;
   const assets={bones:base+'bones.glb',muscles:base+'muscles.glb',exterior:base+'exterior.glb',neurovascular:base+'neurovascular.glb'};
@@ -157,13 +157,13 @@ export function createUpperLegPack(manifest: UpperManifest): RegionPack {
     return group.includes(area);
   }).map(s=>s.id));
   const overview=`Explore the ${side} upper leg from hip to knee, with original side-specific Z-Anatomy bones, muscles, tendons, joint tissues, vessels and nerves.`;
-  const about={...lowerLegPack.about,title,overview,overviewHtml:`<p>${overview}</p><p class="stats">${structures.filter(s=>s.tissue!=="skin").length} selectable structures · ${counts.byTissue.muscle} muscles</p><p>Includes the ipsilateral hip bone, sacrum, knee and proximal lower-leg shafts to show attachment context. Psoas and proximal nerves are cropped at the superior regional boundary.</p><p>Muscle attachment focus cards use source origin/insertion patches where available, projected to bone surfaces. Footprint extents are illustrative. All muscles have source-linked origin, insertion, action, innervation and blood-supply descriptions.</p><p>Fascia and some joint tissues are thin source sheets. This static study model makes no biomechanical predictions.</p>`,controlsHtml:lowerLegPack.about.controlsHtml.replace('Overview, dorsal, plantar, medial, lateral','Overview, anterior, posterior, medial, lateral')};
+  const about={...regionDefaults.about,title,overview,overviewHtml:`<p>${overview}</p><p class="stats">${structures.filter(s=>s.tissue!=="skin").length} selectable structures · ${counts.byTissue.muscle} muscles</p><p>Includes the ipsilateral hip bone, sacrum, knee and proximal lower-leg shafts to show attachment context. Psoas and proximal nerves are cropped at the superior regional boundary.</p><p>Muscle attachment focus cards use source origin/insertion patches where available, projected to bone surfaces. Footprint extents are illustrative. All muscles have source-linked origin, insertion, action, innervation and blood-supply descriptions.</p><p>Fascia and some joint tissues are thin source sheets. This static study model makes no biomechanical predictions.</p>`,controlsHtml:regionDefaults.about.controlsHtml.replace('Overview, dorsal, plantar, medial, lateral','Overview, anterior, posterior, medial, lateral')};
   const labelTier=Object.fromEntries(structures.map(s=>[s.id,(['femur','patella','hip-bone','rectus-femoris','gluteus-maximus','sartorius'].includes(s.id)?1:s.tissue==='muscle'||s.tissue==='bone'?2:3) as 1|2|3]));
-  return validateRegionPack({...lowerLegPack,id,title,description:overview,assetFailureMessage:"Some models could not load. Unavailable structures are hidden; return home and reopen the region to retry.",thumbnail:`${import.meta.env.BASE_URL}regions/${id}.png`,structures,byId,neurovascularSources:Object.fromEntries(unique.filter(r=>r.assetGroup==='neurovascular').map(r=>[r.id,r.sourceObject])),neurovascularCropYMaxMm:undefined,tissueKeys,colors,tissueNames,assets,assetUrls:assets,loaders,structureCounts:counts,createAnkle,
+  return validateRegionPack({...regionDefaults,id,title,description:overview,assetFailureMessage:"Some models could not load. Unavailable structures are hidden; return home and reopen the region to retry.",thumbnail:`${import.meta.env.BASE_URL}regions/${id}.png`,structures,byId,neurovascularSources:Object.fromEntries(unique.filter(r=>r.assetGroup==='neurovascular').map(r=>[r.id,r.sourceObject])),neurovascularCropYMaxMm:undefined,tissueKeys,colors,tissueNames,assets,assetUrls:assets,loaders,structureCounts:counts,createAnkle,
     rebuildSoftTissues, rebuildSoftTissuesAsync: undefined,
     atlasAreas:areas,atlasTabs:areas,atlasIds,relatedIds,directlyAttachedIds:connectionHighlightIds,connectionHighlightIds,connectionsFor,footprintDecal,connectionCameraPose,connectionOccluders,connectionClinicalPoints:{},
-    attachmentSources:{...lowerLegPack.attachmentSources,...{upperSource:{...source,section:'Side-specific muscular origin and insertion patches'}}},
-    presets:lowerLegPack.presets.map(p=>p.id==='anatomy'?{...p,tissues:p.tissues.filter(t=>t!=='fascia')}:p),cameraViews,cameraPreset,directions,defaultView:'overview',viewPresets:['overview','anterior','posterior','medial','lateral'].map(view=>({id:view,label:view[0].toUpperCase()+view.slice(1),direction:view==='overview'?'anterior':view,preset:(aspect:number)=>cameraPreset(view,aspect)})),labelTier,about,
+    attachmentSources:{...regionDefaults.attachmentSources,...{upperSource:{...source,section:'Side-specific muscular origin and insertion patches'}}},
+    presets:regionDefaults.presets.map(p=>p.id==='anatomy'?{...p,tissues:p.tissues.filter(t=>t!=='fascia')}:p),cameraViews,cameraPreset,directions,defaultView:'overview',viewPresets:['overview','anterior','posterior','medial','lateral'].map(view=>({id:view,label:view[0].toUpperCase()+view.slice(1),direction:view==='overview'?'anterior':view,preset:(aspect:number)=>cameraPreset(view,aspect)})),labelTier,about,
     scene:{initialCamera:cameraPreset('overview',1).position,keyPosition:new THREE.Vector3(700,700,500*directionSign),keyTarget:new THREE.Vector3(),fillPosition:new THREE.Vector3(-500,300,-400*directionSign),fillTarget:new THREE.Vector3(),floorPosition:new THREE.Vector3(0,-350,0)},
   });
 }

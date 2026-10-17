@@ -85,8 +85,10 @@ export function boundedLabelIntersection(targets: readonly THREE.Mesh[], interse
     if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
     return { mesh, box: mesh.geometry.boundingBox?.clone().applyMatrix4(mesh.matrixWorld) };
   });
+  const candidates: THREE.Mesh[] = [];
   return (caster: THREE.Raycaster) => {
-    const candidates = bounds.filter(({ box }) => !box || caster.ray.intersectsBox(box)).map(({ mesh }) => mesh);
+    candidates.length = 0;
+    for (const { mesh, box } of bounds) if (!box || caster.ray.intersectsBox(box)) candidates.push(mesh);
     return candidates.length ? intersect(caster, candidates)[0] : undefined;
   };
 }

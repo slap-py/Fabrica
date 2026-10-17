@@ -541,3 +541,39 @@ Repeated cards for the same owner, host, role and site (within 2 mm, with agreei
 - `npm run build`: **passed** (existing bundle-size advisory). Corrected invalid CSS calc spacing that positioned camera controls offscreen.
 - `node scripts/left-arm-browser-check.mjs`: **passed**, no browser errors. Verified native loading, lazy neurovascular loading, notes, focus/isolation, anatomical views, body-map three-region selection, shared scapula deduplication, selected-structure transfer across routes, and the existing 390px phone-size screen notice without horizontal overflow.
 - Evidence: `validation/left-arm-browser.json`, `validation/left-arm-both-arms-back-1440.png`, `validation/left-arm-both-arms-back-390.png`. Generated distinct light/dim thumbnails in `public/regions/left-arm*.png`.
+
+## Optimization validation
+
+The source checkpoint is `2fe5810`. Optimization commits are incremental on
+`codex/performance-optimization`; the checkpoint can be opened on a separate
+branch without discarding the optimized branch.
+
+- `npm test`: asset ownership, streaming length/encoding errors and cancellation,
+  bounded preparation, source geometry transforms, all anatomical source checks,
+  worker transfer parity for both lower-leg sides, and all-model delivery parity.
+- `npm run package`: TypeScript, current generated runtime data, production build,
+  byte-verified lossless model compression, and the complete static release ZIP.
+- `VIEWER_URL=http://127.0.0.1:5193/ node scripts/optimization-browser-check.mjs`:
+  High/Low lower legs, combined right leg and arm/back scenes; unique shared asset
+  requests; lazy neurovascular loading; idle RAF sleep; route cancellation and
+  resource disposal; explicit worker-disabled fallback.
+- `scripts/section-browser-check.mjs`: section rendering, flips, picking, labels,
+  atlas hints, reset, and session restoration for single High and combined Low.
+- `scripts/lifecycle-browser-check.mjs`: ten hub/viewer cycles plus rapid Low
+  route cancellation and worker cleanup.
+- `scripts/attachment-refinement-browser-check.mjs`: supported attachment focus
+  cards across both lower legs, both upper legs, Right Arm and Back.
+- `scripts/inspector-notes-neighbors-browser-check.mjs`: study notes, scoped
+  neighbor visibility and related UI behavior.
+
+Older arm/back and lifecycle checks were updated to use the current region and
+hub routes rather than retired region-menu controls/introduction-as-hub behavior.
+Screenshots and JSON reports remain in `validation/`. The source GLBs, manifests,
+licenses and region thumbnails are unchanged relative to the source checkpoint.
+
+Production measurements: model bytes 74,216,368 → 56,568,472 (23.8% reduction).
+The complete static build is approximately 61.2 MiB, compared with the initial
+78.0 MiB audit; its release ZIP is approximately 49.2 MiB. The arm/back factory
+chunk is 677,800 bytes versus 1,121,298 bytes before runtime-data extraction.
+These are delivery/build measurements. Browser heap samples vary with collection
+and include no controlled before/after peak-memory claim.

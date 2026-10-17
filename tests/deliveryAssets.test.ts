@@ -7,7 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { disposeObject } from '../src/viewerResources';
 const { compressGlb } = await import(new URL('../scripts/compress-models.mjs', import.meta.url).href);
 const files = (dir: string): string[] => fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry => entry.isDirectory()?files(path.join(dir,entry.name)):[path.join(dir,entry.name)]);
-const parse = async (bytes: Buffer) => (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset+bytes.byteLength), '')).scene;
+const parse = async (bytes: Buffer) => (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset+bytes.byteLength) as ArrayBuffer, '')).scene;
 const rawBytes = (array: THREE.TypedArray) => Buffer.from(array.buffer,array.byteOffset,array.byteLength);
 it('delivers every anatomical mesh with identical vertices, normals, indices, transforms and source metadata', async () => {
  let originalBytes=0,deliveryBytes=0;

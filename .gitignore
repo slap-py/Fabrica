@@ -31,3 +31,7 @@ __pycache__/
 /output/skin-hybrid-x/
 /output/skin-toe-fine/
 /output/skin-toe-web/
+
+# Local checkouts and generated release packages are outside the shipped app.
+/.claude/worktrees/
+/output/releases/

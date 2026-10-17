@@ -11,6 +11,7 @@ export async function prepareSoftTissues(region: string, parts: AnatomyParts, si
   let worker: Worker | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let cancel = () => {};
+  const releaseWorker = () => { if (worker) { worker.terminate(); worker = undefined; viewerDiagnostics.activeWorkers--; } };
   try {
     worker = new Worker(new URL('./softTissue.worker.ts', import.meta.url), { type: 'module' });
     viewerDiagnostics.activeWorkers++;
@@ -36,11 +37,12 @@ export async function prepareSoftTissues(region: string, parts: AnatomyParts, si
     });
     return result.report;
   } catch (error) {
+    releaseWorker();
     signal.throwIfAborted();
     console.warn('Fitting worker unavailable; using the existing synchronous preparation.', error);
     return fallback();
   } finally {
     clearTimeout(timer); signal.removeEventListener('abort', cancel);
-    if (worker) { worker.terminate(); viewerDiagnostics.activeWorkers--; }
+    releaseWorker();
   }
 }

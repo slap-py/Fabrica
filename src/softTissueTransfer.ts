@@ -16,6 +16,9 @@ export function packParts(parts: AnatomyParts, copy: boolean): PartData[] {
   return [...parts].map(([id, part]) => ({ id, anchor: part.anchor.toArray(), meshes: part.meshes.map(mesh => {
     const attributes: Record<string, AttributeData> = {};
     for (const [name, attribute] of Object.entries(mesh.geometry.attributes)) {
+      // Fitting needs positions and authored normals for cartilage extrusion.
+      // Rendering UVs and skin masks stay exclusively with the live renderer.
+      if (copy && name !== "position" && name !== "normal") continue;
       if (attribute instanceof THREE.InterleavedBufferAttribute) throw new Error('Interleaved fitting geometry');
       attributes[name] = { array: copy ? attribute.array.slice() : attribute.array, itemSize: attribute.itemSize, normalized: attribute.normalized };
     }

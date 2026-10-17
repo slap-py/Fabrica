@@ -19,6 +19,20 @@ function bone(id: string, size = 0.02) {
 }
 
 describe("bone asset integration", () => {
+  it('keeps independently transformed meshes correct when their source geometry is shared', () => {
+    const scene = new THREE.Group(), shared = new THREE.BoxGeometry(.02,.02,.02);
+    const a = new THREE.Mesh(shared,new THREE.MeshStandardMaterial()), b = new THREE.Mesh(shared,new THREE.MeshStandardMaterial());
+    a.name='talus'; b.name='tibia'; a.position.x=.1;b.position.x=.2;scene.add(a,b);
+    const original=shared.getAttribute('position').array.slice();
+    const parts = new Map(['talus','tibia'].map(id=>[id,{id,group:new THREE.Group(),meshes:[] as THREE.Mesh[],anchor:new THREE.Vector3()}]));
+    const report=installBoneAssets(scene,parts);
+    expect([...report.loaded].sort()).toEqual(['talus','tibia']);
+    expect(parts.get('talus')!.anchor.x).toBeCloseTo(100,4);
+    expect(parts.get('tibia')!.anchor.x).toBeCloseTo(200,4);
+    expect(shared.getAttribute('position').array).toEqual(original);
+    for(const part of parts.values())for(const mesh of part.meshes){mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}
+  });
+
   it("bakes hierarchy and meters once, preserves record/group/anchor identity, and replaces all old submeshes", () => {
     const model = createAnkle(), part = model.parts.get("tibia")!;
     const group = part.group, anchor = part.anchor, old = [...part.meshes];

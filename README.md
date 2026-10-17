@@ -322,3 +322,55 @@ The 651 canonical arm/back records share one information dataset independent of 
 See the [per-record coverage checklist](validation/arm-back-information-coverage.md), [machine-readable coverage and candidate audit](validation/arm-back-information-coverage.json), and [anatomical source review and discrepancy resolutions](validation/arm-back-anatomical-review.md). Source geometry gaps and empty material parts are listed separately from educational exceptions. Regenerate the report with `node scripts/arm-back-information-report.mjs`; run `node scripts/arm-back-information-browser-check.mjs` against a production preview using `VIEWER_URL` (default port 5187). Detailed verification is in [VALIDATION.md](VALIDATION.md).
 
 Arm/back anatomical areas and descriptions are independent of source view membership. Matching left/right structures and their tendon/cartilage components use the same area; source membership labels are omitted from the inspector. The description-to-facts spacing is compact in both arm/back and leg views.
+
+## Optimized delivery and preparation
+
+The pre-optimization project is preserved in commit `2fe5810` on
+`codex/performance-optimization`. Source GLBs, source provenance, anatomical
+metadata, and region thumbnails remain unchanged by the optimization work.
+
+`npm run build` derives compact arm/back runtime data and writes a complete
+static site to `dist/`. The build encodes model bufferViews with lossless
+`EXT_meshopt_compression`; it does not quantize coordinates/normals, reorder
+indices, weld vertices, simplify surfaces, or change structure IDs. Every
+encoded bufferView is decoded and byte-compared during the build. The installed
+Three.js decoder is also tested against all 22 source models, including every
+vertex attribute, index, transform and source node metadata.
+
+`dist/models/delivery-manifest.json` records original and delivered hashes and
+sizes. Published source manifests describe the original exports; use the delivery
+manifest to verify the compressed copies. Original GLBs remain in `public/models/`
+for source audits and reproducible preparation. Run `npm run package` to build
+and create `output/releases/fabrica.zip`, containing the whole static application,
+all regions, source manifests and licenses. Serve the extracted contents over HTTP.
+Local worktrees, caches, source Blender files and validation screenshots are not
+part of this static application package and remain available in the workspace.
+
+Combined regions group identical asset URLs before loading and share their
+canonical parts, avoiding duplicate parsing, geometry and picking indexes.
+Each viewer owns a preparation queue with two active layer jobs. Exclusive
+source geometry is adopted; shared source buffers are cloned before transforms.
+Known-size downloads use one allocation; unknown/HTTP-compressed downloads retain
+indeterminate progress. Navigation cancels queued work and releases staged data.
+
+Both graphics tiers build picking BVHs in a worker. Lower-leg fitted tissues use
+the existing calculation in a cancellable worker, with copied input positions and
+authored normals and transferred output geometry/BVHs. Left-side normal updates
+preserve the existing double-reflection behavior; skin materials and rendering
+attributes stay with the viewer. If workers cannot run, the existing synchronous
+calculation remains available. No precomputed substitute or lower-detail anatomy
+was introduced. Upper-leg attachment contact fitting retains its source algorithm.
+
+Viewer markup and atlas management live in `viewerMarkup.ts` and `atlasPanel.ts`.
+Atlas search strings and group order are prepared once. Region factories reuse
+`regions/defaults.ts` instead of instantiating another complete region pack.
+`scripts/prepare-runtime-data.mjs` derives the compact runtime manifest from the
+full authoritative arm/back records; `npm test` checks that it is current.
+Rendering sleeps after camera motion, label work and TAA finish; pointer, keyboard,
+form, visibility and scene changes wake it. Picking targets are reused until the
+scene or visibility changes.
+
+Validation commands and measured limits are in `VALIDATION.md`. Browser heap
+samples are observations, not a guaranteed peak-RAM reduction; worker input copies
+trade some transient memory for responsiveness. Model compression reduces delivery
+size while preserving the decoded precision and topology.

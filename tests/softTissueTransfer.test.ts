@@ -1,15 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import * as THREE from 'three';
 import { createAnkle } from '../src/ankle';
+import { leftLowerLegPack } from '../src/regions/left-lower-leg';
 import { byId, colors } from '../src/data';
 import { rebuildSoftTissues } from '../src/softTissues';
 import { packParts, unpackParts } from '../src/softTissueTransfer';
 import { disposeObject } from '../src/viewerResources';
 const tissue = (id: string) => ({color:colors[byId[id].tissue],cartilage:byId[id].tissue==='cartilage'});
-it('preserves every fitted vertex, normal, index, footprint and BVH hit across worker transfer', () => {
- const original = createAnkle(), copied = unpackParts(packParts(original.parts,true),tissue);
+it.each(['right', 'left'])('preserves %s fitted vertices, normals, indices, footprints and BVHs across worker transfer', side => {
+ const original = side === 'left' ? leftLowerLegPack.createAnkle() : createAnkle(), copied = unpackParts(packParts(original.parts,true),tissue);
+ const rebuild = side === 'left' ? leftLowerLegPack.rebuildSoftTissues : rebuildSoftTissues;
  try {
-  expect(rebuildSoftTissues(copied)).toEqual(rebuildSoftTissues(original.parts));
+  expect(rebuild(copied)).toEqual(rebuild(original.parts));
   const restored = unpackParts(packParts(copied,false),tissue);
   try {
    for(const [id,part] of original.parts) {
@@ -25,4 +27,4 @@ it('preserves every fitted vertex, normal, index, footprint and BVH hit across w
    }
   } finally { for(const part of restored.values())disposeObject(part.group); }
  } finally { disposeObject(original.root);for(const part of copied.values())disposeObject(part.group); }
-},30000);
+},60000);

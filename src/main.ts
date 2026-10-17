@@ -1,6 +1,6 @@
-import { version } from "../package.json";
-import { loadingScreen } from "./loading";
-import { brandLockup } from "./branding";
+import { viewerMarkup } from "./viewerMarkup";
+import { createAtlasPanel } from "./atlasPanel";
+import { escapeHtml } from "./html";
 import type { RegionPack } from "./regions";
 import type { Tissue } from "./data";
 import type { Connection } from "./connections";
@@ -30,16 +30,8 @@ import {
 import { createSlowFrameMonitor, graphicsSettings, readAutoOverride, readGraphicsChoice, resolveTier, saveAutoOverride, saveGraphicsChoice, weakDeviceReason, type AutoOverride, type GraphicsChoice, type GraphicsSettings, type GraphicsTier } from "./graphics";
 
 import { applySceneTheme, effectiveTheme, listenForThemeChanges, readThemeChoice, setThemeChoice, type ThemeChoice } from "./theme";
-import { MAX_LABELS, MIN_LABELS, passiveLabelCap, readSettings, saveSettings } from "./settings";
+import { passiveLabelCap, readSettings, saveSettings } from "./settings";
 
-const icon = {
-  search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>',
-  pan: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v13M1.5 8h13M6 3.5l2-2 2 2M6 12.5l2 2 2-2M3.5 6l-2 2 2 2M12.5 6l2 2-2 2"/></svg>',
-  plus: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>',
-  minus: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg>',
-  home: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 7.5 8 3l5.5 4.5M4 6.5V13h8V6.5"/></svg>',
-  close: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"/></svg>',
-};
 /** One mounted viewer owns all DOM, listeners, rendering and loading work. */
 export function mountViewer(pack: RegionPack, app: HTMLElement, initialSelection: string | null = null, session?: ViewerSession) {
 const restored = restoreViewerSession(pack, session);
@@ -51,6 +43,8 @@ const loadAssets = (run: () => Promise<AssetReport>) => scope.load(run).catch(er
 });
 let disposed = false;
 let frameRequest = 0;
+let pickingTargets: THREE.Mesh[] | undefined;
+function requestFrame() { if (!disposed && !frameRequest) frameRequest = requestAnimationFrame(frame); }
 const worker = createPickingWorker(delta => { viewerDiagnostics.activeWorkers += delta; });
 const { structures, byId, tissueNames, colors, atlasIds, labelTier, tierForZoom,
   createAnkle, rebuildSoftTissues, cameraPreset, createCompass, attachmentSources,
@@ -58,82 +52,10 @@ const { structures, byId, tissueNames, colors, atlasIds, labelTier, tierForZoom,
   connectionCameraPose, connectionOccluders, connectionClinicalPoints,
   relatedIds, neurovascularTissues, isNeurovascular } = pack;
 const { loadBoneAssets, loadMuscleAssets, loadExteriorAssets, loadNeurovascularAssets, createAssetSceneLoader } = pack.loaders;
-const browsableStructures = structures.filter(d => d.tissue !== "skin");
-const areaOptions = pack.atlasAreas.filter(area => !area.group).map(area => `<option value="${area.id}">${area.label}</option>`).join('') +
-  [...new Set(pack.atlasAreas.map(area => area.group).filter(Boolean))].map(group => `<optgroup label="${group}">${pack.atlasAreas.filter(area => area.group === group).map(area => `<option value="${area.id}">${area.label}</option>`).join('')}</optgroup>`).join('');
-
 const viewerSettings = readSettings();
 const presets = pack.presets;
 const openingLoader = app.querySelector("#loading");
-app.innerHTML = `
-<header class="topbar">
-  <div class="brand"><a class="viewer-home" href="#/" aria-label="Fabrica home" title="Home">${brandLockup}</a><span class="title" title="${pack.title}">${pack.title}</span></div>
-  <div class="segmented modes" aria-label="Tissue presets">${presets.map(preset => `<button data-mode="${preset.id}" class="${preset.id === pack.defaultMode ? 'active' : ''}">${preset.icon ?? ''}${preset.label}</button>`).join('')}</div>
-  <nav class="topbar-actions" aria-label="Explorer actions"><details class="actions-menu" open><summary aria-label="More actions" title="More actions">⋯</summary><div class="action-items"><button id="labels" class="tool-button" aria-pressed="true" title="Toggle labels (L)"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h9l3 5-3 5H2Z"/><circle cx="10" cy="8" r="1"/></svg>Labels</button><button id="reset" class="tool-button" title="Reset model, selection, layers and filters (R)" aria-label="Reset model"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6a5 5 0 1 1 0 5M3 2v4h4"/></svg></button><button id="about" class="tool-button" title="About ${pack.title}" aria-label="About"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7v4M8 4.5v.2"/></svg></button></div></details></nav>
-</header>
-<main>
-<aside class="panel atlas" aria-label="Structures">
-  <div class="atlas-head">
-    <label class="search">${icon.search}<input id="search" placeholder="Search ${browsableStructures.length} structures" aria-label="Find a structure" type="search"/></label>
-    <div id="type-filters" class="type-filters" aria-label="Structure types"></div>
-    <label class="area-filter" for="atlas-area">Area<select id="atlas-area">${areaOptions}</select></label>
-    <label class="visible-filter"><input id="only-visible" type="checkbox"/>Only visible layers</label>
-    <div class="filter-status"><span id="list-count"></span><button id="clear-filters" class="link-button" hidden>Clear filters</button></div>
-  </div>
-  <div id="structure-list" class="atlas-scroll" aria-label="Structure list"></div>
-</aside>
-<section id="viewport" aria-label="Interactive 3D anatomy model">
-  <div id="label-layer"><svg class="label-leaders" aria-hidden="true"></svg></div>
-  <div class="compass-wrap"><div id="compass" role="group" aria-label="Anatomical view compass"></div><span id="view-name">ANTERIOR VIEW</span></div>
-  <div class="view-controls segmented" aria-label="Camera views">${pack.viewPresets.map(view => `<button data-view="${view.id}" class="${view.id === pack.defaultView ? 'active' : ''}">${view.label}</button>`).join('')}</div>
-  <div class="canvas-tools"><button id="pan" aria-pressed="false" aria-label="Pan mode" title="Pan mode (P). Right-drag, Shift-drag or Alt-drag also pans.">${icon.pan}</button><button id="zoom-in" aria-label="Zoom in" title="Zoom in">${icon.plus}</button><button id="zoom-out" aria-label="Zoom out" title="Zoom out">${icon.minus}</button><button id="home" aria-label="Reset camera" title="Reset camera">${icon.home}</button></div>
-  <div id="fps-meter" class="fps-meter" role="status" aria-label="Frames per second" hidden>-- FPS</div>
-  <div id="render-error" hidden></div>
-  <div id="graphics-prompt" class="graphics-prompt" role="status" hidden><p>The 3D view is running slowly on this device.</p><button data-graphics-prompt="low" class="tool-button active">Use Low graphics</button><button data-graphics-prompt="keep" class="tool-button">Keep High</button></div>
-</section>
-<div class="inspector-stack">
-<aside class="panel inspector" aria-label="Structure details">
-  <div class="inspector-resize" role="separator" aria-orientation="vertical" aria-label="Resize details panel" tabindex="0" aria-valuemin="280" aria-valuemax="680"></div>
-  <button id="expand-inspector" class="icon-button" aria-pressed="false" title="Expand details panel" aria-label="Expand details panel">↔</button>
-  <button id="clear" class="icon-button" aria-label="Clear selection" title="Clear selection">${icon.close}</button>
-  <div id="details" class="details" aria-live="polite"></div>
-</aside>
-<aside class="panel layers-panel" aria-label="Layers">
-  <section class="layer-section">
-    <div class="section-heading"><h2>Layers</h2><button id="all-layers" class="link-button">Show all</button></div>
-    <div id="layers"></div>
-    <button id="highlight-connections" class="toggle-row" aria-pressed="false" aria-describedby="highlight-connections-hint"><span>Highlight connections</span><span class="switch" aria-hidden="true"></span></button>
-    <p id="highlight-connections-hint" class="sr-only">Highlight attached tendons and bones with your selection. Hidden connections appear temporarily.</p>
-    <div class="slider-row"><label for="opacity">Muscle</label><input id="opacity" type="range" min="10" max="100" value="100"/><output id="opacity-value">100%</output></div>
-    <div class="slider-row"><label for="dim-opacity" title="How visible other structures stay while something is selected">Others</label><input id="dim-opacity" type="range" min="0" max="100" value="50"/><output id="dim-opacity-value">50%</output></div>
-    <div class="slider-row"><label for="skin-opacity">Skin</label><input id="skin-opacity" type="range" min="0" max="100" value="100"/><output id="skin-opacity-value">100%</output></div>
-    <div id="neurovascular-opacity-controls"><div class="slider-row"><label for="neurovascular-opacity">Vessels &amp; nerves</label><input id="neurovascular-opacity" type="range" min="10" max="100" value="100"/><output id="neurovascular-opacity-value">100%</output></div></div>
-    <p id="neurovascular-status" role="status" hidden></p>
-    <div class="section-control" role="group" aria-labelledby="section-heading">
-      <p class="setting-title" id="section-heading">Section</p>
-      <div class="segmented section-axis">${([["off","Off"],["sagittal","Sagittal"],["coronal","Coronal"],["transverse","Transverse"]] as const).map(([id, name]) => `<button data-section-axis="${id}" aria-pressed="${id === 'off'}" class="${id === 'off' ? 'active' : ''}">${name}</button>`).join('')}</div>
-      <div id="section-options" hidden>
-        <div class="slider-row"><label for="section-position">Position</label><input id="section-position" type="range" min="0" max="100" value="50"/><output id="section-position-value">50%</output></div>
-        <button id="section-flip" class="toggle-row" aria-pressed="false"><span>Flip side</span><span class="switch" aria-hidden="true"></span></button>
-      </div>
-    </div>
-  </section>
-  <p id="layer-hint" class="layer-hint"></p>
-</aside>
-</div>
-</main>
-<dialog id="about-dialog" aria-labelledby="about-title"><button class="dialog-close icon-button" aria-label="Close model information">${icon.close}</button><h2 id="about-title">${pack.about.title}</h2>
-<div class="about-tabs" role="tablist" aria-label="About sections">${[['overview','Overview'],['controls','Controls'],['settings','Settings']].map(([id,name])=>`<button id="about-tab-${id}" role="tab" data-about-tab="${id}" aria-controls="about-panel-${id}" aria-selected="${id==='overview'}" tabindex="${id==='overview'?0:-1}">${name}</button>`).join('')}</div>
-<section id="about-panel-overview" role="tabpanel" data-about-panel="overview" aria-labelledby="about-tab-overview">${pack.about.overviewHtml}</section>
-<section id="about-panel-controls" role="tabpanel" data-about-panel="controls" aria-labelledby="about-tab-controls" hidden>${pack.about.controlsHtml}</section>
-<section id="about-panel-settings" class="settings-panel" role="tabpanel" data-about-panel="settings" aria-labelledby="about-tab-settings" hidden>
-  <div class="setting-block"><p class="setting-title" id="graphics-heading">Graphics quality</p><div class="segmented graphics-control" role="group" aria-labelledby="graphics-heading"><button data-graphics-choice="auto">Auto</button><button data-graphics-choice="high">High</button><button data-graphics-choice="low">Low</button></div><p id="graphics-status" class="setting-note" aria-live="polite"></p></div>
-  <div class="setting-block"><p class="setting-title" id="theme-heading">Theme</p><div class="segmented theme-control" role="group" aria-labelledby="theme-heading"><button data-theme-choice="system">System</button><button data-theme-choice="light">Light</button><button data-theme-choice="dark">Dim</button></div></div>
-  <div class="setting-block"><button id="setting-labels-default" class="toggle-row" aria-pressed="false"><span>Labels on by default</span><span class="switch" aria-hidden="true"></span></button><p class="setting-note">Applies when a region opens or is reset. The Labels button still toggles them while you explore.</p></div>
-  <div class="setting-block"><div class="slider-row"><label for="setting-max-labels">Max labels</label><input id="setting-max-labels" type="range" min="${MIN_LABELS}" max="${MAX_LABELS}" step="1"/><output id="setting-max-labels-value"></output></div><p class="setting-note">Most passive labels shown at once when zoomed in. Fewer appear when zoomed out. Selected and hovered structures are always labeled.</p></div>
-  <div class="setting-block"><button id="setting-fps" class="toggle-row" aria-pressed="false"><span>Show FPS meter</span><span class="switch" aria-hidden="true"></span></button><p class="setting-version">Version ${version}</p></div>
-</section>
-</dialog>${loadingScreen(pack.title)}`;
+app.innerHTML = viewerMarkup(pack);
 // Keep the same loading element (and bar animation) through the lazy import.
 if (openingLoader) app.querySelector("#loading")!.replaceWith(openingLoader);
 const $ = <T extends HTMLElement = HTMLElement>(s: string) =>
@@ -195,68 +117,8 @@ if (restored) {
     $('#' + id + '-value').textContent = Math.round(value * 100) + '%';
   }
 }
-const atlasOrder: Tissue[] = pack.atlasOrder.filter(tissue => tissue !== "skin");
-const atlasNames = pack.atlasNames;
-const collapsedTissues = new Set<string>();
-try { for (const value of JSON.parse(localStorage.getItem('atlas-collapsed') || '[]')) if (atlasOrder.includes(value)) collapsedTissues.add(value); } catch {}
-const escapeHtml = (text: string) => text.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]!));
-function marked(text: string, query: string): string {
-  if (!query) return escapeHtml(text);
-  let start = 0, result = '', index = text.toLowerCase().indexOf(query);
-  while (index >= 0) { result += escapeHtml(text.slice(start,index)) + '<mark>' + escapeHtml(text.slice(index,index+query.length)) + '</mark>'; start=index+query.length; index=text.toLowerCase().indexOf(query,start); }
-  return result + escapeHtml(text.slice(start));
-}
 const isSelected = (id: string) => id === state.selected || state.multi.includes(id);
-function renderList() {
-  const focusedRow=(document.activeElement as HTMLElement)?.closest<HTMLButtonElement>('.structure-row')?.dataset.id;
-  const q = $<HTMLInputElement>('#search').value.trim().toLowerCase();
-  const ids = atlasIds(state.atlasRegion);
-  const items = browsableStructures.filter(d => ids.has(d.id) && state.atlasTypes.has(d.tissue) && (!state.onlyVisible || state.layers.has(d.tissue)) && `${d.name} ${d.group} ${d.description}`.toLowerCase().includes(q));
-  $('#type-filters').innerHTML = atlasOrder.map(t => `<button data-atlas-type="${t}" aria-pressed="${state.atlasTypes.has(t)}"><i style="background:${colors[t]}"></i>${atlasNames[t]} <span>${structures.filter(d=>d.tissue===t).length}</span></button>`).join('');
-  app.querySelectorAll<HTMLButtonElement>('[data-atlas-type]').forEach(b=>b.onclick=()=>{const t=b.dataset.atlasType as Tissue;state.atlasTypes.has(t)?state.atlasTypes.delete(t):state.atlasTypes.add(t);renderList();});
-  $<HTMLSelectElement>('#atlas-area').value=state.atlasRegion;
-  $<HTMLInputElement>('#only-visible').checked=state.onlyVisible;
-  $('#list-count').textContent=`Showing ${items.length} of ${browsableStructures.length}`;
-  $('#clear-filters').hidden=!q && state.atlasRegion==='all' && !state.onlyVisible && atlasOrder.every(t=>state.atlasTypes.has(t));
-  const container=$('#structure-list');container.replaceChildren();
-  for (const tissue of atlasOrder) {
-    const members=items.filter(d=>d.tissue===tissue);if(!members.length)continue;
-    const section=document.createElement('details');section.className='tissue-section';section.dataset.tissue=tissue;
-    section.open=!!q || !collapsedTissues.has(tissue) || members.some(d=>isSelected(d.id));
-    section.innerHTML=`<summary>${atlasNames[tissue]} <span>${members.length}</span></summary>`;
-    section.ontoggle=()=>{if(q || disposed)return;section.open?collapsedTissues.delete(tissue):collapsedTissues.add(tissue);try{localStorage.setItem('atlas-collapsed',JSON.stringify([...collapsedTissues]));}catch{}};
-    for(const group of [...new Set(members.map(d=>d.group))].sort()) {
-      const grouped=members.filter(d=>d.group===group).sort((a,b)=>a.name.localeCompare(b.name));
-      const heading=document.createElement('h3');heading.innerHTML=`${marked(group,q)} <span>${grouped.length}</span>`;section.append(heading);
-      for(const d of grouped){const row=document.createElement('button');row.className='structure-row';row.dataset.id=d.id;row.innerHTML=`<i style="background:${colors[d.tissue]}"></i><span>${marked(d.name,q)}${q && !d.name.toLowerCase().includes(q) && d.description.toLowerCase().includes(q) ? `<small>${marked(d.description,q)}</small>` : ''}</span>`;row.onclick=()=>select(d.id);section.append(row);}
-    }
-    container.append(section);
-  }
-  if(!items.length)container.innerHTML='<p class="empty">No matches. Try another structure name or clear the filters.</p>';
-  updateRows();
-  if(focusedRow)app.querySelector<HTMLButtonElement>(`.structure-row[data-id="${focusedRow}"]`)?.focus({preventScroll:true});
-}
-let lastScrolledSelection: string | null = null;
-function updateRows() {
-  const highlighted=selectedConnectionHighlights();
-  app.querySelectorAll<HTMLButtonElement>('.structure-row').forEach(b=>{
-    const selected=isSelected(b.dataset.id!);
-    b.classList.toggle('selected',selected);b.classList.toggle('connected',!selected&&highlighted.has(b.dataset.id!));b.classList.toggle('hovered',b.dataset.id===state.hovered);b.setAttribute('aria-pressed',String(selected));
-    if(b.dataset.id===state.selected && lastScrolledSelection!==state.selected){b.closest('details')!.open=true;b.scrollIntoView({block:'nearest'});}
-  });
-  lastScrolledSelection=state.selected;
-}
-function clearFilters(){state.atlasRegion='all';state.atlasTypes=new Set(atlasOrder);state.onlyVisible=false;$<HTMLInputElement>('#search').value='';renderList();}
-$('#clear-filters').onclick=clearFilters;
-$<HTMLSelectElement>('#atlas-area').onchange=e=>{state.atlasRegion=(e.target as HTMLSelectElement).value;renderList();};
-$<HTMLInputElement>('#only-visible').onchange=e=>{state.onlyVisible=(e.target as HTMLInputElement).checked;renderList();};
-$('#structure-list').onkeydown=e=>{
-  if(!['ArrowUp','ArrowDown','Enter'].includes(e.key))return;
-  const rows=[...app.querySelectorAll<HTMLButtonElement>('.tissue-section[open] .structure-row')];
-  const current=rows.indexOf(document.activeElement as HTMLButtonElement);
-  if(e.key==='Enter'){if(current>=0){e.preventDefault();rows[current].click();}return;}
-  e.preventDefault();const next=current<0?0:Math.max(0,Math.min(rows.length-1,current+(e.key==='ArrowDown'?1:-1)));rows[next]?.focus();
-};
+const { renderList, updateRows, clearFilters } = createAtlasPanel(app, pack, state, select, selectedConnectionHighlights, () => disposed);
 // Only layers revealed by Neighbors are restored when the temporary view ends.
 const neighborLayers = new Set<Tissue>();
 let preNeighborsMode: string | null = null;
@@ -621,7 +483,7 @@ let labelsDirty=true;
 let visibilityDirty=true;
 let labelViewport = { width: 0, height: 0, freeWidth: 0 };
 /** Request a redraw after anything that changes what the scene or its labels show. */
-function invalidate(){appearanceDirty=true;labelsDirty=true;visibilityDirty=true;}
+function invalidate(){appearanceDirty=true;labelsDirty=true;visibilityDirty=true;pickingTargets=undefined;requestFrame();}
 const leg = createAnkle();
 scene.add(leg.root);
 const footprintGroup = new THREE.Group();
@@ -1372,9 +1234,9 @@ function pickStructure(clientX: number, clientY: number, hoverOnly = false): str
   );
   raycaster.setFromCamera(mouse, camera);
   const hoverIds = hoverOnly && hoverFiltered() ? hoverConnectionIds() : null;
-  const targets = [...leg.parts.values()]
-    .filter((p) => p.group.visible && (!hoverIds || hoverIds.has(p.id)))
-    .flatMap((p) => p.meshes.filter((m) => m.visible && !m.userData.fiber && !sectionHidden.has(p.id)));
+  pickingTargets ??= [...leg.parts.values()].filter(p => p.group.visible)
+    .flatMap(p => p.meshes.filter(m => m.visible && !m.userData.fiber && !sectionHidden.has(p.id)));
+  const targets = hoverIds ? pickingTargets.filter(mesh => hoverIds.has(mesh.userData.id)) : pickingTargets;
   const anatomyTargets = targets.filter(mesh => !isSkinSurface(mesh) && !isSkinCap(mesh));
   const hits = intersectVisible(raycaster, anatomyTargets);
   // Preserve exact selected-surface priority before assisting neighboring tubes.
@@ -1515,7 +1377,7 @@ function setLeaderAttribute(node: SVGElement, name: string, value: number) {
   if (node.getAttribute(name) !== text) node.setAttribute(name, text);
 }
 function buildLabels() {
-  labelsDirty = true;
+  labelsDirty = true; requestFrame();
   const existing = new Map(labelNodes.map((label) => [label.id, label]));
   const next: LabelNode[] = [];
   const ids = state.labels ? Object.keys(labelTier).filter(id=>labelTier[id]<=maxTier) : [];
@@ -1569,7 +1431,7 @@ function buildLabels() {
 void document.fonts.ready.then(() => {
   if (disposed) return;
   for (const label of labelNodes) { label.width = undefined; label.height = undefined; }
-  labelsDirty = true;
+  labelsDirty = true; requestFrame();
 });
 listen(document, "keydown", (e) => {
   if (e.key === "Escape" && !dialog.open) {
@@ -1605,7 +1467,8 @@ let labelsAnimating = false;
 let lastFrameMoved = false;
 function frame(time: number) {
   if (disposed) return;
-  frameRequest = requestAnimationFrame(frame);
+  frameRequest = 0;
+  viewerDiagnostics.frameTicks++;
   const elapsed = time - lastTime;
   const dt = Math.min(elapsed / 1000, 0.05);
   lastTime = time;
@@ -1671,7 +1534,8 @@ function frame(time: number) {
       }
     }
   }
-  if (!cameraChanged && !labelsDirty && !labelsAnimating) return;
+  const keepAnimating = () => cameraChanged || appearanceDirty || taaSamplesLeft > 0 || !!seenTask || seenNeedsRefresh || cutAwayDirty || viewerSettings.showFps;
+  if (!cameraChanged && !labelsDirty && !labelsAnimating) { if (keepAnimating()) requestFrame(); return; }
   labelsDirty = false;
   labelsAnimating = labelNodes.some(l => l.retiringAt !== undefined);
   const occupied: {x:number;y:number;w:number;h:number}[]=[];
@@ -1749,8 +1613,12 @@ function frame(time: number) {
     setLeaderAttribute(line,'y2',THREE.MathUtils.clamp(ay,y-h/2,y+h/2));
     setLeaderAttribute(dot,'cx',ax); setLeaderAttribute(dot,'cy',ay);
   }
+  if (keepAnimating() || labelsAnimating) requestFrame();
 }
-frameRequest = requestAnimationFrame(frame);
+for (const event of ['pointerdown','pointermove','wheel','click','input','change'] as const) listen(app, event, requestFrame, { capture: true, passive: true });
+listen(document, 'keydown', requestFrame);
+listen(document, 'visibilitychange', requestFrame);
+requestFrame();
 
 
 // Start after controls, state and labels exist, so late loads preserve user interaction.
